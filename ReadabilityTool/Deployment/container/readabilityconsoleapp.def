@@ -1,0 +1,44 @@
+Bootstrap: docker
+From: ghcr.io/ggml-org/llama.cpp:server-cuda
+
+# ============================================================================= #
+#    Built from llama.cpp's official CUDA server image, with nothing installed:  #
+#    the compute nodes block the user namespaces that a %post section needs     #
+#    (Ubuntu 24.04, apparmor_restrict_unprivileged_userns = 1), so the image    #
+#    may only copy files in. The tool is published self-contained, so it needs  #
+#    no .NET runtime; the base image has the ICU and OpenSSL libraries it uses. #
+#                                                                               #
+#    Not pinned: every image build takes the latest llama.cpp. The tool         #
+#    records the version in every output file, and resume refuses to mix        #
+#    versions, so avoid rebuilding the image in the middle of an experiment.    #
+#                                                                               #
+#    GPUs: the image carries native code for the RTX 3090 / RTX A4000 (86) and  #
+#    portable code that the driver compiles on first use for the GTX 1080 (61), #
+#    RTX 2080 Ti / Titan RTX (75) and A100 (80).                                #
+# ============================================================================= #
+
+%labels
+    Author Márton Gergő
+    Version 3.0
+    Description Code readability tool with llama.cpp, for the NIPG cluster
+
+%files
+    publish /opt/readability
+
+%environment
+    # llama-server and its libraries live in /app in the base image.
+    export PATH=/app:$PATH
+    export LD_LIBRARY_PATH=/app:${LD_LIBRARY_PATH:-}
+    # Room for the GPU code the driver compiles on first use (kept in ~/.nv between jobs).
+    export CUDA_CACHE_MAXSIZE=4294967296
+
+%runscript
+    exec /opt/readability/ReadabilityConsoleApp "$@"
+
+%help
+    Code readability tool. Run it from the project folder (~/readability) so that its
+    output, datasets and checkpoints folders land there:
+
+        apptainer run --nv readabilityconsoleapp.sif help
+
+    On the cluster, use scripts/submit.sh instead of running it directly.

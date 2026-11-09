@@ -1,0 +1,19 @@
+﻿[*.cs]
+
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = none
+
+# IDE0305: Simplify collection initialization
+dotnet_diagnostic.IDE0305.severity = none
+
+# CA2208: Instantiate argument exceptions correctly
+dotnet_diagnostic.CA2208.severity = none
+
+# IDE0090: Use 'new(...)' expression
+dotnet_diagnostic.IDE0090.severity = none
+
+# IDE0028: Use expression body for properties
+dotnet_diagnostic.IDE0028.severity = none
+
+# CA1822: Mark members as static
+dotnet_diagnostic.CA1822.severity = none

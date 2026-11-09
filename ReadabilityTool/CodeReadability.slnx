@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Project Path="CodeReadabilityLib/CodeReadabilityLib.csproj" />
+  <Project Path="ReadabilityConsoleApp/ReadabilityConsoleApp.csproj" />
+</Solution>

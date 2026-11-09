@@ -1,0 +1,32 @@
+﻿{
+  "totalSnippets": 30, // the total number of snippets that were evaluated.
+  "modelResults": [ // the models are in order of best to worst, meaning the first model in the array is the one that performed the best, and the last model is the one that performed the worst.
+    // a model was better if the number of exact answers was higher than the other models,
+    // if the exact answers were the same, then the model with more answers that were off by 1 was better,
+    // if the exact answers and the answers that were off by 1 were the same, then the model with more answers that were off by 2 was better
+    // and so on and so on
+    {
+      "modelName": "exampleModelOne",
+      "answers": [
+        17, // 17 exact answers, meaning if the original score was 5, the model's answer was also 5, if it was 4, the model's answer was also 4, and so on.
+        7, // 7 answers that were off by 1, meaning if the original score was 5, the model's answer was either 4 or 6, if it was 4, the model's answer was either 3 or 5, and so on.
+        3, // 3 answers that were off by 2, meaning if the original score was 5, the model's answer was either 3 or 7, if it was 4, the model's answer was either 2 or 6, and so on.
+        3 // 3 answers that were off by 3 or more, meaning if the original score was 5, the model's answer was either 2, 1, 0, 6, 7, 8, or 9, if it was 4, the model's answer was either 1, 0, 2, 6, 7, 8, or 9, and so on.
+      ], // the sum of these numbers should equal the total number of snippets, which is 30 in this case.
+      "concreteAnswers": [ // this is an array of objects that provides more detailed information about each snippet, including the original score and the model's answer for that snippet.
+        {
+          "snippetId": "snippet1",
+          "originalScore": 5,
+          "modelAnswer": 5
+        },
+        {
+          "snippetId": "snippet2",
+          "originalScore": 4,
+          "modelAnswer": 5
+        }
+        // ... more snippets
+      ]
+    }
+    // ... more models
+  ]
+}

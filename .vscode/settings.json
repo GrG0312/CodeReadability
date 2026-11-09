@@ -1,0 +1,36 @@
+{
+    // LaTeX Workshop: Perl nélküli fordítás (a MiKTeX latexmk-ja Perlt igényelne).
+    // Sorrend: pdflatex -> biber (irodalomjegyzék) -> pdflatex -> pdflatex (hivatkozások, tartalomjegyzék).
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "pdflatex ➞ biber ➞ pdflatex × 2",
+            "tools": ["pdflatex", "biber", "pdflatex", "pdflatex"]
+        },
+        {
+            "name": "pdflatex (gyors, irodalomjegyzék nélkül)",
+            "tools": ["pdflatex"]
+        }
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOCFILE%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "biber",
+            "command": "biber",
+            "args": ["%DOCFILE%"],
+            "env": {}
+        }
+    ],
+    "latex-workshop.latex.recipe.default": "first",
+    // Csak kézi fordítás (Ctrl+Alt+B vagy a Build gomb), mentéskor/módosításkor nem fordít.
+    "latex-workshop.latex.autoBuild.run": "never"
+}
