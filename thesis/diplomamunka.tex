@@ -22,7 +22,7 @@
 % University's metadata
 \university{Eötvös Loránd Tudományegyetem}
 \faculty{Informatikai Kar}
-\department{Programozáselméleti és Szoftvertechnológiai Tanszék} % TODO: newline-t valahogy ide be kéne illeszteni
+\department{Programozáselméleti és Szoftvertechnológiai Tanszék}
 \city{Budapest}
 \logo{elte_cimer_szines}
 
@@ -47,50 +47,57 @@
 \chapter{Bevezetés}
 \label{ch:intro}
 
-% Note: 
-% '„' = Alt + 0132
-% '”' = Alt + 0148
+Napjainkban a szoftverfejlesztők munkájának jelentős részét a meglévő kód megértése, az új kód írása és a kód karbantartása teszi ki.
+Emiatt különösen fontos, hogy egy projekt kódja olvasható legyen.
+Felmerül viszont a kérdés, hogy mit jelent az, hogy egy kód \textit{olvasható}.
+A kódolvashatóság nehezen számszerűsíthető, hiszen megítélése nagymértékben szubjektív:
+két szakember ugyanazt a kódrészletet gyakran egészen eltérően értékeli.
 
-Napjainkban a szoftveriparban dolgozó fejlesztők munkájának jelentős részét a meglévő kód megértése, az új kód írása és a kód karbantartása teszi ki.
-Emiatt minden projekt alapvető feltételévé vált, hogy a hozzá tartozó kód olvasható legyen.
-Felmerül viszont a kérdés, hogy: „Mit jelent az, hogy egy kód \textit{olvasható}?”
-Ez önmagában nem egy mérhető fogalom, ráadásul megítélése nagy mértékben szubjektív.
-Két szakember ugyanazt a kódrészletet vizsgálva számos szempont alapján értékelheti,
-véleményeik pedig gyakran jelentősen eltérnek egymástól.
+Ennek ellenére számos kutatómunka foglalkozik olyan módszerekkel, amelyek az olvashatóság számszerűsítését kísérlik meg.
+Az elsők között Buse és Weimer próbálta meg gépi tanulási modellel, szintaktikai kódjellemzők alapján becsülni a kód olvashatóságát \cite{buse2008metric}.
+Posnett és munkatársai később megmutatták, hogy egy jóval kevesebb jellemzőre épülő, egyszerűbb modell is jobban teljesít \cite{posnett2011simpler}.
+Dorn már a kód vizuális megjelenését is figyelembe vette, és ehhez egy nagyobb, több programozási nyelvet felölelő adathalmazt használt.
+% TODO: Dorn-ra közvetlen hivatkozás
+Scalabrino és munkatársai pedig az azonosítók és a megjegyzések szövegéből számolt jellemzőkkel egészítették ki a korábbiakat,
+majd ezeket egyetlen átfogó modellben egyesítették \cite{scalabrino2016improving,scalabrino2018comprehensive}.
+Egy másik vizsgálatukban viszont azt is kimutatták, hogy ezek a mérőszámok alig mondanak valamit arról,
+hogy a fejlesztők valóban megértik-e a kódot \cite{scalabrino2017understandability}.
 
-Ennek ellenére számos kutatócsoport próbálkozott már különböző módszerekkel, hogy az olvashatóságot mérhetővé, számszerűsíthetővé tegyék.
-Ilyen Buse és Weimer 2008-ban publikált megközelítése, amely során különböző szintaktikai jellemzőket számoltak,
-majd ezeket gépi tanulásos modell bemeneteként használva becsülték meg a kód olvashatóságát \cite{buse2008metric}.
-Posnet és munkatársainak 2011-es publikációja pedig rámutatott arra, 
-hogy a szintaktikai metrikák gyakran gyengén korrelálnak a kód tényleges olvashatóságával \cite{posnett2011simpler}.
-A korai olvashatósági modellek gépi tanulási módszerekre épültek, a későbbi kutatások pedig már mélytanulást is alkalmaztak.
+Az utóbbi években a szoftverfejlesztés gyakorlatát jelentősen átalakította a nagy nyelvi modellek
+(\textit{Large Language Model}, a továbbiakban LLM) elterjedése.
+Az LLM-ek számos szoftvertechnológiai feladatot képesek értelmezni és megoldani, például kódrészleteket is meg tudnak magyarázni \cite{szalontai2025readability}.
+Innen már csak egy lépés a dolgozatom központi kérdése: mennyire képesek az LLM-ek a kód olvashatóságát megítélni, és mennyire használhatók olvashatósági bíráként?
+% TODO: itt az volt a visszajelzés, hogy hiányoznak az LLM-ekről hivatkozások.
+% Milyen hivatkozást kéne itt egyáltalán használni? Ez csak ilyen general info.
+Erre Ouédraogo és munkatársai CoReEval benchmarkja már adott egy első választ:
+a szerzők az LLM-ek pontszámait ugyanazokon az emberi értékelésű adathalmazokon vetették össze az emberekével, és csak gyenge egyezést találtak.
+Java-kódon például az LLM-ek egy klasszikus, jellemzőalapú modellnél sem teljesítettek jobban \cite{ouedraogo2025coreeval}.
 
-A modern szoftveriparban azonban megjelent egy új jelenség, amely jelentősen átalakította az ipari szokásokat: 
-a nagy nyelvi modellek (Large Language Model, továbbiakban LLM) elterjedése.
-Az LLM-ek képesek számnos, egyedi igényű szoftvertechnológiai feladat értelmezésére és megoldására,
-ami felveti a kutatásom központi kérdését: „Mennyire képesek az LLM-ek kódrészletek olvashatóságának megítélésére, és mennyire használhatók jól olvashatósági bíráként?”
+Egy LLM viselkedését ugyanakkor számos tényező befolyásolja, és a kimenete a beállításoktól függően változhat.
+Ugyanaz a modell gyakran több méretben is elérhető, és különböző mértékben kvantálva is futtatható (\textit{quantization}).
+Az úgynevezett hibrid modellek válaszadás előtt akár gondolkodhatnak is (\textit{thinking}), de ez a mód ki is kapcsolható.
+Ezen felül a modellcsaládok is eltérhetnek egymástól. % Call me Albert Einstein
+Végül az is számíthat, hogyan fogalmazzuk meg a modell feladatát, és kap-e mellé mintapéldákat (promptolási stratégia).
+Ezek a tényezők jelölik ki a vizsgálatom \textit{tengelyeit}.
+Az LLM-ek kimenete alapértelmezés szerint véletlenszerű is, ezt a hatást viszont nem vizsgálom.
 
-Ez azonban nem egy egyszerű kérdés, mert az LLM-ek megítélése több tényezőtől függően nagy mértékben változhat.
-Függhet a modell tulajdonságaitól, például a méretétől, a kvantálásától (quantization),
-a modellcsaládtól, illetve attól, hogy a válasz előtt „gondolkozhat”-e (thinking).
-Függhet továbbá attól is, hogy a kérdés milyen módon lett megfogalmazva, vagy akár hogy a feladat mellé kap-e mintapéldákat (promptolási stratégia).
-Emellett az LLM-ek alapértelmezett mintavételezés mellett nem determinisztikusak (temperature).
+A CoReEval ezeket a tényezőket nem választotta szét egymástól.
+API-n keresztül elérhető és kisebb, helyben futtatott modelleket vizsgált, így például a modellméret hatása nem különíthető el a modellcsaládétól.
+A kvantálással nem foglalkozik, és a hibrid modellek két módját sem veti össze.
+Azt sem vizsgálja, hogy a modellek pontszámai milyen mérhető kódtulajdonságokkal mozognak együtt.
+A dolgozatom ezekre a hiányokra épít: helyben futtatott, nyílt súlyú modelleket vizsgálok,
+amelyeket úgy választottam ki, hogy párjaik lehetőleg egyetlen tulajdonságban térjenek el.
+Így egy-egy tulajdonság hatása a többitől elkülönítve is mérhető.
 
-Ezek a tényezők a vizsgálatom „tengelyeit” is kijelölik, hisz ha egy LLM ítélete függ a modell méretétől, kvantálásától, családjától,
-gondolkodási módjától vagy a prompt formájától, akkor a központi kérdésre csak úgy adható megfelelően kielégítő válasz,
-ha ezeknek a tényezőknek a hatását egyenként is megvizsgálom. Önmagában az sem elegendő, ha egy modell pontszáma jól egyezik az emberekével.
-Tudni kell azt is, hogy milyen kódtulajdonságokkal mozog együtt az ítélete, és hogy jobb-e a korábbi, nem LLM-alapú módszereknél.
-A központi kérdés mellett ezért a következő mellékkérdéseket is felteszem:
-\begin{itemize}
-	\item Milyen mértékben korrelálnak a modellek pontszámai a humán pontszámokkal?
-	\item Mely modellek teljesítenek jobban illetve rosszabbul a korreláció szerint?
-	\item Számít-e a modell mérete?
-	\item Van-e különbség ugyanannak a modellnek a különböző kvantált változatai között?
-	\item Milyen hatással van az eredményekre, ha a modell gondolkodhat válaszadás előtt?
-	\item Milyen befolyással bír a különböző promptolási stratégiák alkalmazása?
-	\item Mely kódmetrikákkal mozognak együtt a modellek, illetve a humán értékelők pontszámai?
-	\item Hogyan teljesítenek a modellek a korábban publikált megközelítésekhez képest?
-\end{itemize}
+Hogy a modellek mi alapján hozzák meg az ítéleteiket, azt közvetlenül nem lehet megfigyelni.
+Azt viszont meg lehet vizsgálni, hogy a pontszámaik milyen mérhető kódtulajdonságokkal mozognak együtt.
+Ha ezek egyeznek az emberi pontszámokkal együtt mozgó tulajdonságokkal, az a modellek és az emberek hasonló szempontjaira utalhat.
+
+A központi kérdést tehát több mellékkérdésre bontom.
+Először azt vizsgálom, mennyire korrelálnak a modellek pontszámai az emberi pontszámokkal, és mely modellek teljesítenek jobban vagy rosszabbul.
+Ezután azt elemzem, hogyan befolyásolják ezt az egyezést a fent bemutatott tengelyek.
+Megvizsgálom azt is, mely kódmetrikákkal mozognak együtt a modellek és az emberi értékelők pontszámai.
+Végül pedig azt vizsgálom, hogyan viszonyulnak a modellek a korábban publikált, nem LLM-alapú megközelítésekhez.
 
 \cleardoublepage
 
