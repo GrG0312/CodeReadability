@@ -47,150 +47,260 @@
 \chapter{Bevezetés}
 \label{ch:intro}
 
-Napjainkban a szoftverfejlesztők munkájának jelentős részét a meglévő kód megértése, az új kód írása és a kód karbantartása teszi ki.
-Emiatt különösen fontos, hogy egy projekt kódja olvasható legyen.
-Felmerül viszont a kérdés, hogy mit jelent az, hogy egy kód \textit{olvasható}.
-A kódolvashatóság nehezen számszerűsíthető, hiszen megítélése nagymértékben szubjektív:
-két szakember ugyanazt a kódrészletet gyakran egészen eltérően értékeli.
+Napjainkban a szoftverfejlesztők munkájának jelentős részét a meglévő kód
+megértése, az új kód írása és a kód karbantartása teszi ki. %szb: az új kód írása nem épphogy picit kakukktojás? Nem a kód megértés és karbantartás miatt jön szóba a readability check?
+Emiatt különösen fontos, hogy egy projekt kódja %szb: forráskódja
+olvasható legyen. Felmerül viszont a kérdés, hogy mit jelent az, hogy egy kód
+\textit{olvasható}. %szb: túl kevéssé szakmai szófordulat, ilyet nem szokás tudományos szövegbe írni
+A kódolvashatóság nehezen számszerűsíthető, hiszen megítélése nagymértékben
+szubjektív: két szakember %szb: programozó
+ugyanazt a kódrészletet gyakran egészen eltérően értékeli. %szb: még kicsit 1-2 mondat erejéig észletezhetnéd, hogy miért szubjektív a kódolvashatóság
 
-Ennek ellenére számos kutatómunka foglalkozik olyan módszerekkel, amelyek az olvashatóság számszerűsítését kísérlik meg.
-Az elsők között Buse és Weimer próbálta meg gépi tanulási modellel, szintaktikai kódjellemzők alapján becsülni a kód olvashatóságát \cite{buse2008metric}.
-Posnett és munkatársai később megmutatták, hogy egy jóval kevesebb jellemzőre épülő, egyszerűbb modell is jobban teljesít \cite{posnett2011simpler}.
-Dorn már a kód vizuális megjelenését is figyelembe vette, és ehhez egy nagyobb, több programozási nyelvet felölelő adathalmazt használt.
+Ennek ellenére %szb: mivel új bekezdést kezdtél, megtörted a gondoltatmenetet. Konkretizálni kéne az "Ennek" szót
+számos kutatómunka foglalkozik olyan módszerekkel, %szb: esetleg: javasol módszereket/megoldásokat
+amelyek az olvashatóság számszerűsítését kísérlik meg. Az elsők között Buse és
+Weimer próbálta meg gépi tanulási modellel, szintaktikai kódjellemzők alapján
+becsülni a kód olvashatóságát \cite{buse2008metric}. Posnett és munkatársai
+később megmutatták, hogy egy jóval kevesebb jellemzőre épülő, egyszerűbb modell
+is jobban teljesít \cite{posnett2011simpler}. %szb: konkretizáld: minél teljesít jobban?
+Dorn már a kód vizuális megjelenését is figyelembe vette, és ehhez egy nagyobb,
+több programozási nyelvet felölelő adathalmazt használt.
 % TODO: Dorn-ra közvetlen hivatkozás
-Scalabrino és munkatársai pedig az azonosítók és a megjegyzések szövegéből számolt jellemzőkkel egészítették ki a korábbiakat,
-majd ezeket egyetlen átfogó modellben egyesítették \cite{scalabrino2016improving,scalabrino2018comprehensive}.
-Egy másik vizsgálatukban viszont azt is kimutatták, hogy ezek a mérőszámok alig mondanak valamit arról,
-hogy a fejlesztők valóban megértik-e a kódot \cite{scalabrino2017understandability}.
+Scalabrino és munkatársai pedig az azonosítók és a megjegyzések szövegéből
+számolt jellemzőkkel egészítették ki a korábbiakat, majd ezeket egyetlen átfogó
+modellben egyesítették
+\cite{scalabrino2016improving,scalabrino2018comprehensive}. %szb: egyetlen átfogó modell, mégis 2 cikk? Ez nem két munka lenne?
+Egy másik vizsgálatukban viszont azt is kimutatták, hogy ezek a mérőszámok alig
+mondanak valamit arról, %szb: túl informális
+hogy a fejlesztők valóban megértik-e a kódot
+\cite{scalabrino2017understandability}.
 
-Az utóbbi években a szoftverfejlesztés gyakorlatát jelentősen átalakította a nagy nyelvi modellek
-(\textit{Large Language Model}, a továbbiakban LLM) elterjedése.
-Az LLM-ek számos szoftvertechnológiai feladatot képesek értelmezni és megoldani, például kódrészleteket is meg tudnak magyarázni \cite{szalontai2025readability}.
-Kézenfekvő tehát a kérdés, hogy mennyire képesek az LLM-ek a kód olvashatóságát megítélni, és mennyire használhatók olvashatósági bíráként?
+Az utóbbi években a szoftverfejlesztés gyakorlatát jelentősen átalakította a
+nagy nyelvi modellek (\textit{Large Language Model}, a továbbiakban LLM)
+elterjedése. Az LLM-ek számos szoftvertechnológiai feladatot képesek értelmezni
+és megoldani, például kódrészleteket is meg tudnak magyarázni
+\cite{szalontai2025readability}. %szb: aranyos a cite, köszi, de itt nem releváns. Itt a modelleket kéne hivatkozni először. A kódmagyarázat pedig kicsit túl random, ránézésre nincs köze a témához
+Kézenfekvő tehát a kérdés, hogy mennyire képesek az LLM-ek a kód olvashatóságát
+megítélni, és mennyire használhatók olvashatósági bíráként?
 % TODO: itt az volt a visszajelzés, hogy hiányoznak az LLM-ekről hivatkozások.
 % Milyen hivatkozást kéne itt egyáltalán használni? Ez csak ilyen general info.
-Erre Ouédraogo és munkatársai CoReEval benchmarkja már adott egy első választ:
-a szerzők az LLM-ek pontszámait ugyanazokon az emberi értékelésű adathalmazokon vetették össze az emberekével, és csak gyenge egyezést találtak.
-Java-kódon például az LLM-ek egy klasszikus, jellemzőalapú modellnél sem teljesítettek jobban \cite{ouedraogo2025coreeval}.
+% válasz: nem telesen értem. Ha egy adott munkát hivatkozol akkor a cikket cite-old. Ha egy tématerületet, akkor pár reprezentatív cikket a tématerületről.
+%javaslat: először írd le, hogy megjelentek az LLM-ek (cite-okkal a konkrét LLMeket bemutató cikkekre), amik átformálták a szoftvertechnológiát.
+%			említheted a open weight, kifejezetten szoftvertechnológiai célra megalkotott modelleket (pl. codellama elsőként, majd wizardcoder, deepseekcoder, magicoder, wavecoder, codestral, stb)
+% 			utána írd le, hogy mely területeken használják őket (cite-okkal)
+%			majd írd le, hogy voltak akik kifejezetten az olvashatóságot vizsgálják (cite a leghasonlkóbb cikkre)
+Erre Ouédraogo és munkatársai CoReEval benchmarkja már adott egy első választ: a
+szerzők az LLM-ek pontszámait ugyanazokon az emberi értékelésű adathalmazokon
+vetették össze az emberekével, és csak gyenge egyezést találtak. Java-kódon
+például az LLM-ek egy klasszikus, jellemzőalapú modellnél sem teljesítettek
+jobban \cite{ouedraogo2025coreeval}.
 
-Egy LLM viselkedését ugyanakkor számos tényező befolyásolja, és a kimenete a beállításoktól függően változhat.
-Ugyanaz a modell gyakran több méretben is elérhető, és különböző mértékben kvantálva is futtatható (\textit{quantization}).
-Az úgynevezett hibrid modellek válaszadás előtt akár gondolkodhatnak is (\textit{thinking}), de ez a mód ki is kapcsolható.
-Ezen felül a modellcsaládok is eltérhetnek egymástól.
-Végül az is számíthat, hogyan fogalmazzuk meg a modell feladatát, és kap-e mellé mintapéldákat (promptolási stratégia).
-Ezek a tényezők jelölik ki a vizsgálatom \textit{tengelyeit}.
-Az LLM-ek kimenete alapértelmezés szerint véletlenszerű is, ezt a hatást viszont nem vizsgálom.
+%szb: ez a bekezdés nagyon megtöri a gondolatmenetet
+Egy LLM viselkedését ugyanakkor %szb: nem szerencsés bekezdés első mondatában "ugyanakkor"-t használni. Ugyanaz a bajom, mint korábban: az új bekezdés megszakít egy gondolatmenetet, így ez fura
+számos tényező befolyásolja, és a kimenete a beállításoktól függően változhat.
+Ugyanaz a modell gyakran több méretben is elérhető, %szb: akkor az már nem ugyanaz a modell
+és különböző mértékben kvantálva %szb: itt a számábrázolás szót szerintem jó ha említed
+is futtatható (\textit{quantization}). Az úgynevezett hibrid modellek %szb: szerintem nem a hibrid a jó kulcsszó itt. A readoning modell az, ami gondolkodik, nem a hibrid.
+válaszadás előtt akár gondolkodhatnak is (\textit{thinking}), de ez a mód ki is
+kapcsolható. %szb: na igen, a ki/bekapcsolhatóság az, ami hibriddé teszi őket - ezt pedig csak egy mellékes dologként említed, nem mint a hibrid tulajdonság magyarázásaként
+Ezen felül a modellcsaládok is eltérhetnek egymástól. %szb: ez eléggé magától értetődő, nemigen van információtartalma ennek a mondatnak
+Végül az is számíthat, hogyan fogalmazzuk meg a modell feladatát, és kap-e mellé
+mintapéldákat (promptolási stratégia). Ezek a tényezők jelölik ki a vizsgálatom
+\textit{tengelyeit}. %szb: még nem volt szó a vizsgálatodról, de már bizonyos aspektusait mégis bemutatod. Előbb kell leírni a munkád lényegét madártávlatból, és csak azt kövessék a konkrtéumok
+Az LLM-ek kimenete alapértelmezés szerint véletlenszerű is, ezt a hatást viszont
+nem vizsgálom. %szb: nem fontos itt kiemelni, hogy mit nem csinálsz. Sokminden mást is nem vizsgálsz, pl. q6-os quantizationt, azt mégse emeled ki. 
 
-A CoReEval ezeket a tényezőket nem választotta szét egymástól.
-API-n keresztül elérhető és kisebb, helyben futtatott modelleket vizsgált, így például a modellméret hatása nem különíthető el a modellcsaládétól.
+A CoReEval ezeket a tényezőket nem választotta szét egymástól. %szb: ez nem igaz, pl. a prompt stratégiából 4 különbözőt is vizsgált.
+API-n keresztül elérhető és kisebb, helyben %szb: lokálisan
+futtatott modelleket vizsgált, %szb: mármint a coreeval? a claude 3 sonnet-et biztos nem lokálisan futtaták, de a GPT-4o-t se. Illetve nem tudjuk, hogy ezek mekkora modellek
+%szb: közben asszem rájöttem, hogy API-n keresztül elérhető és a kicsi az két külön kategória, szóval az előbbi kommentem nem direktbe releváns. 
+%Viszont elsőre így értettem, és értetlenkedtem, szóval valószínűleg szükséges lenne pontosítani a fogalmazásomn, hogy kevésbé legyen félreérthető
+így például a modellméret hatása nem különíthető el a modellcsaládétól. %szb: nem ezért nem különíthető el. 
+%Ha lokálisan futtatsz modelleket, és ugyanazon modellcsaládból több méretet is kiértékelsz, akkor a modellméret hatása kiderül
+%Ha lokálisan futtatsz modelleket, és ugyanazon modellcsaládból csak 1 méretet értékelsz ki, akkor a modellméret hatása nem derül ki
 A kvantálással nem foglalkozik, és a hibrid modellek két módját sem veti össze.
-Azt sem vizsgálja, hogy a modellek pontszámai milyen mérhető kódtulajdonságokkal mozognak együtt.
-A dolgozatom ezekre a hiányokra épít: helyben futtatott, nyílt súlyú modelleket vizsgálok,
-amelyeket úgy választottam ki, hogy párjaik lehetőleg egyetlen tulajdonságban térjenek el.
-Így egy-egy tulajdonság hatása a többitől elkülönítve is mérhető.
+Azt sem vizsgálja, hogy a modellek pontszámai milyen mérhető kódtulajdonságokkal
+mozognak együtt. A dolgozatom ezekre a hiányokra %szb: hiányosságok
+épít: helyben futtatott, nyílt súlyú modelleket vizsgálok, amelyeket úgy
+választottam ki, hogy párjaik %szb: mire gondolsz párjaik alatt?
+lehetőleg egyetlen tulajdonságban térjenek el. Így egy-egy tulajdonság hatása a
+többitől elkülönítve is mérhető. 
+%szb: nagyon összemosódik a te munkád felvezetése a korábbi munka szidásával. máskogy közelíteném meg. 
+% a coreeval-t inkább röviden mutasd be, és 1-2 hiényosságát emeld ki, de nem kell túlrészletezni. 
+% ahelyett, hogy most leírod, hogy mit NEM csinálnak és te pont ezeket csinálod, inkább írd le, hogy te mit csinálsz direktbe. 
+% Ez mindig egy külön bekezdsés szokott lenni. angol cikkekben jellemzően ilyenek vannak, hogy "In this paper, we present .,.." jellegű és kezdetű bekezdések
 
-Hogy a modellek mi alapján hozzák meg az ítéleteiket, azt közvetlenül nem lehet megfigyelni.
-Azt viszont meg lehet vizsgálni, hogy a pontszámaik milyen mérhető kódtulajdonságokkal mozognak együtt.
-Ha ezek egyeznek az emberi pontszámokkal együtt mozgó tulajdonságokkal, az a modellek és az emberek hasonló szempontjaira utalhat.
+Hogy a modellek mi alapján hozzák meg az ítéleteiket, azt közvetlenül nem lehet
+megfigyelni. %szb: ez kritizálható. a reasdoning modellek reasoning chain-jei igenis utalhatnak erre + egy bármely modell attention map-je is
+Azt viszont meg lehet vizsgálni, %szb: ne úgy írds, hogy mit lehet megcsináklni, hanem hogy mit csinálsz
+hogy a pontszámaik milyen mérhető kódtulajdonságokkal mozognak együtt. Ha ezek
+egyeznek az emberi pontszámokkal együtt mozgó tulajdonságokkal, az a modellek és
+az emberek hasonló szempontjaira utalhat. %szb: kicsit nehezn érthető szerintem ez a rész, túlságosan körülírni próbálod a lényeget, és a lényeg meg homályos marad picit
 
-A központi kérdést tehát több mellékkérdésre bontom.
-Először azt vizsgálom, mennyire korrelálnak a modellek pontszámai az emberi pontszámokkal, és mely modellek teljesítenek jobban vagy rosszabbul.
-Ezután azt elemzem, hogyan befolyásolják ezt az egyezést a fent bemutatott tengelyek.
-Megvizsgálom azt is, mely kódmetrikákkal mozognak együtt a modellek és az emberi értékelők pontszámai.
-Végül pedig azt vizsgálom, hogyan viszonyulnak a modellek a korábban publikált, nem LLM-alapú megközelítésekhez.
+A központi kérdést tehát több mellékkérdésre bontom. Először azt vizsgálom,
+mennyire korrelálnak a modellek pontszámai az emberi pontszámokkal, és mely
+modellek teljesítenek jobban vagy rosszabbul. Ezután azt elemzem, hogyan
+befolyásolják ezt az egyezést a fent bemutatott tengelyek. Megvizsgálom azt is,
+mely kódmetrikákkal mozognak együtt a modellek és az emberi értékelők
+pontszámai. Végül pedig azt vizsgálom, hogyan viszonyulnak a modellek a korábban
+publikált, nem LLM-alapú megközelítésekhez.
 
 \cleardoublepage
 
 \chapter{Kapcsolódó munkák}
 \label{ch:related}
 
-Ez a fejezet a kódolvashatóság mérésével foglalkozó kutatásokat tekinti át.
-Először az olvashatóság és az érthetőség fogalmát fogom tisztázni, majd
-ezt követik az emberi értékelésekből tanuló olvashatósági modellek és az ezekhez készített adathalmazok.
-Végül pedig azok a munkák következnek, amelyek a kód olvashatóságának és a nagy nyelvi modellek kapcsolatát mutatják be.
+Ez a fejezet a kódolvashatóság mérésével foglalkozó kutatásokat %szb: kutatómunkákat
+tekinti át. Először az olvashatóság és az érthetőség fogalmát fogom tisztázni, %szb: először a fejeztről írsz e/3-ban, majd e/1-re válasz. légy következetes. javaslom az e/1 kerülését (in general)
+majd ezt követik az emberi értékelésekből tanuló olvashatósági modellek és az
+ezekhez készített adathalmazok. Végül pedig azok a munkák következnek, amelyek a
+kód olvashatóságának és a nagy nyelvi modellek kapcsolatát mutatják be.
 
 \section{Az olvashatóság fogalma}
 \label{sec:related:definition}
 
-Buse és Weimer szerint az olvashatóság \textbf{egy emberi ítélet arról, mennyire könnyű megérteni egy szöveget} \cite{buse2008metric}.
+Buse és Weimer szerint az olvashatóság \textbf{egy emberi ítélet arról, mennyire
+könnyű megérteni egy szöveget} \cite{buse2008metric}.
 % ^ Ez eredetileg is benne volt, de most talán hangsúlyosabb, hogy ez a definíció, amiből kiindulunk.
-A fogalmat azért vezették le az emberi ítéletből, mert a természetes nyelvű szövegekhez hasonlóan a forráskódra is szerettek volna egy mérőszámot készíteni.
-Természetes nyelvű szövegeknél ilyen például a Flesch-Kincaid-index, amely a mondatok és a szavak hosszából becsüli meg egy szöveg olvashatóságát.
-Bővített cikkükben Buse és Weimer azt is rögzítik, mi nem tartozik a fogalomba.
-Brooks megkülönböztetésére építve a komplexitást a szoftver lényegi tulajdonságának tekintik, amely a megoldandó problémából adódik.
-Az olvashatóság ezzel szemben egy járulékos tulajdonság, amelyet a kódot író fejlesztő befolyásolhat.
-Hasonlóan elhatárolják az olvashatóságot a kódolási szabványoktól is, mert azok elsősorban az egységességet szolgálják \cite{buse2010learning}. % TODO: Brooks közvetlen hivatkozása ide jöhet majd
-Ezek az elhatárolások a mérés módját is meghatározták.
-Rövid, kontextus nélküli kódrészleteket pontoztattak, és a kód méretétől független jellemzőket kerestek.
+A fogalmat azért vezették le az emberi ítéletből, mert a természetes nyelvű
+szövegekhez hasonlóan a forráskódra is szerettek volna egy mérőszámot készíteni. %szb: nem értem a két tagmondat kapcsolatát
+Természetes nyelvű szövegeknél ilyen például a Flesch-Kincaid-index, amely a
+mondatok és a szavak hosszából becsüli meg egy szöveg olvashatóságát. Bővített
+cikkükben %szb: publikációjukban
+%szb: ja, és hiányzik a bővítettről a cite 
+Buse és Weimer azt is rögzítik, mi nem tartozik a fogalomba. Brooks %szb: az ki?
+megkülönböztetésére %szb: hogy mijére? ezt a megkülönböztetést is le kéne írni (bármi is legyen ez), hogy érthető legyen, hogy mire építünk
+építve a komplexitást %szb: kicsit random, hogy bevezeted a komplexitás fogalmát. Gondolom az volt a háttérben, hogy buseék azt mondták, hogy az olvashatóság 
+% nem a koplexitás, és így kerül ide az, hogy mi a komplexitás. Viszont akkor segítsd az olvasót, és ez legyen benne expliciten, ne csak az, hogy 
+%"buseék leírták, hogy mi nem tartozik bele + itt a komplexitás dfefiníciója"
+a szoftver lényegi tulajdonságának tekintik, amely a megoldandó problémából %szb: magyarul a probléma azt jelenti hogy baj, nehézség. Angolul a problem 2 jelentésű: feladat/probléma. Itt feladat
+adódik. Az olvashatóság ezzel szemben egy járulékos tulajdonság, amelyet a kódot
+író fejlesztő befolyásolhat. Hasonlóan elhatárolják az olvashatóságot a kódolási
+szabványoktól is, mert azok elsősorban az egységességet szolgálják
+\cite{buse2010learning}.
+% TODO: Brooks közvetlen hivatkozása ide jöhet majd <- szb: oda jöjjön, ahol először említed
+Ezek az elhatárolások a mérés módját is meghatározták. Rövid, kontextus nélküli
+kódrészleteket pontoztattak, és a kód méretétől független jellemzőket kerestek.
 
-A meghatározás az olvashatóságot a megértés könnyűségével írja le.
-A mérés viszont nem a megértést rögzíti, hanem azt, hogy az értékelő mennyire tartja könnyen érthetőnek a kódot.
-Posnett és munkatársai ezért élesebb határt húznak az olvashatóság és az érthetőség között.
-Párhuzamuk szerint az olvashatóság a szintaktikai, az érthetőség a szemantikai elemzésnek felel meg \cite{posnett2011simpler}.
-Scalabrino és munkatársai megfogalmazásában az olvashatóság azt méri, mekkora erőfeszítés kell a kódban lévő információ eléréséhez.
-Az érthetőség ezzel szemben azt írja le, mennyire összetett maga ez az információ \cite{scalabrino2018comprehensive}.
-Ouédraogo és munkatársai LLM-eket vizsgáló munkája is hasonlóan választja szét a két fogalmat.
-Náluk az olvashatóság a kód vizuális feldolgozhatóságának (elrendezés, behúzás, elnevezés), az érthetőség pedig a szándék, a logika és a viselkedés megértésének felel meg \cite{ouedraogo2025coreeval}.
+A meghatározás %szb: melyik meghatározás? ne feledd, az új bekezdés új gondolatmenetet vezet be
+az olvashatóságot a megértés könnyűségével írja le. A mérés %szb: milyen mérésre gondolsz?
+viszont nem a megértést rögzíti, %szb: márminthogy nem bináris yes/no? nem teljesen értem mire gondolsz ott, hogy nem a megértés, hanem a könnyen érthetőség
+hanem azt, hogy az értékelő mennyire tartja könnyen érthetőnek a kódot. Posnett
+és munkatársai ezért élesebb határt húznak az olvashatóság és az érthetőség
+között. Párhuzamuk szerint az olvashatóság a szintaktikai, az érthetőség a
+szemantikai elemzésnek felel meg \cite{posnett2011simpler}. Scalabrino és
+munkatársai megfogalmazásában az olvashatóság azt méri, mekkora erőfeszítés kell
+a kódban lévő információ eléréséhez. %szb: "információ elérése" - ez olyan abszrakt, nehezen felfogható
+Az érthetőség ezzel szemben azt írja le, mennyire összetett maga ez az
+információ %szb: most milyen információra kell gondolni?
+\cite{scalabrino2018comprehensive}. Ouédraogo és munkatársai LLM-eket vizsgáló
+munkája is hasonlóan választja szét a két fogalmat. Náluk az olvashatóság a kód
+vizuális feldolgozhatóságának (elrendezés, behúzás, elnevezés), az érthetőség
+pedig a szándék, a logika és a viselkedés megértésének felel meg
+\cite{ouedraogo2025coreeval}.
+%szb: ellentmondásban van a section címe és a tartalma. A cím arra utal, hogy lesz egy fogalom, amit max részletezel
+% ehelyett inkább ez egy elmélkedés arról, hogy ki mit mond az olvashatóságról, és hogyan viszonyul más fogalmakhoz.
+% nekem elég nehezen követhető, hogy mikor miről van szó
+% ahelyett, hogy leírod, hogy ki mit gondolt, sokkal jobb lenne, ha lenne egy alaposan végiggondolt gondolatmenet
+% amit nem aszerint struktúrálnál, hogy ki mit mondott, hanem a tények alapján. 
+% pl. Első bekezdés: Mi az olvashatóság, második: és mik a kapcsolódó fogalmak, amik mégsem de nem  nem az olvashatóság kategóriájába tartoznak? (cite-okkal alátámasztva)
 
-A két fogalom különbségét Scalabrino és munkatársai kísérleti úton is megvizsgálták.
-Vizsgálatukban 46 résztvevő tíz nyílt forrású Java-rendszer 50 metódusát próbálta megérteni.
-A résztvevők jelezték, hogy sikerült-e megérteniük a metódust, majd ellenőrző kérdésekre válaszoltak, amivel a tényleges megértés is mérhetővé vált.
-A metódusokhoz 121 metrikát számítottak ki, köztük a korábbi olvashatósági modellek jellemzőit és egy teljes olvashatósági modellt is.
-Egyetlen metrika sem mutatott érdemi összefüggést a megértéssel: a legerősebb Kendall-korreláció is csupán $|\tau| \approx 0{,}18$ volt.
-A szerzők rámutatnak arra is, hogy a két fogalom szubjektivitása is más forrásból ered.
-Az olvashatóságot a személyes ízlés és szokások, míg az érthetőséget pedig a fejlesztő előzetes tudása, például az API-k ismerete befolyásolja \cite{scalabrino2017understandability}.
+A két fogalom %szb: melyik két fogalom? volt olvashatóság, volt komplexitás, érthetőség, én már kicsit elvesztem ezen a ponton
+különbségét Scalabrino és munkatársai kísérleti úton is megvizsgálták.
+%szb: ez nagyon fura itt. Ez nem az olvashatóság definíciója fogalma, hanem scalabrinoék kutatómunkája. Ez abba a részbe való, ahol tételesen átmész kronológiailag az olvashaótsági modellek
+% történelmén. Scalabrinoék csak 1 a sok közül.
+Vizsgálatukban 46 résztvevő tíz nyílt forrású Java-rendszer 50 metódusát
+próbálta megérteni. A résztvevők jelezték, hogy sikerült-e megérteniük a
+metódust, majd ellenőrző kérdésekre válaszoltak, amivel a tényleges megértés is
+mérhetővé vált. A metódusokhoz 121 metrikát számítottak ki, köztük a korábbi
+olvashatósági modellek jellemzőit és egy teljes olvashatósági modellt is.
+Egyetlen metrika sem mutatott érdemi összefüggést a megértéssel: a legerősebb
+Kendall-korreláció is csupán $|\tau| \approx 0{,}18$ volt. A szerzők rámutatnak
+arra is, hogy a két fogalom szubjektivitása is más forrásból ered. Az
+olvashatóságot a személyes ízlés és szokások, míg az érthetőséget pedig a
+fejlesztő előzetes tudása, például az API-k ismerete befolyásolja
+\cite{scalabrino2017understandability}.
 
 \section{Olvashatósági modellek és adathalmazaik}
 \label{sec:related:models}
 
-Az olvashatóság automatikus becslésére épülő korai modellek mind felügyelt tanulással (\textit{supervised learning}) készültek.
-Mindegyikhez saját, emberek által pontozott adathalmazt gyűjtöttek.
-Az átlagos emberi pontszámokat pedig egy küszöb segítségével olvasható és nem olvasható címkékre alakították, majd ezeken osztályozó modellt tanítottak.
-A modellek időrendben követik egymást, és mindegyik az elődjének valamely gyengeségére próbált választ adni.
+Az olvashatóság automatikus becslésére épülő korai modellek mind felügyelt
+tanulással (\textit{supervised learning}) készültek. %szb: az LLMek előtt szinte minden osztályozó modellt felügyelt tanulással tanítottak, itt ez nem is kérdés.
+% sokkal érdekesebb kérdés, hogy milyen modelleket használtak
+Mindegyikhez saját, %szb: mit jelent, hogy saját?
+emberek által pontozott %szb: a forráskód pontozott, az adathalmaz annotált
+adathalmazt gyűjtöttek. Az átlagos emberi pontszámokat pedig egy küszöb
+segítségével olvasható és nem olvasható címkékre alakították, %szb: sztem a bináris szó hasznos lehet itt
+majd ezeken osztályozó modellt tanítottak. A modellek időrendben követik
+egymást, és mindegyik az elődjének valamely gyengeségére próbált választ adni.
 Az alábbi szakasz ebben a sorrendben mutatja be a modelleket és adathalmazaikat.
 
-\subsection{Soronkénti jellemzők}
+\subsection{Soronkénti jellemzők} %szb: fura a subsection név, kicsit lehetne részletesebb. csak a cím alapján nem derül ki számomra, hogy ez volt az első cikk a témában
 \label{sec:related:models:buse}
 
-Az első jelentős, emberi pontozáson alapuló olvashatósági adathalmaz Buse és Weimer nevéhez fűződik.
-120 informatikus hallgató egy ötfokozatú skálán pontozott 100 rövid Java-kódrészletet, ami összesen 12\,000 ítéletet eredményezett.
-A kódrészletek három egymást követő, egyszerű utasításból, a megjegyzéseket és üres sorokat is beszámítva átlagosan 7,7 sor álltak.
-Az olvashatóságot a résztvevőknek szándékosan nem definiálták, hogy a saját, intuitív felfogásukat kövessék \cite{buse2008metric}.
+Az első jelentős, emberi pontozáson alapuló olvashatósági adathalmaz Buse és
+Weimer nevéhez fűződik. 120 informatikus hallgató egy ötfokozatú skálán
+pontozott 100 rövid Java-kódrészletet, ami összesen 12\,000 ítéletet
+eredményezett. A kódrészletek három egymást követő, egyszerű utasításból, a
+megjegyzéseket és üres sorokat is beszámítva átlagosan 7,7 sor álltak. %szb: hiányos tagmondatok sokasága, és eredményként egy értelmetlen mondat
+Az olvashatóságot a résztvevőknek szándékosan nem definiálták, hogy a saját,
+intuitív felfogásukat kövessék \cite{buse2008metric}.
 
-Az értékelők közötti egyetértést a bővített cikk öt különböző statisztikával elemzi.
-A szerzők amellett érvelnek, hogy pontos útmutatás hiányában az abszolút pontszámnál meghatározóbb a relatív sorrend.
-Eszerint két értékelő akkor is egyetért, ha ugyanabba a sorrendbe állít két kódrészletet, de más pontszámot ad rájuk.
-Éppen ezért a \textbf{Spearman-féle rangkorrelációt} választották fő mérőszámnak.
-Egy átlagos értékelő és a csoportátlag közötti Spearman-korreláció 0,55 volt.
-A szerzők értelmezése szerint ez azt jelenti, hogy az emberek jelentős, de nem túlnyomó mértékben egyet értenek abban, milyen az olvasható kód.
-Az átlagolás pedig megőrzi a közös tényezőket, és kiszűri a személyes ízlésből adó eltéréseket \cite{buse2010learning}.
+Az értékelők közötti egyetértést a bővített cikk öt különböző statisztikával
+elemzi. %szb: a statisztika egy tudományág, nem világos mit akarsz mondani. Valami mérőszámokról van szó? vagy korrelációról? statisztikai módszerekről?
+A szerzők amellett érvelnek, hogy pontos útmutatás hiányában az abszolút
+pontszámnál meghatározóbb a relatív sorrend. Eszerint két értékelő akkor is
+egyetért, ha ugyanabba a sorrendbe állít két kódrészletet, de más pontszámot ad
+rájuk. %szb: nekem ez nem teljesen egyérelmű
+Éppen ezért a \textbf{Spearman-féle rangkorrelációt} választották fő
+mérőszámnak. Egy átlagos értékelő és a csoportátlag közötti Spearman-korreláció
+0,55 volt. A szerzők értelmezése szerint ez azt jelenti, hogy az emberek
+jelentős, de nem túlnyomó mértékben egyet értenek abban, milyen az olvasható
+kód. Az átlagolás pedig megőrzi a közös tényezőket, és kiszűri a személyes
+ízlésből adó eltéréseket \cite{buse2010learning}.
 
-A modell 25 jellemzőt használt, amelyek mindegyike egy egyszerű mennyiség soronkénti átlaga vagy maximuma volt.
-Ilyen például a sorhossz, az azonosítók száma és hossza, vagy az üres sorok száma.
-A kódrészleteket a 3,14-es átlagpontszámnál osztották két csoportra, mivel az átlagok eloszlásában a két csúcs között itt volt természetes határ.
-A legjobb osztályozók a kódrészletek 75--80\%-át sorolták helyesen \cite{buse2008metric}.
-A bővített cikk egyúttal összeveti az egyik osztályozó folytonos kimenetét is a humán átlaggal.
-Az így kapott 0,71-es Spearman-korreláció magasabb egy átlagos értékelőénél, viszont ez nem tekinthető független tesztnek,
-a modellt ugyanis éppen arra az átlagra tanították, amellyel összehasonlítják.
-A jellemzők közül az azonosítók és a karakterek soronkénti száma bizonyult a legerősebbnek,
-míg az átlagos azonosítóhossznak szinte semmilyen előrejelző ereje nem volt, a megjegyzések szerepe pedig csak mérsékeltnek bizonyult \cite{buse2010learning}.
+A modell %szb: melyik modell? visszatérő hiba, hogy a bekezdések in medias res kezdenek bele a sztoriba vagy folytatják azt
+25 jellemzőt %szb: esetleg: szintaktikai jellemzőt
+használt, amelyek mindegyike egy egyszerű mennyiség soronkénti átlaga vagy
+maximuma volt. Ilyen például a sorhossz, az azonosítók száma és hossza, vagy az
+üres sorok száma. A kódrészleteket a 3,14-es átlagpontszámnál osztották két
+csoportra, mivel az átlagok eloszlásában a két csúcs között itt volt természetes
+határ. A legjobb osztályozók %szb: magyartalan
+%szb: + itt az osztályozóklról is kéne írni, mert azokat még nem említetted
+a kódrészletek 75--80\%-át sorolták helyesen \cite{buse2008metric}. %szb: nem kell újra meg újrahivatkozni
+A bővített cikk egyúttal összeveti az egyik osztályozó folytonos kimenetét is a
+humán átlaggal. Az így kapott 0,71-es Spearman-korreláció magasabb egy átlagos
+értékelőénél, viszont ez nem tekinthető független tesztnek, a modellt ugyanis
+éppen arra az átlagra tanították, amellyel összehasonlítják. A jellemzők közül
+az azonosítók és a karakterek soronkénti száma bizonyult a legerősebbnek, %szb: hogy érted, hogy legerősebb? légy explicitebb: az korrelált leginkább
+míg az átlagos azonosítóhossznak szinte semmilyen előrejelző ereje nem volt, %szb: nem korrelált
+a megjegyzések
+%szb: itt a kommenekre gondolsz, csak valami fura fordítás eredménye ez?
+szerepe pedig csak mérsékeltnek bizonyult \cite{buse2010learning}.
 
 \subsection{Egyszerűbb modell kevesebb jellemzővel}
 \label{sec:related:models:posnett}
 
-Posnett és munkatársai ugyanezen a 100 kódrészleten két szempontból is bírálták a Buse-modellt.
-Egyrészt kifogásolták a modell méretét, ugyanis a bevett ökölszabály szerint egy prediktorhoz 10-20 megfigyelés szükséges,
-ami 100 kódrészlet esetén legfeljebb 5-10 jellemzőt jelent, nem 25-öt.
-Másrészt vitatták a méretfüggetlenséget is.
-Buse és Weimer szerint jellemzőik függetlenek a kódrészlet hosszától, Posnett és munkatársai azonban kimutatták,
+Posnett és munkatársai ugyanezen a 100 kódrészleten két szempontból is bírálták
+a Buse-modellt. %szb: mit jelent 100 kódrészleten bírálni?
+Egyrészt kifogásolták a modell méretét, ugyanis a bevett ökölszabály szerint egy
+prediktorhoz %szb: az mit jelent?
+10-20 megfigyelés szükséges, ami 100 kódrészlet esetén legfeljebb 5-10 jellemzőt
+jelent, nem 25-öt. %szb: ezt az ökölszabályt én nem ismerem, így ezt most annyira nem értettem
+Másrészt vitatták a méretfüggetlenséget is. Buse és Weimer szerint jellemzőik
+függetlenek a kódrészlet hosszától, Posnett és munkatársai azonban kimutatták,
 hogy közülük több is erősen korrelál a karakter- vagy szószámmal.
 
-Helyettük három jellemzőt javasoltak: a sorok számát, a Halstead-féle térfogatot és a bájtszintű entrópiát.
-Az ezekre épülő modellek a Buse-modellnél szignifikánsan jobban teljesítettek.
-A cikk az egyes metrikák és a humán átlag közötti Spearman-korrelációt is megadja,
-ami a Halstead-térfogat esetén $\rho = -0{,}64$, a tokenentrópiánál $\rho = +0{,}62$, a sorok számánál viszont csak $\rho = +0{,}23$.
-A szerzők értelmezése szerint azonos méret mellett a több és változatosabb token rontja az olvashatóságot,
-míg a több sor javítja, mert a tokenek jobban szétoszlanak \cite{posnett2011simpler}.
+Helyettük három jellemzőt javasoltak: a sorok számát, a Halstead-féle térfogatot %szb: sztem maradhat angolul, hacsak nem láttad máshol magyarul, mert akkor maradhat magyarul
+és a bájtszintű entrópiát. %szb: bájt? mármint a lefordított forráskód bárjaira gondolsz?
+Az ezekre épülő modellek a Buse-modellnél szignifikánsan jobban teljesítettek. A
+cikk az egyes metrikák és a humán átlag közötti Spearman-korrelációt is megadja, %szb: nagyon fura és szokatlan kifejezés hogy a cikk megadja
+ami a Halstead-térfogat esetén $\rho = -0{,}64$, a tokenentrópiánál $\rho =
++0{,}62$, a sorok számánál viszont csak $\rho = +0{,}23$. A szerzők értelmezése
+szerint %szb: ezt máshol is használod, nem szükséges. egyértelmű, hogy a szerzők szerint
+azonos méret mellett a több és változatosabb token rontja az olvashatóságot, míg
+a több sor javítja, mert a tokenek jobban szétoszlanak
+\cite{posnett2011simpler}.
 
 %%%
 % Random fun activity:
@@ -207,31 +317,53 @@ míg a több sor javítja, mert a tokenek jobban szétoszlanak \cite{posnett2011
 \subsection{Vizuális és szöveges jellemzők}
 \label{sec:related:models:visualandtext}
 
-Dorn modellje a kód vizuális megjelenését is figyelembe vette, például a behúzás szabályosságát és az egymás alá igazított műveleteket.
-Ehhez Dorn a korábbiaknál jóval nagyobb és változatosabb adathalmazt állított össze:
-360 kódrészlet Java, Python és CUDA nyelven, nyelvenként egyenlő arányban 10, 30 és 50 soros részletekkel.
-A pontszámokat 5468 értékelő adta, köztük 1800 ipari fejlesztő.
-Egy értékelő azonban átlagosan csak 14 kódrészletet látott.
-Emiatt a pontszámok közötti különbségek részben az értékelők közötti eltérésekből is adódhatnak \cite{scalabrino2018comprehensive}. % TODO: Dorn saját munkájára közvetlen hivatkozás
+Dorn modellje a kód vizuális megjelenését is figyelembe vette, például a behúzás
+szabályosságát és az egymás alá igazított műveleteket. Ehhez Dorn a korábbiaknál
+jóval nagyobb és változatosabb adathalmazt állított össze: 360 kódrészlet Java,
+Python és CUDA nyelven, nyelvenként egyenlő arányban 10, 30 és 50 soros
+részletekkel. A pontszámokat 5468 értékelő adta, köztük 1800 ipari fejlesztő.
+Egy értékelő azonban átlagosan csak 14 kódrészletet látott. Emiatt a pontszámok
+közötti különbségek részben az értékelők közötti eltérésekből is adódhatnak %szb: még itt írhatnál dornékról, hogy ők milyen teljesítményt (pl. korrelációkat) értek el, stb.
+\cite{scalabrino2018comprehensive}.
+% TODO: Dorn saját munkájára közvetlen hivatkozás
 
-Scalabrino és munkatársai abból a feltevésből indultak ki, hogy az azonosítók és a megjegyzések jelentést hordoznak.
-Mivel a korábbi kódrészletek gyakran nem alkottak teljes kódegységet, a szöveges jellemzők egy része rajtuk nem volt kiszámítható.
-Ezért saját adathalmazt hoztak létre négy nyílt forrású Java-projekt 10-50 soros metódusaiból.
-A 200 metódust nem véletlenszerűen, hanem jellemzőik alapján válogatták össze, hogy egymástól minél jobban különbözzenek.
-Mindegyiket kilenc hallgató értékelte.
-A javasolt szöveges jellemzők közé tartozik a megjegyzések és az azonosítók szóegyezése (CIC) és a szótári szavakból álló azonosítók aránya (ITID).
-További példa lehet még a kódblokkok szóhasználatának koherenciája (TC) és a megjegyzések Flesch-Kincaid-index szerinti olvashatósága (CR).
-A szöveges és a szerkezeti jellemzők kölcsönösen kiegészítik egymást: a kódrészletek 12--21\%-át például csak a szöveges jellemzőkre épülő modell sorolta be helyesen \cite{scalabrino2016improving}.
+Scalabrino és munkatársai abból a feltevésből indultak ki, hogy az azonosítók és
+a megjegyzések %szb: ismét: ez nem komment?
+jelentést hordoznak. Mivel a korábbi kódrészletek gyakran nem alkottak teljes
+kódegységet, a szöveges jellemzők egy része rajtuk nem volt kiszámítható. Ezért
+saját adathalmazt hoztak létre négy nyílt forrású Java-projekt 10-50 soros
+metódusaiból. A 200 metódust nem véletlenszerűen, hanem jellemzőik alapján
+válogatták össze, hogy egymástól minél jobban különbözzenek. Mindegyiket kilenc
+hallgató értékelte. A javasolt szöveges jellemzők közé tartozik a megjegyzések
+és az azonosítók szóegyezése (CIC) %szb: sztem nem fontos az általuk bevezetett rövidítéseket említeni. 
+%Angol kifejezéseket rövidítenek, amit nem írsz le, és nem is használod a későbbiekben ezeket, így nem adnak túl sokat...
+és a szótári szavakból álló azonosítók aránya (ITID). További példa lehet még a
+kódblokkok szóhasználatának koherenciája (TC) és a megjegyzések
+Flesch-Kincaid-index szerinti olvashatósága (CR). A szöveges és a szerkezeti
+jellemzők kölcsönösen kiegészítik egymást: a kódrészletek 12--21\%-át például
+csak a szöveges jellemzőkre épülő modell sorolta be helyesen
+\cite{scalabrino2016improving}.
 
-A folyóiratban megjelent változat valamennyi addigi jellemzőt egyetlen modellben egyesített.
-Ez a modell a három adathalmaz 660 kódrészletén átlagosan 84,4\%-os pontosságot és 0,867-es AUC-t (\textit{Area Under the ROC Curve}) ért el.
-Az összevont tesztben a modell minden korábbi jellemzőkészletnél szignifikánsan jobban teljesített.
-A szöveges jellemzők közül a megjegyzések olvashatósága (CR) bizonyult a legjobb előrejelzőnek \cite{scalabrino2018comprehensive}.
-Kutatómunkám során e három adathalmaz Java-kódrészleteit használom.
+A folyóiratban megjelent változat %szb: nem szokás említeni a megjelenítés helyét. publikáció az publikáció, nem kell túlgondolni
+%szb: közben sejtem, hogy azt akarod kifejezni, hogy a kövi munkájuk. Akkor írd azt, hogy munkájuk folytatásaként vagy kövi munkájukban vagy ilyesmi
+valamennyi addigi jellemzőt egyetlen modellben egyesített. Ez a modell a három
+adathalmaz 660 kódrészletén átlagosan 84,4\%-os pontosságot és 0,867-es AUC-t
+(\textit{Area Under the ROC Curve}) ért el. %szb: esetleg korrelációt nem tudsz említeni? vonatkozik ez mindegyik itteni cikkre, hisz a buse meg posnettnél azok voltak. 
+%kicsit egységesebb lenne, ha mindenhol lenne korreláció pl.
+Az összevont tesztben a modell minden korábbi jellemzőkészletnél szignifikánsan
+jobban teljesített. A szöveges jellemzők közül a megjegyzések olvashatósága (CR)
+bizonyult a legjobb előrejelzőnek \cite{scalabrino2018comprehensive}.
+Kutatómunkám során e három %szb: ez így fura, mert a 3 úgy jön ki, hogy az előző section + ez a section említett adathalmazai... Az olvasónak nem egyértelmű, mire gondolsz. 
+%Ink sztem ezt kihagyhatod, aztán majd a módszerttanban leírod, hogy milyen adathalmazt használsz
+adathalmaz Java-kódrészleteit használom.
 
 A \ref{tab:related:models}. táblázat a bemutatott modelleket foglalja össze.
-Fontos hangsúlyozni, hogy a közölt eredmények közvetlenül nem vethetők össze egymással: a modelleket adathalmazonként tanították és keresztvalidációval értékelték, a pontosság és az AUC pedig bináris címkékre vonatkozik.
-Folytonos pontszámon alapuló rangkorrelációt csak Buse és Weimer bővített cikke közöl, az is a tanítóadaton számított érték.
+Fontos hangsúlyozni, hogy a közölt eredmények közvetlenül nem vethetők össze %szb: kicsit szebb lenne egy ilyesmi kezdetű mondat:
+% Bár a különböző olvashatósági modellek szerzői eltérő módon értékelték ki a modellek teljesítményét, ... 
+egymással: a modelleket adathalmazonként tanították és keresztvalidációval
+értékelték, a pontosság és az AUC pedig bináris címkékre vonatkozik. Folytonos
+pontszámon alapuló rangkorrelációt csak Buse és Weimer bővített cikke közöl, az
+is a tanítóadaton számított érték.
 
 \begin{table}[htb]
 	\centering
@@ -263,43 +395,88 @@ Folytonos pontszámon alapuló rangkorrelációt csak Buse és Weimer bővített
 	\label{tab:related:models}
 \end{table}
 
+%szb: még van 1-2 olvashatósághoz kötehtő cikk az LLMek előtt, azokat is szerintem említeni kéne
+% ezekre gondolok pl.:
+% Mi, Qing, et al. “Improving code readability classification using convolutional neural networks.” Information and Software Technology 104
+%(2018): 60-71.
+%Qing Mi, Yiqun Hao, Liwei Ou, and Wei Ma. 2022. Towards using visual, semantic and structural features to improve code readability
+%classification. J. Syst. Softw. 193, C (Nov 2022). https://doi.org/10.1016/j.jss.2022.111454
+%Sergeyuk, Agnia, et al. “Reassessing java code readability models with a human-centered approach.” Proceedings of the 32nd IEEE/ACM
+%international conference on program comprehension. 2024.
+%Susanto, Budi, Ridi Ferdiana, and Teguh Bharata Adji. “Predicting Multiclass Java Code Readability: A Comparative Study of Machine
+%Learning Algorithms.” International Journal of Advanced Computer Science & Applications 16.4 (2025): 1055. 
+% --- főleg a Mi Qing-esek asszem
+
 \section{Nagy nyelvi modellek és a kód olvashatósága}
 \label{sec:related:llm}
 
-A nagy nyelvi modellek és a kódolvashatóság kapcsolata két irányból közelíthető meg.
-Az egyik irány arra kérdez rá, hogy a kód olvashatósága miként befolyásolja az LLM-ek teljesítményét.
-Szalontai és munkatársai például azt vizsgálták, hogy az olvashatóbb kódot jobban meg tudják-e magyarázni az LLM-ek.
-A HumanEvalExplain benchmark 164 rövid Python-programján hat nyílt modellt futtattak, 1,5 és 70 milliárd paraméter közötti méretben.
-A modell először magyarázatot írt a kódról, majd ebből a magyarázatból próbálta meg újra előállítani az eredeti kódot, amelyet tesztesetekkel ellenőriztek.
-Azoknál a programoknál, amelyeket sikeresen magyaráztak, a Posnett-féle olvashatósági pontszám hat modellből öt esetében szignifikánsan magasabb volt.
-A siker előrejelzésében a sorhossz, a Halstead-térfogat és az entrópia bizonyult meghatározónak \cite{szalontai2025readability}.
+A nagy nyelvi modellek és a kódolvashatóság kapcsolata két irányból közelíthető
+meg. Az egyik irány arra kérdez rá, hogy a kód olvashatósága miként befolyásolja
+az LLM-ek teljesítményét. %szb: szerintem ez a kevésbé érdekes irány, ezért ez mehetne másodiknak/utolsónak, érdekessének
+Szalontai és munkatársai például azt vizsgálták, hogy az olvashatóbb kódot
+jobban meg tudják-e magyarázni az LLM-ek. A HumanEvalExplain benchmark %szb: hivatkozd (mueinginghoff vagy kiafranc, 2023, octopack)
+164 rövid Python-programján hat nyílt modellt futtattak, 1,5 és 70 milliárd
+paraméter közötti méretben. A modell először magyarázatot írt a kódról, majd
+ebből a magyarázatból próbálta meg újra előállítani az eredeti kódot, amelyet
+tesztesetekkel ellenőriztek. %szb: a benchmark működését nem kell magyaráznod
+Azoknál a programoknál, amelyeket sikeresen magyaráztak, a Posnett-féle
+olvashatósági pontszám hat modellből öt esetében szignifikánsan magasabb volt. A
+siker előrejelzésében %szb: előrejelzés nem jó szó. Tudom, angolul szokás használni a predict-et, kb. "korrelál" jelentéssel, de magyarul nemigen hallottam még
+a sorhossz, a Halstead-térfogat és az entrópia bizonyult meghatározónak
+\cite{szalontai2025readability}.
 
-A másik irány azt kérdezi, hogy mennyire képesek az LLM-ek maguk megítélni a kód olvashatóságát.
-Ezt a kérdést Ouédraogo és munkatársai CoReEval benchmarkja vizsgálja a legközvetlenebbül.
-A benchmark 656 kódrészletet tartalmaz, amelyek a fent bemutatott három adathalmazból származnak, három nyelven (Java, Python, CUDA).
-A szerzők tíz modellt értékeltek ki: négyet API-n keresztül (például GPT-4o, Claude Sonnet 3), hatot pedig helyben futtatva (4-7 milliárd paraméter).
-Négyféle promptolási stratégiát használtak: zero-shot, few-shot, lépésenkénti gondolkodás, valamint több szimulált szakértő konszenzusa a promptban.
-Ezen felül két értékelői szerepet (\textit{persona}, hallgató és senior fejlesztő) és kilenc dekódolási beállítást is kipróbáltak.
-A modellek 0 és 20 közötti pontszámot adtak egy rövid indoklással együtt.
-A pontszámokat a szerzők az összehasonlítás érdekében egy 1-től 5-ig terjedő skálára konvertálták.
+A másik irány %szb: tudományos szövegben nem teheted meg, hogy az 1. bekezdésben leírod, hogy 2 irány van, és utána ott csak az egyiket írod le, majd töröd a bekezdést és újat kezdesz
+% mikor újat kezdesz, az olvasó csak néz egy nagyot, hogy "what? melyik másik irány?"
+azt kérdezi, %szb: vizsgálja
+hogy mennyire képesek az LLM-ek maguk megítélni a kód olvashatóságát. Ezt a
+kérdést Ouédraogo és munkatársai CoReEval benchmarkja vizsgálja a
+legközvetlenebbül. %szb: közvetlenül
+A benchmark 656 kódrészletet tartalmaz, amelyek a fent bemutatott három
+adathalmazból származnak, három nyelven (Java, Python, CUDA). A szerzők tíz
+modellt értékeltek ki: négyet API-n keresztül (például GPT-4o, Claude Sonnet 3),
+hatot pedig helyben futtatva (4-7 milliárd paraméter). Négyféle promptolási
+stratégiát használtak: zero-shot, few-shot, lépésenkénti gondolkodás, valamint
+több szimulált szakértő konszenzusa a promptban. %szb: ha az első kettőnek az angol nevét használod, használd a másik kettőnek. 
+%Mert úgy még legalább rá tud keresni valaki ha érdekli, de így csak néz, hogy whaaaaat, kik azok a szimulált szakértők és miért van elsötétítve a BMW ablaka
+Ezen felül két értékelői szerepet (\textit{persona}, hallgató és senior %szb: nem junior? idk, don't take my word for it
+fejlesztő) és kilenc dekódolási beállítást is kipróbáltak. A modellek 0 és 20
+közötti pontszámot adtak egy rövid indoklással együtt. A pontszámokat a szerzők
+az összehasonlítás %szb: összehasonlíthatóság
+érdekében egy 1-től 5-ig terjedő skálára konvertálták.
 
-Java-kódon az LLM-ek és az emberek pontszámai közötti Spearman-korreláció 0,25 volt, Python és CUDA esetében pedig nulla körüli értéket mutatott.
-Ugyanezen a Java-adathalmazon a Scalabrino-féle jellemzőalapú modell 0,27-es korrelációt ért el, vagyis az LLM-ek nem teljesítettek jobban a klasszikus modellnél.
-A modellek emellett az embereknél optimistábbnak bizonyultak: a kódrészletek 65\%-át ítélték meg olvashatónak, szemben az emberek 44\%-ával.
-Az összetettebb promptolási stratégiák (a few-shot és a szakértői konszenzus) ugyan magasabb pontszámokat adtak, de az emberektől való átlagos eltérése (MAE) ezeknek a pontszámoknak is ezeknél volt a legnagyobb.
-A legkisebb átlagos eltérést a legegyszerűbb, zero-shot prompt adta.
-Az átlagos eltérés azonban érzékeny a pontszámok eltolódására is, ezért ez önmagában keveset árul el arról, hogy mennyire jól rangsorol egy modell.
-A nagyobb modellek kisebb átlagos eltéréssel pontoztak, ezt azonban különböző gyártók modelljeinek összehasonlításából állapították meg,
-így a méret hatása nem választható el a modellcsaládétól.
+Java-kódon az LLM-ek és az emberek pontszámai közötti Spearman-korreláció %szb: sperma korreláció 8)
+0,25 volt, Python és CUDA esetében pedig nulla körüli értéket mutatott.
+Ugyanezen a Java-adathalmazon a Scalabrino-féle jellemzőalapú modell %szb: sztem elég csak Scalabrino-féle modell... ugyanakkor egy bevezető mondat is elférne:
+% a szerzők az llmeket összevetették egy korábbi readability modellel
+0,27-es korrelációt ért el, vagyis az LLM-ek nem teljesítettek jobban %szb: magyarul: valamivel rosszabbul teljesítettek 
+a klasszikus modellnél. A modellek %szb: melyek? a korábbi readability modellek? vagy az LLM-ek? bármelyik is, használd következetesen a szavakat, és ha LLM-ek, akkor legyen itt is LLM
+emellett az embereknél optimistábbnak bizonyultak: a kódrészletek 65\%-át
+ítélték meg olvashatónak, szemben az emberek 44\%-ával. Az összetettebb
+promptolási stratégiák (a few-shot és a szakértői konszenzus) ugyan magasabb
+pontszámokat adtak, de az emberektől való átlagos eltérése (MAE) ezeknek a
+pontszámoknak is ezeknél volt a legnagyobb. A legkisebb átlagos eltérést a
+legegyszerűbb, zero-shot prompt adta. Az átlagos eltérés azonban érzékeny a
+pontszámok eltolódására is, ezért ez önmagában keveset árul el arról, hogy
+mennyire jól rangsorol egy modell. A nagyobb modellek kisebb átlagos eltéréssel
+pontoztak, ezt azonban különböző gyártók %szb: fura a gyártók szó... gyártani inkább fizikai dolgokat szokás
+modelljeinek összehasonlításából állapították meg, így a méret hatása nem
+választható el a modellcsaládétól.
 
-A szerzők a modellek által adott indoklásokat is elemezték.
-A leggyakrabban felbukkanó szempontok a megjegyzések, az elnevezések,
-a behúzás és a szerkezet voltak, ezek az indoklások több mint 82\%-ában megjelentek.
-Ebből arra következtetnek, hogy az LLM-ek elsősorban felszíni jellemzőkre támaszkodnak az ítéletük meghozatalakor.
-Amikor a prompt kifejezetten fejlesztői szempontokat sorolt fel, a modellek ezeket gyakrabban említették,
-az emberekkel való egyezés mértéke azonban nem javult \cite{ouedraogo2025coreeval}.
-A benchmark nem vizsgálja sem a kvantálás, sem a hibrid modellek gondolkodási módjának hatását,
-és azt sem elemzi, hogy a modellek pontszámai milyen mérhető kódtulajdonságokkal mozognak együtt.
+A szerzők a modellek által adott indoklásokat is elemezték. %szb: esetleg előbb írd le, hogy a szerzők nem csak pontszámot kértek a modelltől hanem indoklást is - 
+% és akkor érthető, hogy milyen indoklásra gondolsz
+A leggyakrabban felbukkanó szempontok a megjegyzések, az elnevezések, a behúzás
+és a szerkezet voltak, ezek az indoklások több mint 82\%-ában megjelentek. %szb: picit döcögős mondat
+Ebből arra következtetnek, hogy az LLM-ek elsősorban felszíni jellemzőkre
+támaszkodnak az ítéletük meghozatalakor. Amikor a prompt kifejezetten fejlesztői
+szempontokat sorolt fel, %szb: a szerzők olyan prompt-okkal is kísérleteztek, amelyek kifejezetten említ fejlesztői szempontokat, ...  <- valami ilyesmi
+% amit írsz, nem rossz, csak túl sűrű és "gyors" tempójú. Igen, abból, hogy azt írod hgy
+% "Amikor a prompt kifejezetten fejlesztői szempontokat sorolt fel" <- kiderül hogy kísérleteztek ilyen promptokkal,
+% de ezt az olvasónak kell hozzágondolni... ahol tudod, fogd az olvasó kezét picit jobban, és legyenek lassabb tempójú mondataid, ahol az olvasónak nem kell sokat gondolkoznia
+a modellek ezeket gyakrabban említették, az emberekkel való egyezés mértéke
+azonban nem javult \cite{ouedraogo2025coreeval}. %szb: elég random itt a hivatkozás. Elég a legelején, ahol elkezdesz errl beszéli ebben a chapterben (tehát e section 2. bekezdésében)
+A benchmark nem vizsgálja sem a kvantálás, sem a hibrid modellek gondolkodási
+módjának hatását, és azt sem elemzi, hogy a modellek pontszámai milyen mérhető
+kódtulajdonságokkal mozognak együtt.
 
 \cleardoublepage
 
