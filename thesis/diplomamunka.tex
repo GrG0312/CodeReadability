@@ -467,46 +467,175 @@ a sikerrel pedig leginkább a sorhossz, a Halstead-térfogat és az entrópia mo
 
 \cleardoublepage
 
-% Acknowledgements (optional)
-%\chapter*{\acklabel}
-%\addcontentsline{toc}{chapter}{\acklabel}
-%Köszönetnyilvánítás szövege.
+\chapter{Módszertan}
+\label{ch:method}
 
-% Appendices (optional)
-%\appendix
-%\cleardoublepage
+Ez a fejezet a kísérlet felépítését ismerteti.
+Kiindulásként megfogalmazom a kutatási kérdéseket, majd ezt követően bemutatom az adathalmazt amin a kísérlet zajlott.
+Ezt követik a vizsgált modellek, a vizsgálati tengelyek, a pontozás menete és a kódmetrikák leírásai.
+A fejezet a statisztikai elemzés módszereinek bemutatásával zárul.
+
+\section{Kutatási kérdések}
+\label{sec:method:questions}
+
+A dolgozat fő kérdése, hogy a helyben futtatott LLM-ek kódolvashatósági ítéletei
+mennyire egyeznek meg az emberekével, és milyen tényezők hatnak erre az egyezésre.
+Ezt a fő kérdést négy további alkérdésre lehet bontani.
+
+Az első alkérdés, hogy az LLM-ek pontszámai mennyire egyeznek az emberi pontszámokkal,
+és mely modellek teljesítenek jobban vagy rosszabbul?
+A válaszhoz minden modell minden promptolási stratégiával végigmegy az adathalmazon és pontozza az egyes kódrészleteket.
+Egy modellnek az egy adott promptolási stratégiával végzett pontozására a továbbiakban \textbf{futásként} hivatkozok.
+A futások pontszámait a kódrészletenkénti emberi átlagpontszámokkal vetem össze.
+A pontszámok és átlagpontszámok egyezésének fő mérőszáma a Spearman-féle rangkorreláció,
+amelyet további egyezési mérőszámok egészítenek ki.
+
+A második alkérdés, hogy a vizsgálat tengelyei hogyan befolyásolják az egyezést.
+Ahogy azt már korábban említettem, a vizsgálati tengelyek azok a tényezők,
+amelyek befolyásolhatják a modellek viselkedését. A modell tulajdonságai közül ezek a kvantálás,
+a modellméret, a gondolkodási mód és a modellcsalád.
+Ezen kívül egy külön, modellfüggetlen vizsgálati tengely
+a promptolási stratégia is, melyet minden modellen vizsgálok.
+A tengelyek hatásainak méréséhez a modellek halmazát részhalmazokra bontom,
+melyek kizárólag egyszerre mindig csak egy tulajdonságban különböznek egymástól.
+
+A harmadik alkérdés, hogy az LLM-ek és az emberek pontszámai milyen mérhető kódtulajdonságokkal mozognak együtt,
+és e tekintetben mennyire hasonlítanak a modellek az emberekhez?
+Ehhez minden kódrészletre kódmetrikákat számolok. A metrikák egy része algoritmikusan, képlet által kiszámítható,
+míg a másik részüket, melyek osztályozása nem lehetséges determinisztikus módon, LLM-ek pontozzák.
+A metrikákat ezután rangsorolom aszerint, mennyire korrelálnak az emberek, illetve az egyes modellek pontszámaival.
+A két rangsor összevetéséből derül ki, hogy a modellek és az emberek pontszámai hasonló kódtulajdonságokkal mozognak-e együtt.
+
+Végül a negyedik alkérdés arra irányul, hogy az LLM-ek hogyan viszonyulnak a korábbi, nem LLM-alapú olvashatósági modellekhez.
+Számszerű összevetést kizárólag Scalabrino és munkatársai átfogó modelljével végzek, mivel ennek kimeneteit
+Ouédraogo és munkatársai ugyanerre az adathalmazra tették közzé \cite{scalabrino2018comprehensive,ouedraogo2025coreeval}.
+A többi korábbi modell eredményei eltérő feltételek mellett születtek,
+ezért az LLM-eket velük minőségi szempontok alapján vetem össze.
+Ilyen szempont például a tanításhoz szükséges adat, az új kódra való átvihetőség, valamint a döntések átláthatósága.
+
+\section{Az adathalmaz}
+\label{sec:method:dataset}
+
+A kísérletekhez a \ref{sec:related:models}. alfejezetben ismertetett három, emberi pontozású adathalmaz
+Java-nyelvű kódrészleteit használom.
+Buse és Weimer, valamint Scalabrino és munkatársai adathalmaza kizárólag Java-kódot tartalmaz,
+ezért Dorn adathalmazából is csak a Java-részleteket veszem figyelembe.
+Krodinger a három forrás Java-részleteit egyetlen, 421 kódrészletből álló adathalmazba gyűjtötte,
+és tette közzé a Hugging Face platformon \cite{krodinger2023merged}.
+Az adathalmaz minden kódrészlet esetében tartalmazza magát a kódot és az emberi pontszámok átlagát egy 1-től 5-ig terjedő skálán,
+ahol az 1 a nagyon nehezen, az 5 a nagyon könnyen olvasható kódot jelöli.
+Az átlagoláson kívül más feldolgozást nem végeztek az adatokon.
+Ugyanezt a 421 kódrészletet használták Java-kódon a CoReEval szerzői is,
+ami lehetővé teszi az eredmények közvetlen összevetését \cite{ouedraogo2025coreeval}.
+
+A három forrásból származó részletek több szempontból is különböznek egymástól.
+Buse és Weimer 100 részlete rövidebb, átlagosan 7,7 soros kódrészleteket tartalmaz,
+és valamennyit ugyanaz a 120 hallgató értékelte \cite{buse2008metric}.
+Dorn 121 Java-részlete nagyjából egyenlő arányban 10, 30 és 50 soros részletekből áll,
+és részletenként átlagosan mintegy 214 értékelést kapott \cite{dorn2012general}.
+Scalabrino és munkatársai 200 részlete pedig teljes, 10--50 soros metódusokat foglal magába,
+amelyek mindegyikét kilenc hallgató értékelte \cite{scalabrino2016improving}.
+
+% TODO: ezt a táblázatot majd formázni kell mert undorítóan néz ki pdf-ben
+\begin{table}[htb]
+	\centering
+	\small
+	\begin{tabular}{ | l | r | r | r | r | r | }
+		\hline
+		\textbf{Forrás} &
+		\textbf{Részletek} &
+		\textbf{Átlagos sorszám} &
+		\textbf{Értékelés részletenként} &
+		\textbf{Átlagpontszám} &
+		\textbf{Szórás} \\
+		\hline \hline
+		Buse és Weimer & 100 & 7,7 & 120 & 3,28 & 0,63 \\
+		\hline
+		Dorn (Java) & 121 & 29,9 & kb. 214 & 3,35 & 0,45 \\
+		\hline
+		Scalabrino és mtsai & 200 & 26,7 & 9 & 3,61 & 0,59 \\
+		\hline \hline
+		Összesen & 421 & 23,1 & -- & 3,46 & 0,58 \\
+		\hline
+	\end{tabular}
+	\caption[Az egyesített adathalmaz összetétele]{Az egyesített adathalmaz összetétele forrásonként.
+	Az értékelések száma a forráspublikációk adatain alapul.}
+	\label{tab:method:dataset}
+\end{table}
+
+\section{Modellek és vizsgálati tengelyek}
+\label{sec:method:models}
+
+\section{A pontozás menete}
+\label{sec:method:judging}
+
+\section{Metrikák}
+\label{sec:method:metrics}
+
+\section{Statisztikai elemzés}
+\label{sec:method:statistics}
+
+\cleardoublepage
+
+\chapter{Eredmények}
+\label{ch:results}
+
+\section{Áttekintés}
+\label{sec:results:overview}
+
+\section{Egyezés az emberi ítéletekkel}
+\label{sec:results:agreement}
+
+\section{A modelltulajdonságok hatása}
+\label{sec:results:axes}
+
+\section{A promptolási stratégiák hatása}
+\label{sec:results:prompting}
+
+\section{A pontszámokkal együtt mozgó kódtulajdonságok}
+\label{sec:results:metrics}
+
+\section{Összevetés a klasszikus modellekkel}
+\label{sec:results:classic}
+
+\cleardoublepage
+
+\chapter{Megvitatás} % Jó név ez ennek?
+\label{ch:discussion}
+
+\section{Az eredmények értelmezése}
+\label{sec:discussion:interpretation}
+
+\section{Következmények}
+\label{sec:discussion:practice}
+
+\section{Érvényességi korlátok}
+\label{sec:discussion:validity}
+
+\cleardoublepage
+
+\chapter{Összegzés}
+\label{ch:conclusion}
+
+\cleardoublepage
+
+\appendix
+
+\chapter{A promptok szövege}
+\label{app:prompts}
+
+\chapter{A kódmetrikák definíciói}
+\label{app:metrics}
+
+\chapter{Részletes eredmények}
+\label{app:results}
+
+\cleardoublepage
 
 % Bibliography (mandatory)
 \phantomsection
 \addcontentsline{toc}{chapter}{\biblabel}
 \printbibliography[title=\biblabel]
 \cleardoublepage
-
-% List of figures (optional) - useful over 3-5 figures
-%\phantomsection
-%\addcontentsline{toc}{chapter}{\lstfigurelabel}
-%\listoffigures
-%\cleardoublepage
-
-% List of tables (optional) - useful over 3-5 tables
-%\phantomsection
-%\addcontentsline{toc}{chapter}{\lsttablelabel}
-%\listoftables
-%\cleardoublepage
-
-% List of algorithms (optional) - useful over 3-5 algorithms
-%\phantomsection
-%\addcontentsline{toc}{chapter}{\lstalgorithmlabel}
-%\listofalgorithms
-%\cleardoublepage
-
-% List of codes (optional) - useful over 3-5 code samples
-%\phantomsection
-%\addcontentsline{toc}{chapter}{\lstcodelabel}
-%\lstlistoflistings
-%\cleardoublepage
-
-% List of symbols (optional)
-%\printnomenclature
 
 \end{document}
