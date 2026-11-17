@@ -59,6 +59,6 @@ namespace CodeReadabilityLib.Pipelines.ComputeMetrics
         /// Extra completion tokens for thinking. Not granted to flash models, nor to hybrid
         /// models, which grade with thinking off.
         /// </summary>
-        public uint ThinkingTokenBudget { get; init; } = 2048;
+        public uint ThinkingTokenBudget { get; init; } = 4096;
     }
 }

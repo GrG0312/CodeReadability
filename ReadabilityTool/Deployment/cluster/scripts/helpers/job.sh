@@ -14,6 +14,7 @@ ROOT="${SLURM_SUBMIT_DIR:?This script runs as a SLURM job}"
 cd "$ROOT"
 
 SIF="$ROOT/app/readabilityconsoleapp.sif"
+source "$ROOT/scripts/helpers/tool.sh"
 RESUMABLE=75
 MAX_REQUEUES=10
 
@@ -32,7 +33,7 @@ on_time_limit() {
 }
 trap on_time_limit USR1
 
-apptainer run --nv "$SIF" "$@" &
+apptainer run --nv "${TOOL_BIND[@]}" "$SIF" "$@" &
 TOOL_PID=$!
 
 # wait returns early when the signal trap runs; keep waiting until the tool has exited.

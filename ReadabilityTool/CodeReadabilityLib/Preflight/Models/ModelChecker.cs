@@ -143,7 +143,7 @@ namespace CodeReadabilityLib.Preflight.Models
             foreach (IPromptingStrategy strategy in _strategies)
             {
                 // The same judge a real run uses, so that the check behaves exactly like judging.
-                IReadabilityJudge judge = new PromptedRangeJudge(pass.ModelName, client, strategy, pass.ThinkingTokenBudget, pass.ChatTemplateValues);
+                IReadabilityJudge judge = new PromptedRangeJudge(pass.ModelName, client, strategy, pass.ThinkingTokenBudget, pass.ChatTemplateValues, pass.SamplingParameters);
                 Stopwatch watch = Stopwatch.StartNew();
 
                 JudgementResult result = await judge.EvaluateAsync(new ReadabilityEvaluationRequest { Code = sampleCode, Language = language }, cancellationToken)

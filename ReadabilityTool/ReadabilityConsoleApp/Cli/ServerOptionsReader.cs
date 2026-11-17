@@ -19,7 +19,7 @@ namespace ReadabilityConsoleApp.Cli
                 ExecutablePath = args.Optional("llama-server-path") ?? "llama-server",
                 Port = (uint)args.Int("port", 0),
                 GpuLayers = (byte)args.Int("gpu-layers", 99),
-                ContextSize = (uint)args.Int("ctx-size", 4096),
+                ContextSize = (uint)args.Int("ctx-size", 8192),
                 LogDirectory = args.Optional("log-dir"),
                 ExtraArguments = args.Optional("server-args") ?? string.Empty
             };

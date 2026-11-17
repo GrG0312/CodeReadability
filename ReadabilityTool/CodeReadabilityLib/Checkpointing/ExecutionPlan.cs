@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace CodeReadabilityLib.Checkpointing
@@ -47,6 +48,14 @@ namespace CodeReadabilityLib.Checkpointing
         /// </summary>
         [JsonPropertyName("llamaCppVersion")]
         public string? LlamaCppVersion { get; init; }
+
+        /// <summary>
+        /// The sampling defaults each model's server reported, keyed by model file, so that
+        /// the result files can show them even for models finished before a resume.
+        /// </summary>
+        [JsonPropertyName("serverSamplingDefaults")]
+        public Dictionary<string, Dictionary<string, JsonElement>> ServerSamplingDefaults { get; init; } =
+            new Dictionary<string, Dictionary<string, JsonElement>>();
 
         /// <summary>
         /// The output file of every step that has finished, keyed by step name.

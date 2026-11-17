@@ -131,6 +131,26 @@ namespace CodeReadabilityLib.Checkpointing
             }
         }
 
+        /// <summary>
+        /// Records the sampling defaults a model's server reported. Does nothing when the
+        /// server reported none.
+        /// </summary>
+        public void RecordServerSamplingDefaults(string modelFile, Dictionary<string, JsonElement>? defaults)
+        {
+            if (defaults is null)
+            {
+                return;
+            }
+
+            UpdatePlan(plan => plan with
+            {
+                ServerSamplingDefaults = new Dictionary<string, Dictionary<string, JsonElement>>(plan.ServerSamplingDefaults)
+                {
+                    [modelFile] = defaults
+                }
+            });
+        }
+
         public bool IsDone(string unitId)
         {
             return File.Exists(UnitPath(unitId) + DoneExtension);

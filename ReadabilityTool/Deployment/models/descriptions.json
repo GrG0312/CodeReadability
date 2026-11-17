@@ -1,0 +1,86 @@
+{
+  "Qwen3.8-27B-UD-Q4_K_M": {
+    "family": "Qwen3.8", "size": "30B", "quant": "UD-Q4_K_M", "type": "hybrid",
+    "recommended-params": {
+      "thinking":    { "temperature": 1.0, "top_p": 0.95, "top_k": 20, "min_p": 0.0, "presence_penalty": 0.0, "repeat_penalty": 1.0 },
+      "no-thinking": { "temperature": 0.7, "top_p": 0.80, "top_k": 20, "min_p": 0.0, "presence_penalty": 1.5, "repeat_penalty": 1.0 }
+    }
+  },
+  "Qwen3.8-27B-Q8_0": {
+    "family": "Qwen3.8", "size": "30B", "quant": "Q8_0", "type": "hybrid",
+    "recommended-params": {
+      "thinking":    { "temperature": 1.0, "top_p": 0.95, "top_k": 20, "min_p": 0.0, "presence_penalty": 0.0, "repeat_penalty": 1.0 },
+      "no-thinking": { "temperature": 0.7, "top_p": 0.80, "top_k": 20, "min_p": 0.0, "presence_penalty": 1.5, "repeat_penalty": 1.0 }
+    }
+  },
+  "gemma-4-31B-it-Q4_K_M": {
+    "family": "Gemma4", "size": "30B", "quant": "Q4_K_M", "type": "hybrid",
+    "recommended-params": {
+      "thinking":    { "temperature": 1.0, "top_p": 0.95, "top_k": 64 },
+      "no-thinking": { "temperature": 1.0, "top_p": 0.95, "top_k": 64 }
+    }
+  },
+  "gemma-4-31B-it-Q8_0": {
+    "family": "Gemma4", "size": "30B", "quant": "Q8_0", "type": "hybrid",
+    "recommended-params": {
+      "thinking":    { "temperature": 1.0, "top_p": 0.95, "top_k": 64 },
+      "no-thinking": { "temperature": 1.0, "top_p": 0.95, "top_k": 64 }
+    }
+  },
+  "gemma-4-12b-it-Q4_K_M": {
+    "family": "Gemma4", "size": "12B", "quant": "Q4_K_M", "type": "hybrid",
+    "recommended-params": {
+      "thinking":    { "temperature": 1.0, "top_p": 0.95, "top_k": 64 },
+      "no-thinking": { "temperature": 1.0, "top_p": 0.95, "top_k": 64 }
+    }
+  },
+  "gemma-4-12b-it-Q8_0": {
+    "family": "Gemma4", "size": "12B", "quant": "Q8_0", "type": "hybrid",
+    "recommended-params": {
+      "thinking":    { "temperature": 1.0, "top_p": 0.95, "top_k": 64 },
+      "no-thinking": { "temperature": 1.0, "top_p": 0.95, "top_k": 64 }
+    }
+  },
+  "gemma-4-E4B-it-Q4_K_M": {
+    "family": "Gemma4", "size": "4B", "quant": "Q4_K_M", "type": "hybrid",
+    "recommended-params": {
+      "thinking":    { "temperature": 1.0, "top_p": 0.95, "top_k": 64 },
+      "no-thinking": { "temperature": 1.0, "top_p": 0.95, "top_k": 64 }
+    }
+  },
+  "gemma-4-E4B-it-Q8_0": {
+    "family": "Gemma4", "size": "4B", "quant": "Q8_0", "type": "hybrid",
+    "recommended-params": {
+      "thinking":    { "temperature": 1.0, "top_p": 0.95, "top_k": 64 },
+      "no-thinking": { "temperature": 1.0, "top_p": 0.95, "top_k": 64 }
+    }
+  },
+  "Qwen3.5-9B-Q4_K_M": {
+    "family": "Qwen3.5", "size": "9B", "quant": "Q4_K_M", "type": "hybrid",
+    "recommended-params": {
+      "thinking":    { "temperature": 1.0, "top_p": 0.95, "top_k": 20, "min_p": 0.0, "presence_penalty": 1.5, "repeat_penalty": 1.0 },
+      "no-thinking": { "temperature": 0.7, "top_p": 0.80, "top_k": 20, "min_p": 0.0, "presence_penalty": 1.5, "repeat_penalty": 1.0 }
+    }
+  },
+  "Qwen3.5-9B-Q8_0": {
+    "family": "Qwen3.5", "size": "9B", "quant": "Q8_0", "type": "hybrid",
+    "recommended-params": {
+      "thinking":    { "temperature": 1.0, "top_p": 0.95, "top_k": 20, "min_p": 0.0, "presence_penalty": 1.5, "repeat_penalty": 1.0 },
+      "no-thinking": { "temperature": 0.7, "top_p": 0.80, "top_k": 20, "min_p": 0.0, "presence_penalty": 1.5, "repeat_penalty": 1.0 }
+    }
+  },
+  "Qwen3.5-4B-Q4_K_M": {
+    "family": "Qwen3.5", "size": "4B", "quant": "Q4_K_M", "type": "hybrid",
+    "recommended-params": {
+      "thinking":    { "temperature": 1.0, "top_p": 0.95, "top_k": 20, "min_p": 0.0, "presence_penalty": 1.5, "repeat_penalty": 1.0 },
+      "no-thinking": { "temperature": 0.7, "top_p": 0.80, "top_k": 20, "min_p": 0.0, "presence_penalty": 1.5, "repeat_penalty": 1.0 }
+    }
+  },
+  "Qwen3.5-4B-Q8_0": {
+    "family": "Qwen3.5", "size": "4B", "quant": "Q8_0", "type": "hybrid",
+    "recommended-params": {
+      "thinking":    { "temperature": 1.0, "top_p": 0.95, "top_k": 20, "min_p": 0.0, "presence_penalty": 1.5, "repeat_penalty": 1.0 },
+      "no-thinking": { "temperature": 0.7, "top_p": 0.80, "top_k": 20, "min_p": 0.0, "presence_penalty": 1.5, "repeat_penalty": 1.0 }
+    }
+  }
+}

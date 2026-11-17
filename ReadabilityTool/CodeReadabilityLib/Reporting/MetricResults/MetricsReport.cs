@@ -1,4 +1,5 @@
 using CodeReadabilityLib.Storage.Tracking;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace CodeReadabilityLib.Reporting.MetricResults
@@ -23,6 +24,14 @@ namespace CodeReadabilityLib.Reporting.MetricResults
         /// </summary>
         [JsonPropertyName("llamaCppVersion")]
         public string? LlamaCppVersion { get; set; }
+
+        /// <summary>
+        /// The sampling values each grading model's server used for whatever its recommended
+        /// parameters left out, keyed by model file; empty for <c>algo-only</c>.
+        /// </summary>
+        [JsonPropertyName("server-sampling-defaults")]
+        public Dictionary<string, Dictionary<string, JsonElement>> ServerSamplingDefaults { get; init; } =
+            new Dictionary<string, Dictionary<string, JsonElement>>();
 
         [JsonPropertyName("datasetDescription")]
         public required string DatasetDescription { get; init; }

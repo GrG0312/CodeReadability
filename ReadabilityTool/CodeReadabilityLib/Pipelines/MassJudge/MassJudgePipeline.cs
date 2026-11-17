@@ -9,6 +9,7 @@ using CodeReadabilityLib.Pipelines.Shared;
 using CodeReadabilityLib.Reporting.Judgements;
 using CodeReadabilityLib.Sources;
 using CodeReadabilityLib.Storage.Tracking;
+using System.Text.Json;
 
 namespace CodeReadabilityLib.Pipelines.MassJudge
 {
@@ -101,6 +102,11 @@ namespace CodeReadabilityLib.Pipelines.MassJudge
                 {
                     string? version = await JudgeModelAsync(modelPath, passes, samples, cancellationToken).ConfigureAwait(false);
                     report.LlamaCppVersion ??= version;
+                }
+
+                if (_options.Checkpoints.Plan.ServerSamplingDefaults.TryGetValue(modelFile, out Dictionary<string, JsonElement>? defaults))
+                {
+                    report.ServerSamplingDefaults[modelFile] = defaults;
                 }
 
                 foreach (JudgingPass pass in passes)
@@ -203,7 +209,7 @@ namespace CodeReadabilityLib.Pipelines.MassJudge
 
                         // One attempt within the assigned tokens: a failed answer is a result.
                         IReadabilityJudge judge =
-                            new PromptedRangeJudge(pass.ModelName, client, strategy, pass.ThinkingTokenBudget, pass.ChatTemplateValues);
+                            new PromptedRangeJudge(pass.ModelName, client, strategy, pass.ThinkingTokenBudget, pass.ChatTemplateValues, pass.SamplingParameters);
 
                         await ScoreUnitAsync(judge, $"{pass.ModelName} [{strategy.Id}]", unit, samples, cancellationToken).ConfigureAwait(false);
 

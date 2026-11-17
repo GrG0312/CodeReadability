@@ -39,6 +39,13 @@ namespace CodeReadabilityLib.Llms.Chatting
         /// </summary>
         public IReadOnlyDictionary<string, JsonElement>? ChatTemplateValues { get; init; }
 
+        /// <summary>
+        /// Sampling parameters sent with the request as they are, such as a model's
+        /// recommended <c>top_k</c>. A <c>temperature</c> among them replaces
+        /// <see cref="Temperature"/>. <see langword="null"/> sends none.
+        /// </summary>
+        public IReadOnlyDictionary<string, JsonElement>? SamplingParameters { get; init; }
+
         public static readonly ChatOptions Deterministic = new ChatOptions();
     }
 }

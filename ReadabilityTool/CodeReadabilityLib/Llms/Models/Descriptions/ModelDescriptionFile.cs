@@ -49,8 +49,8 @@ namespace CodeReadabilityLib.Llms.Models.Descriptions
         /// </summary>
         ///
         /// <exception cref="InvalidDataException">
-        /// Thrown when the file is not valid JSON, or a description has a <c>type</c> that is
-        /// not allowed.
+        /// Thrown when the file is not valid JSON, a description has a <c>type</c> that is not
+        /// allowed, or its recommended parameters are missing for a mode or not valid.
         /// </exception>
         public static Dictionary<string, ModelDescription> Load(string path)
         {
@@ -75,9 +75,45 @@ namespace CodeReadabilityLib.Llms.Models.Descriptions
                         $"Model '{model}' in '{path}' has type '{description.Type}'. " +
                         $"Allowed: {ModelTypes.Reasoning}, {ModelTypes.Flash}, {ModelTypes.Hybrid}.");
                 }
+
+                CheckRecommendedParams(model, description, path);
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Requires a block for every mode the model runs in, so that a forgotten block
+        /// cannot silently run one model with different settings from the others, and checks
+        /// that every value is a number under an allowed name.
+        /// </summary>
+        ///
+        /// <exception cref="InvalidDataException"></exception>
+        private static void CheckRecommendedParams(string model, ModelDescription description, string path)
+        {
+            foreach (bool thinking in description.ThinkingModes)
+            {
+                string mode = thinking ? "thinking" : "no-thinking";
+                Dictionary<string, JsonElement> block = description.RecommendedParams?.For(thinking)
+                    ?? throw new InvalidDataException(
+                        $"Model '{model}' in '{path}' has no 'recommended-params' block for '{mode}'. " +
+                        "Write the recommended values, or an empty block {} to keep the server's defaults on purpose.");
+
+                foreach ((string name, JsonElement value) in block)
+                {
+                    if (!SamplingParameterNames.Allowed.Contains(name))
+                    {
+                        throw new InvalidDataException(
+                            $"Model '{model}' in '{path}' has the unknown parameter '{name}' under '{mode}'. " +
+                            $"Allowed: {string.Join(", ", SamplingParameterNames.Allowed)}.");
+                    }
+
+                    if (value.ValueKind != JsonValueKind.Number)
+                    {
+                        throw new InvalidDataException($"Model '{model}' in '{path}' has a non-numeric '{name}' under '{mode}'.");
+                    }
+                }
+            }
         }
     }
 }

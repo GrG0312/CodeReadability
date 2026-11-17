@@ -42,7 +42,9 @@ namespace ReadabilityConsoleApp.Cli
             Console.WriteLine($"  --strategies <ids>        Comma-separated: {PromptingStrategies.SupportedIds}. Default: all.");
             Console.WriteLine("  --model-descriptions <p>  Model description file. Default: descriptions.json in --model-dir.");
             Console.WriteLine("                            Models missing from it get placeholders, to fill in before");
-            Console.WriteLine("                            compute-statistics.");
+            Console.WriteLine("                            compute-statistics. A described model needs a");
+            Console.WriteLine("                            'recommended-params' block (sampling values) for every mode it");
+            Console.WriteLine("                            runs in: 'thinking', 'no-thinking'; {} keeps the server defaults.");
             Console.WriteLine();
 
             Console.WriteLine("compute-metrics");
@@ -89,7 +91,7 @@ namespace ReadabilityConsoleApp.Cli
             Console.WriteLine($"  --thinking-budget <n>     Extra tokens for thinking (not for flash runs). Default: {SharedOptions.DefaultThinkingBudget}.");
             Console.WriteLine("  --checkpoint-dir <path>   Where resume data is kept. Default: 'checkpoints' next to <output>.");
             Console.WriteLine("                            Deleted after success; kept after a stop, for 'resume'.");
-            Console.WriteLine("  --ctx-size <n>            Model context size, shared by the parallel slots. Default: 4096.");
+            Console.WriteLine("  --ctx-size <n>            Model context size, shared by the parallel slots. Default: 8192.");
             Console.WriteLine("  --gpu-layers <n>          Layers offloaded to the GPU. Default: 99.");
             Console.WriteLine("  --port <n>                llama-server port. Default: 0 (auto-select a free port).");
             Console.WriteLine("  --llama-server-path <p>   llama-server executable. Default: llama-server (on PATH).");

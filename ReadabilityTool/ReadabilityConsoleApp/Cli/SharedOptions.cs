@@ -11,7 +11,7 @@ namespace ReadabilityConsoleApp.Cli
     /// </summary>
     public static class SharedOptions
     {
-        public const int DefaultThinkingBudget = 2048;
+        public const int DefaultThinkingBudget = 4096;
 
         public static uint ThinkingBudget(CommandLine args)
         {

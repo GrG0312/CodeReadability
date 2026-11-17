@@ -1,7 +1,8 @@
 # Copies datasets and/or models to the NIPG cluster.
 #
 #   ./ReadabilityTool/Deployment/local/upload.ps1 -Datasets C:\data\bw-dataset.csv
-#   ./ReadabilityTool/Deployment/local/upload.ps1 -Models D:\models\qwen3.5-9b-q4_k_m.gguf, D:\models\descriptions.json
+#   ./ReadabilityTool/Deployment/local/upload.ps1 -Models ReadabilityTool/Deployment/models/descriptions.json
+#   ./ReadabilityTool/Deployment/local/upload.ps1 -Models D:\models\qwen3.5-9b-q4_k_m.gguf    # a model file from this computer
 #
 # Datasets go to ~/readability/datasets (next to the tool's ID-stamped copies), models and
 # the model description file to ~/readability/models.

@@ -30,7 +30,7 @@
         /// <summary>
         /// Gets or sets the context size for the Llama server.
         /// </summary>
-        public uint ContextSize { get; init; } = 4096;
+        public uint ContextSize { get; init; } = 8192;
 
         /// <summary>
         /// Gets or sets the number of parallel slots for processing requests in the Llama server.

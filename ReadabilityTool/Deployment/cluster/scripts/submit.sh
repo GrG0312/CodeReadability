@@ -21,10 +21,12 @@ if [ ! -f "$SIF" ]; then
     exit 1
 fi
 
+source "$ROOT/scripts/helpers/tool.sh"
+
 mkdir -p logs
 SCRIPT="$ROOT/logs/submit_$(date +%Y%m%d_%H%M%S).sh"
 
-apptainer run "$SIF" submit "$@" --script-out "$SCRIPT"
+apptainer run "${TOOL_BIND[@]}" "$SIF" submit "$@" --script-out "$SCRIPT"
 bash "$SCRIPT"
 
 echo

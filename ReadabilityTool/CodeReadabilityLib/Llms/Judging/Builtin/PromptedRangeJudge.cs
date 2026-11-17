@@ -48,6 +48,7 @@ namespace CodeReadabilityLib.Llms.Judging.Builtin
         private readonly IPromptingStrategy _strategy;
         private readonly uint _thinkingTokenBudget;
         private readonly IReadOnlyDictionary<string, JsonElement>? _chatTemplateValues;
+        private readonly IReadOnlyDictionary<string, JsonElement>? _samplingParameters;
 
         /// <param name="thinkingTokenBudget">
         /// Extra completion tokens for a model's thinking, which counts against the
@@ -58,18 +59,24 @@ namespace CodeReadabilityLib.Llms.Judging.Builtin
         /// Values sent to the model's chat template with every request, such as a hybrid
         /// model's thinking switch.
         /// </param>
+        ///
+        /// <param name="samplingParameters">
+        /// The model's recommended sampling parameters for this mode, sent with every request.
+        /// </param>
         public PromptedRangeJudge(
             string name,
             IChatClient chatClient,
             IPromptingStrategy strategy,
             uint thinkingTokenBudget = 0,
-            IReadOnlyDictionary<string, JsonElement>? chatTemplateValues = null)
+            IReadOnlyDictionary<string, JsonElement>? chatTemplateValues = null,
+            IReadOnlyDictionary<string, JsonElement>? samplingParameters = null)
         {
             Name = name;
             _chatClient = chatClient;
             _strategy = strategy;
             _thinkingTokenBudget = thinkingTokenBudget;
             _chatTemplateValues = chatTemplateValues;
+            _samplingParameters = samplingParameters;
         }
 
         /// <inheritdoc/>
@@ -83,7 +90,8 @@ namespace CodeReadabilityLib.Llms.Judging.Builtin
             {
                 MaxTokens = tokensAllowed,
                 JsonSchema = ScoreSchema,
-                ChatTemplateValues = _chatTemplateValues
+                ChatTemplateValues = _chatTemplateValues,
+                SamplingParameters = _samplingParameters
             };
 
             ChatCompletion completion;

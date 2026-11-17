@@ -37,7 +37,9 @@ scp (Get-ChildItem (Join-Path $deployment "cluster/scripts/helpers") -Filter *.s
 if ($LASTEXITCODE -ne 0) { throw "Copying failed." }
 
 # Scripts edited on Windows may carry CR line endings, which bash refuses.
-ssh $Server "cd $RemoteRoot && sed -i 's/\r$//' scripts/*.sh scripts/helpers/*.sh && chmod +x scripts/*.sh scripts/helpers/*.sh"
+# The jobs run app/publish bound into the image (see scripts/helpers/tool.sh), so the tool must
+# be executable there too.
+ssh $Server "cd $RemoteRoot && sed -i 's/\r$//' scripts/*.sh scripts/helpers/*.sh && chmod +x scripts/*.sh scripts/helpers/*.sh app/publish/ReadabilityConsoleApp"
 
 if (-not $SkipImageBuild) {
     Write-Host "=== Submitting the container image build..."
@@ -48,4 +50,4 @@ Remove-Item -Recurse -Force $publish
 
 Write-Host ""
 Write-Host "Deployed to ${Server}:~/$RemoteRoot"
-Write-Host "Next: upload models and datasets (upload.ps1), then on nipg1: cd ~/$RemoteRoot && scripts/submit.sh ..."
+Write-Host "Next: upload descriptions.json and datasets (upload.ps1), on nipg1 sbatch scripts/download-models.sh, then scripts/submit.sh ..."

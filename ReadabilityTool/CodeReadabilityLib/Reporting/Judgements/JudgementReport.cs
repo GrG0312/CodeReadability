@@ -1,5 +1,6 @@
 using CodeReadabilityLib.Llms.Models.Descriptions;
 using CodeReadabilityLib.Storage.Tracking;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace CodeReadabilityLib.Reporting.Judgements
@@ -43,6 +44,15 @@ namespace CodeReadabilityLib.Reporting.Judgements
         /// </summary>
         [JsonPropertyName("model-descriptions")]
         public Dictionary<string, ModelDescription> ModelDescriptions { get; init; } = new Dictionary<string, ModelDescription>();
+
+        /// <summary>
+        /// The sampling values each model's server used for whatever its recommended
+        /// parameters left out, keyed by model file (both modes of a hybrid share one server).
+        /// Together with the descriptions' recommended parameters, every value a run used.
+        /// </summary>
+        [JsonPropertyName("server-sampling-defaults")]
+        public Dictionary<string, Dictionary<string, JsonElement>> ServerSamplingDefaults { get; init; } =
+            new Dictionary<string, Dictionary<string, JsonElement>>();
 
         /// <summary>
         /// One entry per model and prompting strategy.

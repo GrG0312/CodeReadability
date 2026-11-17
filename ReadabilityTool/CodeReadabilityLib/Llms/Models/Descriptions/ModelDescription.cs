@@ -35,6 +35,13 @@ namespace CodeReadabilityLib.Llms.Models.Descriptions
         public string Type { get; init; } = ModelTypes.Placeholder;
 
         /// <summary>
+        /// The sampling parameters for each mode the model runs in. Required for every such
+        /// mode; see <see cref="Descriptions.RecommendedParams"/>.
+        /// </summary>
+        [JsonPropertyName("recommended-params")]
+        public RecommendedParams? RecommendedParams { get; init; }
+
+        /// <summary>
         /// For a hybrid model whose template does not use the default switch.
         /// </summary>
         [JsonPropertyName("thinking-switch")]
@@ -66,5 +73,18 @@ namespace CodeReadabilityLib.Llms.Models.Descriptions
         /// </summary>
         [JsonIgnore]
         public bool IsHybrid => ModelTypes.Normalize(Type) == ModelTypes.Hybrid;
+
+        /// <summary>
+        /// The modes the model runs in, <see langword="true"/> meaning thinking on: both for a
+        /// hybrid, on for a reasoning model, off for a flash model, none for a placeholder.
+        /// </summary>
+        [JsonIgnore]
+        public IReadOnlyList<bool> ThinkingModes => ModelTypes.Normalize(Type) switch
+        {
+            ModelTypes.Hybrid => [true, false],
+            ModelTypes.Reasoning => [true],
+            ModelTypes.Flash => [false],
+            _ => []
+        };
     }
 }

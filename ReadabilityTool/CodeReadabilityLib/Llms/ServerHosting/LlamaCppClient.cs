@@ -1,4 +1,5 @@
 ﻿using CodeReadabilityLib.Llms.Chatting;
+using CodeReadabilityLib.Llms.Models.Descriptions;
 using CodeReadabilityLib.Logging;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -168,6 +169,16 @@ namespace CodeReadabilityLib.Llms.ServerHosting
                 ["seed"] = options.Seed
             };
 
+            // A model's recommended sampling parameters; a recommended temperature replaces the
+            // one above. Whatever is not sent takes the server's default.
+            if (options.SamplingParameters is { Count: > 0 } sampling)
+            {
+                foreach ((string name, JsonElement value) in sampling)
+                {
+                    payload[name] = value;
+                }
+            }
+
             // If a schema was provided, add it to the payload so that the server enforces the format.
             // This way a malformed response will be impossible to get.
             if (options.JsonSchema is not null)
@@ -242,6 +253,46 @@ namespace CodeReadabilityLib.Llms.ServerHosting
                 return json.RootElement.TryGetProperty("build_info", out JsonElement build) && build.ValueKind == JsonValueKind.String
                     ? build.GetString()
                     : null;
+            }
+            catch (Exception ex) when (ex is HttpRequestException or JsonException)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// The sampling parameters the server uses for whatever a request leaves out, after
+        /// it has applied the model file's own recommendations, or <see langword="null"/> when
+        /// the server does not report them.
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Only the settings a model description may set (<see cref="SamplingParameterNames"/>),
+        /// so that together with the sent values they give every value a request ran with.
+        /// </remarks>
+        public async Task<Dictionary<string, JsonElement>?> GetDefaultSamplingAsync(CancellationToken ctoken = default)
+        {
+            try
+            {
+                using HttpResponseMessage response = await _httpClient.GetAsync("props", ctoken).ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
+                await using Stream stream = await response.Content.ReadAsStreamAsync(ctoken).ConfigureAwait(false);
+                using JsonDocument json = await JsonDocument.ParseAsync(stream, cancellationToken: ctoken).ConfigureAwait(false);
+
+                if (!json.RootElement.TryGetProperty("default_generation_settings", out JsonElement settings)
+                    || !settings.TryGetProperty("params", out JsonElement parameters)
+                    || parameters.ValueKind != JsonValueKind.Object)
+                {
+                    return null;
+                }
+
+                return parameters.EnumerateObject()
+                    .Where(property => SamplingParameterNames.Allowed.Contains(property.Name))
+                    .ToDictionary(property => property.Name, property => property.Value.Clone());
             }
             catch (Exception ex) when (ex is HttpRequestException or JsonException)
             {

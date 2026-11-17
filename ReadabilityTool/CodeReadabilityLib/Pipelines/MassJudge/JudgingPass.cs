@@ -29,6 +29,12 @@ namespace CodeReadabilityLib.Pipelines.MassJudge
         public IReadOnlyDictionary<string, JsonElement>? ChatTemplateValues { get; init; }
 
         /// <summary>
+        /// The model's recommended sampling parameters for this pass's mode, sent with every
+        /// request, or <see langword="null"/> when the model has no description.
+        /// </summary>
+        public IReadOnlyDictionary<string, JsonElement>? SamplingParameters { get; init; }
+
+        /// <summary>
         /// Extra completion tokens for thinking.
         /// </summary>
         public required uint ThinkingTokenBudget { get; init; }
@@ -57,27 +63,44 @@ namespace CodeReadabilityLib.Pipelines.MassJudge
                     {
                         ModelName = modelFile,
                         Description = fileDescription,
+                        SamplingParameters = description.RecommendedParams?.For(thinking: !flash),
                         ThinkingTokenBudget = flash ? 0 : thinkingTokenBudget
                     }
                 ];
             }
 
             ThinkingSwitch thinkingSwitch = description.ThinkingSwitch ?? ThinkingSwitch.Default;
+            Dictionary<string, JsonElement>? thinkingParams = description.RecommendedParams?.For(thinking: true);
+            Dictionary<string, JsonElement>? noThinkingParams = description.RecommendedParams?.For(thinking: false);
 
+            // Each pass's description keeps only the block it ran with, as a reasoning or flash
+            // model's would.
             return
             [
                 new JudgingPass
                 {
                     ModelName = $"{modelFile} [thinking]",
-                    Description = fileDescription with { Type = ModelTypes.Reasoning, ThinkingSwitch = null },
+                    Description = fileDescription with
+                    {
+                        Type = ModelTypes.Reasoning,
+                        ThinkingSwitch = null,
+                        RecommendedParams = description.RecommendedParams is null ? null : new RecommendedParams { Thinking = thinkingParams }
+                    },
                     ChatTemplateValues = thinkingSwitch.On,
+                    SamplingParameters = thinkingParams,
                     ThinkingTokenBudget = thinkingTokenBudget
                 },
                 new JudgingPass
                 {
                     ModelName = $"{modelFile} [no-thinking]",
-                    Description = fileDescription with { Type = ModelTypes.Flash, ThinkingSwitch = null },
+                    Description = fileDescription with
+                    {
+                        Type = ModelTypes.Flash,
+                        ThinkingSwitch = null,
+                        RecommendedParams = description.RecommendedParams is null ? null : new RecommendedParams { NoThinking = noThinkingParams }
+                    },
                     ChatTemplateValues = thinkingSwitch.Off,
+                    SamplingParameters = noThinkingParams,
                     ThinkingTokenBudget = 0
                 }
             ];

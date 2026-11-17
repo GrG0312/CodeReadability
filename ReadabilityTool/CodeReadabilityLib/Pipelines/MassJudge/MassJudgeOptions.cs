@@ -66,6 +66,6 @@ namespace CodeReadabilityLib.Pipelines.MassJudge
         /// up as unusable answers. The prompt, the code and this budget must all fit in the
         /// server's context size.
         /// </remarks>
-        public uint ThinkingTokenBudget { get; init; } = 2048;
+        public uint ThinkingTokenBudget { get; init; } = 4096;
     }
 }

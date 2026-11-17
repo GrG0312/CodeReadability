@@ -180,6 +180,11 @@ namespace CodeReadabilityLib.Pipelines.ComputeMetrics
 
             report.LlamaCppVersion ??= store.Plan.LlamaCppVersion;
 
+            if (store.Plan.ServerSamplingDefaults.TryGetValue(modelFile, out Dictionary<string, JsonElement>? defaults))
+            {
+                report.ServerSamplingDefaults[modelFile] = defaults;
+            }
+
             List<MetricGradeEntry> entries = store.ReadEntries<MetricGradeEntry>(unit)
                 .GroupBy(entry => entry.SnippetId, StringComparer.Ordinal)
                 .Select(group => group.Last())
@@ -250,7 +255,8 @@ namespace CodeReadabilityLib.Pipelines.ComputeMetrics
             return ModelSession.RunAsync(serverOptions, store, _logger, async client =>
             {
                 // One attempt within the assigned tokens: a failed grading is a result.
-                IReadabilityJudge judge = new MetricJudge(modelFile, client, thinks ? _options.ThinkingTokenBudget : 0, templateValues);
+                IReadabilityJudge judge = new MetricJudge(
+                    modelFile, client, thinks ? _options.ThinkingTokenBudget : 0, templateValues, description.RecommendedParams?.For(thinks));
 
                 // Twice at most: the second pass only grades snippets whose saved grading was
                 // lost (for example glued onto a line damaged by a crash).

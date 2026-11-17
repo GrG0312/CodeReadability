@@ -52,6 +52,7 @@ namespace CodeReadabilityLib.Llms.Judging.Builtin
 
         private readonly uint _thinkingTokenBudget;
         private readonly IReadOnlyDictionary<string, JsonElement>? _chatTemplateValues;
+        private readonly IReadOnlyDictionary<string, JsonElement>? _samplingParameters;
 
         /// <summary>
         /// A reasoning model's thinking block, when the server leaves it in the content.
@@ -67,16 +68,22 @@ namespace CodeReadabilityLib.Llms.Judging.Builtin
         /// Values sent to the model's chat template with every request, such as a hybrid
         /// model's thinking switch.
         /// </param>
+        ///
+        /// <param name="samplingParameters">
+        /// The model's recommended sampling parameters for this mode, sent with every request.
+        /// </param>
         public MetricJudge(
             string name,
             IChatClient chatClient,
             uint thinkingTokenBudget = 0,
-            IReadOnlyDictionary<string, JsonElement>? chatTemplateValues = null)
+            IReadOnlyDictionary<string, JsonElement>? chatTemplateValues = null,
+            IReadOnlyDictionary<string, JsonElement>? samplingParameters = null)
         {
             Name = name;
             _chatClient = chatClient;
             _thinkingTokenBudget = thinkingTokenBudget;
             _chatTemplateValues = chatTemplateValues;
+            _samplingParameters = samplingParameters;
         }
 
         /// <inheritdoc/>
@@ -97,7 +104,8 @@ namespace CodeReadabilityLib.Llms.Judging.Builtin
             {
                 MaxTokens = tokensAllowed,
                 JsonSchema = BuildSchema(request),
-                ChatTemplateValues = _chatTemplateValues
+                ChatTemplateValues = _chatTemplateValues,
+                SamplingParameters = _samplingParameters
             };
 
             ChatCompletion completion;

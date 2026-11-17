@@ -75,6 +75,7 @@ namespace CodeReadabilityLib.Pipelines.Shared
 
                     string? version = await client.GetServerVersionAsync(cancellationToken).ConfigureAwait(false);
                     store.EnsureLlamaCppVersion(version);
+                    store.RecordServerSamplingDefaults(modelFile, await client.GetDefaultSamplingAsync(cancellationToken).ConfigureAwait(false));
 
                     await work(client).ConfigureAwait(false);
                     return version;
