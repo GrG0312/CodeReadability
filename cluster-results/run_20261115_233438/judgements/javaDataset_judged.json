@@ -356,7 +356,7 @@
     "Qwen3.8-27B-UD-Q4_K_M [thinking]": {
       "family": "Qwen3.8",
       "size": "30B",
-      "quant": "UD-Q4_K_M",
+      "quant": "Q4_K_M",
       "type": "reasoning",
       "recommended-params": {
         "thinking": {
@@ -373,7 +373,7 @@
     "Qwen3.8-27B-UD-Q4_K_M [no-thinking]": {
       "family": "Qwen3.8",
       "size": "30B",
-      "quant": "UD-Q4_K_M",
+      "quant": "Q4_K_M",
       "type": "flash",
       "recommended-params": {
         "no-thinking": {

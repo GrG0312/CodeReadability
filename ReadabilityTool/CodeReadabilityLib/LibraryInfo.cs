@@ -14,7 +14,7 @@ namespace CodeReadabilityLib
         /// <summary>
         /// The library version, sent as part of the User-Agent header on outbound requests.
         /// </summary>
-        public const string Version = "1.3.0";
+        public const string Version = "1.4.0";
 
         /// <summary>
         /// The User-Agent value identifying this library to remote hosts.

@@ -57,6 +57,13 @@ namespace CodeReadabilityLib.Analysis.MetricImpact
 
             CorrelationSet humanSet = CorrelationSet.Compute(metrics.Select(table.ForHumans).ToList(), human, bootstrap);
 
+            // The leave-one-out check needs only the LLM-based metrics: the algorithmic ones
+            // have the same values under both averages.
+            int[] llmIndices = Enumerable.Range(0, metrics.Count).Where(i => metrics[i].IsLlm).ToArray();
+            List<double[]> allGraderValues = llmIndices.Select(i => table.ForHumans(metrics[i])).ToList();
+            List<CorrelationSet> checkedLeaveOneOut = new List<CorrelationSet>();
+            List<CorrelationSet> checkedAllGraders = new List<CorrelationSet>();
+
             List<ModelMetricImpact> perModel = new List<ModelMetricImpact>();
             List<RunMetricImpact> perRun = new List<RunMetricImpact>();
             List<CorrelationSet> modelSets = new List<CorrelationSet>();
@@ -93,6 +100,19 @@ namespace CodeReadabilityLib.Analysis.MetricImpact
                     });
                 }
 
+                // Only a model whose file graded the metrics has two different averages.
+                List<LeaveOneOutCheckEntry> leaveOneOutCheck = new List<LeaveOneOutCheckEntry>();
+                if (llmIndices.Length > 0 && table.Graders.Contains(modelFile))
+                {
+                    CorrelationSet allGradersSet = CorrelationSet.FisherMean(runSets
+                        .Select(r => CorrelationSet.Compute(allGraderValues, Scores(r.Run, snippetIds), bootstrap))
+                        .ToList());
+
+                    leaveOneOutCheck = LeaveOneOutCheck(modelSet, allGradersSet, llmIndices, metrics);
+                    checkedLeaveOneOut.Add(modelSet);
+                    checkedAllGraders.Add(allGradersSet);
+                }
+
                 perModel.Add(new ModelMetricImpact
                 {
                     ModelName = model.Key,
@@ -101,7 +121,8 @@ namespace CodeReadabilityLib.Analysis.MetricImpact
                     VersusHuman = builder.VersusHuman(modelSet, humanForModel),
                     SamePrioritiesByStrategy = samePriorities,
                     ClosestStrategy = samePriorities.Where(p => p.Value.HasValue).OrderByDescending(p => p.Value).Select(p => p.Key).FirstOrDefault(),
-                    SelfConsistency = SelfConsistency(model.ToList(), modelFile, table, snippetIds)
+                    SelfConsistency = SelfConsistency(model.ToList(), modelFile, table, snippetIds),
+                    LeaveOneOutCheck = leaveOneOutCheck
                 });
 
                 _logger.Info($"  {model.Key}: done.");
@@ -119,8 +140,64 @@ namespace CodeReadabilityLib.Analysis.MetricImpact
                 PerModel = perModel,
                 PerRun = perRun,
                 GraderAgreement = agreement,
+                LeaveOneOutCheck = checkedLeaveOneOut.Count > 0
+                    ? LeaveOneOutCheck(
+                        CorrelationSet.FisherMean(checkedLeaveOneOut),
+                        CorrelationSet.FisherMean(checkedAllGraders),
+                        llmIndices,
+                        metrics)
+                    : new List<LeaveOneOutCheckEntry>(),
                 Notes = Notes(metricsReport)
             };
+        }
+
+        /// <summary>
+        /// Per LLM-based metric, the leave-one-out correlation next to the all-graders one,
+        /// with a paired bootstrap interval for their difference.
+        /// </summary>
+        ///
+        /// <param name="leaveOneOut">
+        /// Correlations of every metric, in the order of <paramref name="metrics"/>.
+        /// </param>
+        ///
+        /// <param name="allGraders">
+        /// Correlations of the LLM-based metrics only, in the order of
+        /// <paramref name="llmIndices"/>.
+        /// </param>
+        private List<LeaveOneOutCheckEntry> LeaveOneOutCheck(
+            CorrelationSet leaveOneOut,
+            CorrelationSet allGraders,
+            IReadOnlyList<int> llmIndices,
+            IReadOnlyList<MetricInfo> metrics)
+        {
+            List<LeaveOneOutCheckEntry> entries = new List<LeaveOneOutCheckEntry>();
+
+            for (int k = 0; k < llmIndices.Count; k++)
+            {
+                int m = llmIndices[k];
+                double withoutOwn = leaveOneOut.Point[m];
+                double withOwn = allGraders.Point[k];
+
+                // Both sets were computed on the same resamples, so the difference is paired.
+                double[] differences = allGraders.Bootstrap[k]
+                    .Zip(leaveOneOut.Bootstrap[m], (all, loo) => all - loo)
+                    .ToArray();
+
+                ConfidenceInterval? interval = double.IsFinite(withoutOwn) && double.IsFinite(withOwn)
+                    ? Bootstrap.PercentileInterval(differences, _options.Alpha)
+                    : null;
+
+                entries.Add(new LeaveOneOutCheckEntry
+                {
+                    MetricId = metrics[m].MetricId,
+                    SpearmanLeaveOneOut = AnalysisFormat.Finite(withoutOwn),
+                    SpearmanAllGraders = AnalysisFormat.Finite(withOwn),
+                    Difference = AnalysisFormat.Finite(withOwn - withoutOwn),
+                    DifferenceInterval = interval is ConfidenceInterval ci ? new Interval { Lower = ci.Lower, Upper = ci.Upper } : null
+                });
+            }
+
+            return entries;
         }
 
         /// <summary>
@@ -176,6 +253,7 @@ namespace CodeReadabilityLib.Analysis.MetricImpact
             {
                 notes.Add("LLM-based metric values are averages of the graders' grades: over all graders for the human scores, and over every grader except the analysed model's own file (leave-one-out) for a model.");
                 notes.Add("An LLM-based metric with poor grader agreement (ICC < 0.5) is flagged: its values are mostly noise, so a low rank means 'not measured reliably' rather than 'unimportant'.");
+                notes.Add("'leaveOneOutCheck' sets each model's leave-one-out correlation next to its correlation with the all-graders average; the difference is what the model's own grades add. It is descriptive and not tested.");
             }
 
             if (!MetricKinds.IncludesLlm(report.MetricKinds))

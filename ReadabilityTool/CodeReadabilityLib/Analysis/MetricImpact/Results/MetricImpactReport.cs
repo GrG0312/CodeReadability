@@ -50,6 +50,13 @@ namespace CodeReadabilityLib.Analysis.MetricImpact.Results
         [JsonPropertyName("graderAgreement")]
         public List<GraderAgreement> GraderAgreement { get; init; } = new List<GraderAgreement>();
 
+        /// <summary>
+        /// The leave-one-out check pooled over the models that graded the metrics, through the
+        /// Fisher z-transform. Empty without LLM-based metrics or grading models.
+        /// </summary>
+        [JsonPropertyName("leaveOneOutCheck")]
+        public List<LeaveOneOutCheckEntry> LeaveOneOutCheck { get; init; } = new List<LeaveOneOutCheckEntry>();
+
         [JsonPropertyName("notes")]
         public List<string> Notes { get; init; } = new List<string>();
     }

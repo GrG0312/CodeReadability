@@ -50,5 +50,13 @@ namespace CodeReadabilityLib.Analysis.MetricImpact.Results
         /// </summary>
         [JsonPropertyName("selfConsistency")]
         public List<SelfConsistencyEntry> SelfConsistency { get; init; } = new List<SelfConsistencyEntry>();
+
+        /// <summary>
+        /// Per LLM-based metric, the model's correlation with the leave-one-out average next to
+        /// its correlation with the all-graders average. Empty when the model did not grade
+        /// the metrics, because the two averages are then the same.
+        /// </summary>
+        [JsonPropertyName("leaveOneOutCheck")]
+        public List<LeaveOneOutCheckEntry> LeaveOneOutCheck { get; init; } = new List<LeaveOneOutCheckEntry>();
     }
 }
