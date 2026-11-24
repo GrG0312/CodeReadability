@@ -149,11 +149,6 @@ olvashatósága és a nagy nyelvi modellek közötti kapcsolatot mutatják be.
 
 Buse és Weimer szerint egy általános szöveg olvashatósága \textbf{egy emberi ítélet arról, mennyire
 könnyű megérteni egy szöveget} \cite{buse2008metric}.
-%szb: bocsi, itt ugye a natural language olvashatóságra gondoltak, ugye? mert akkor azt írhatnád egy 
-% jelzővel, hogy ... a természetes nyelvű szöveg olvashatósága ... vagy valami ilyesmi. Nehogy confusing legyen, mert elsőre az ember azt hiszi hogy a code 
-% readability-re gonodlsz sztem
-% MG: nem, ha jól értem ők egy általános szöveg olvashatóságáról beszélnek, legyen az kód vagy valami természetes szöveg
-% de ezt a definíciót használják kódhoz is, szóval megállja a helyét
 Céljuk az volt, hogy a forráskódra is olyan mérőszámot alkossanak, amilyen a
 természetes nyelvű szövegekre már korábban létezett. Ilyen például a
 Flesch-Kincaid-index, ami a mondatok és a szavak hosszából becsüli meg egy
@@ -485,21 +480,23 @@ entrópia mozgott együtt \cite{szalontai2025readability}.
 \chapter{Módszertan}
 \label{ch:method}
 
-Ez a fejezet azt a kísérletet ismerteti. Kiindulásként bemutatom az
-emberek által annotált adathalmazt, amely a kódrészleteket és azok olvashatósági pontszámait tartalmazza.
+Ez a fejezet azt a kísérletet ismerteti, amellyel a kutatási kérdéseket vizsgálom.
+Kiindulásként bemutatom az emberek által annotált adathalmazt,
+amely a kódrészleteket és azok olvashatósági pontszámait tartalmazza.
 Ezt követi a vizsgált LLM-ek, valamint azon vizsgálati tengelyek leírása,
-amelyek mentén az LLM-ek egyezését összehasonlítom. 
-Ezután a következő szakaszban azokat a kódmetrikákat mutatom be,
+amelyek mentén az LLM-ek egyezését összehasonlítom.
+Ezután a kódrészletek LLM-ek általi pontozásának menetét írom le.
+A rákövetkező szakaszban azokat a statisztikai módszereket mutatom be,
+amelyekkel az egyezést és a tengelyek hatását mérem.
+A fejezet azoknak a kódmetrikáknak a bemutatásával zárul,
 amelyeknek a pontszámokkal való együttmozgását vizsgálom.
-A fejezet azoknak a statisztikai módszereknek a bemutatásával zárul,
-amelyekkel az egyezést, a tengelyek hatását és a metrikák szerepét mérem.
 
 \section{A kísérletekhez használt adathalmaz}
 \label{sec:method:dataset}
 
-A kísérletekhez a \ref{sec:related:models}. alfejezetben ismertetett három,
+A kísérletekhez a \ref{sec:related:models}. szakaszban ismertetett három,
 emberek által pontozott adathalmaz Java-nyelvű kódrészleteit használom. Ezeket a
-részleteket Krodinger egyetlen, 421 kódrészletből álló adathalmazba gyűjtötte,
+kódrészleteket Krodinger egyetlen, 421 kódrészletből álló adathalmazba gyűjtötte,
 és tette közzé a Hugging Face platformon \cite{krodinger2023merged}. Az
 adathalmaz minden bejegyzés esetében tartalmazza magát a kódrészletet
 és az emberi pontszámok átlagát egy 1-től 5-ig terjedő skálán, ahol az 1 a
@@ -509,12 +506,12 @@ között ugyanezt a 421 kódrészletet tartalmazza, ezért a két munka eredmén
 a kódrészleteken közvetlenül összehasonlíthatóak \cite{ouedraogo2025coreeval}.
 
 A három forrásból származó kódrészletek
-több szempontból is különböznek egymástól. Buse és Weimer 100 részlete rövidebb,
-átlagosan 7,7 soros kódrészleteket tartalmaz, és valamennyit ugyanaz a 120
-hallgató értékelte \cite{buse2008metric}. Dorn 121 Java-részlete nagyjából
-egyenlő arányban 10, 30 és 50 soros részletekből áll, és részletenként átlagosan
+több szempontból is különböznek egymástól. Buse és Weimer 100 kódrészlete rövidebb.
+Átlagosan 7,7 soros kódrészleteket tartalmaz, és valamennyit ugyanaz a 120
+hallgató értékelte \cite{buse2008metric}. Dorn 121 kódrészlete nagyjából
+egyenlő arányban 10, 30 és 50 soros részletekből áll, és kódrészletenként átlagosan
 mintegy 214 értékelést kapott \cite{dorn2012general}. Scalabrino és munkatársai
-200 részlete pedig teljes, 10--50 soros metódusokat foglal magába, amelyek
+200 kódrészlete pedig teljes, 10-50 soros metódusokat foglal magába, amelyek
 mindegyikét kilenc hallgató értékelte \cite{scalabrino2016improving}.
 
 \begin{table}[htb]
@@ -546,27 +543,32 @@ mindegyikét kilenc hallgató értékelte \cite{scalabrino2016improving}.
 \end{table}
 
 Az LLM-ek pontszámainak összehasonlítási alapját az adathalmaz emberi
-átlagpontszámai adják. Az első kutatási kérdés (\textbf{RQ1}) arra irányul, hogy
-a lokálisan futtatott LLM-ek pontszámai mennyire egyeznek az emberi
-átlagpontszámokkal, és mely modellek mutatnak jobb, illetve rosszabb egyezést.
-%szb: ok, hogy erre irányul, de mi az első kutatási kérdés? Mármint konkrétan. Ha RQ-kkal dolgozol (ez amúgy opcionális)
-% akkor azoknak nagggyon konkrétnak kell lenniük és át kell szőniük a diplomamunka egészét
-% ha az olvasó RQ-t lát, akkor egy rövid tömör explicit kérdésre gondol, ami valahogy nagyon egyéretlműen ki van emelve
-% a dolgozatban, és többször van említve. 2 opciót látok: vagy átformálod a stílust itt-ott hogy az RQ központibb szerepet ű
-% kapjon vagy csak simán elhagyod a számozást
+átlagpontszámai adják. Az első kutatási kérdés (\textit{research question}, RQ)
+a következő:
+
+\textbf{RQ1:} \textit{Mennyire egyeznek a lokálisan futtatott LLM-ek pontszámai
+az emberi átlagpontszámokkal, és mely modellek mutatnak jobb, illetve rosszabb
+egyezést?}
 
 \section{A kísérlethez használt modellek és vizsgálati tengelyek}
 \label{sec:method:models}
 
-A kísérlet folyamán tizenkét lokálisan futtatott modellt vizsgálok, amelyek
+A kísérlet folyamán hat lokálisan futtatott modellt vizsgálok, amelyek
 három modellcsaládból származnak. A Gemma-4 család három méretben (E4B, 12B és
-31B), a Qwen3.5 család két méretben (4B és 9B), a Qwen3.8 család pedig egyetlen
-méretben (27B) szerepel. Mindegyik modell két kvantálásban érhető el: nyolcbites
-(\textit{Q8\_0}), illetve négybites (\textit{Q4\_K\_M}) számábrázolással.
-
-A modellek mindegyike GGUF fájl formátumú, futtatásukat egy
-\textit{llama-server} végzi (verziószám: b11804-c7fc50941). A modelleket a
-következő táblázat összegzi:
+31B), a Qwen3.5 család két méretben (4B és 9B), a Qwen3.8 család pedig egy
+méretben (27B) szerepel. Mindegyik modell nyolcbites (\textit{Q8\_0}),
+illetve négybites kvantálással érhető el. A négybites változatokat a
+\textit{Q4\_K\_M} módszerrel kvantálták. A Qwen3.8 négybites változata ilyen
+formában nem volt elérhető, ezért annak az \textit{Unsloth Dynamic} módszerrel
+kvantált változatát használom.%
+\footnote{Mindkét módszer vegyes pontosságú
+négybites kvantálás, azaz a súlyok jelentős részét négybites formában tárolják,
+a kényesebb részeket pedig magasabb pontosságon tartják meg. Az eltérés abban
+rejlik, hogy a \textit{Q4\_K\_M} ezeket a részeket előre rögzített szabály
+szerint jelöli ki, míg az Unsloth Dynamic módszer rétegenként, modellenként
+egyedi módon választja meg a számábrázolást \cite{unsloth2026dynamic}. A két
+módszer különbségét a kísérlet nem méri.}
+A modelleket a következő táblázat összegzi:
 
 \begin{table}[htb]
 	\centering
@@ -575,148 +577,107 @@ következő táblázat összegzi:
 		\hline
 		\textbf{Modell} & \textbf{Család} & \textbf{Méretosztály} & \textbf{Kvantálások} \\
 		\hline \hline
-		gemma-4-E4B-it & Gemma-4 & 4B & Q4\_K\_M, Q8\_0 \\
+		gemma-4-E4B-it & Gemma-4 & 4B & 4 bit, 8 bit \\
 		\hline
-		gemma-4-12b-it & Gemma-4 & 12B & Q4\_K\_M, Q8\_0 \\
+		gemma-4-12b-it & Gemma-4 & 12B & 4 bit, 8 bit \\
 		\hline
-		gemma-4-31B-it & Gemma-4 & 30B & Q4\_K\_M, Q8\_0 \\
+		gemma-4-31B-it & Gemma-4 & 30B & 4 bit, 8 bit \\
 		\hline
-		Qwen3.5-4B & Qwen3.5 & 4B & Q4\_K\_M, Q8\_0 \\
+		Qwen3.5-4B & Qwen3.5 & 4B & 4 bit, 8 bit \\
 		\hline
-		Qwen3.5-9B & Qwen3.5 & 9B & Q4\_K\_M, Q8\_0 \\
+		Qwen3.5-9B & Qwen3.5 & 9B & 4 bit, 8 bit \\
 		\hline
-		Qwen3.8-27B & Qwen3.8 & 30B & Q4\_K\_M\textsuperscript{*}, Q8\_0 \\
+		Qwen3.8-27B & Qwen3.8 & 30B & 4 bit\textsuperscript{*}, 8 bit \\
 		\hline
 	\end{tabular}
-	\caption[A vizsgált modellek]{A vizsgált modellek. \textsuperscript{*}A Qwen3.8 négybites
-	változata Unsloth Dynamic kvantálású fájl, lásd lejjebb a tengelyek bemutatását.}
+	\caption[A vizsgált modellek]{A vizsgált modellek. \textsuperscript{*}A Qwen3.8
+	négybites változata az Unsloth Dynamic módszerrel kvantált.}
 	\label{tab:method:models}
 \end{table}
 
+A vizsgálati tengelyek azokat a tényezőket jelentik,
+amelyek hatással lehetnek a modellek teljesítményére.
+Öt tengelyt elemzek: a kvantálást, a modellméretet,
+a gondolkodási módot, a modellcsaládot és a promptolási stratégiát.
+
 A modellek mindegyike hibrid, vagyis képes gondolkodó (\textit{thinking}) és
 közvetlen válaszadó (\textit{no-thinking}) módban is ugyanazokkal a súlyokkal
-futni. Valamennyi modellfájlt mindkét módban lefuttatom, a két módot pedig külön
-modellként kezelem, aminek következtében a vizsgált modellek száma 24-re nő. %szb: ez hibás. 
-% Attó, hogy 2féleképpen futtatsz 1 modellt, attól az nem lesz 2 modell, emiatt te se kezelheted 2 modellként
-% az h reasoninggal vagy nélküle futtatsz, csak egy "random" beállítás, mint a kvantálás
-Mivel a két mód súlyai %szb: helytelen terminológia, a modelleknek vannak súlyai, nem a módoknak
-megegyeznek, a közöttük tapasztalható eltérés csakis a gondolkodásból eredhet,
+futni. Minden hibrid modellt mindkét módban lefuttatok.
+Mivel mindkét módban ugyanaz a modell fut, így a közöttük tapasztalható eltérés csakis a gondolkodásból eredhet,
 ezért a gondolkodás hatása egyéb tényezők befolyásától függetlenül elemezhető.
 Gondolkodó módban a modell legfeljebb 4096 token hosszan gondolkodhat a válasz
 megadása előtt.
 
-A vizsgálati tengelyek azokat a tényezőket jelentik, %szb: most vezeted be a vizsgálati tengelyeket, holott épp 
-% az előbb már az egyiket leírtad (reasoning vs. no reasoning)
-amelyek hatással lehetnek a modellek teljesítményére.
-A modelltulajdonságok közül négy tengelyt elemzek: a kvantálást, a
-modellméretet, a gondolkodási módot és a modellcsaládot. Ezek mellett ötödikként
-egy modellfüggetlen tengely, %szb: sztem fura ezt elkülöníteni, nem szükséges. Amúgy sem az a lényeg
-% hogy a modellnek mik a beállításai, hanem az, hogy a kiértékelés/futtatás milyen "paraméterekkel" történik
-% és a prompt ugyanúgy egy paramétere a futtatásnak, mint az, hogy mely modellt nézed
-a promptolási stratégia is szerepel a vizsgálatban, amelyet minden modellen
-kipróbálok. Egy tengely hatását úgy mérem, hogy olyan modellpárokat hasonlítok
-össze, amelyek a vizsgált tulajdonságon kívül minden másban megegyeznek. Ennek
-megfelelően a kvantálás tengelyén 12, a méret tengelyén 16, a gondolkodás
-tengelyén 12, a család tengelyén pedig 8 modellpár áll rendelkezésre.
+A méret tengelyén kizárólag azonos családba tartozó modelleket vetek össze.
+A család tengelyén hasonló méretű, azonos kvantálású és módú modellek állnak
+szemben egymással. Mivel kevés modellt vizsgálok, így egy általánosabb következtetést
+csak akkor fogalmazok meg, ha a méret szerinti párok összevetése minden családban hasonló eredményt ad.
 
-A méret tengelyén kizárólag azonos családba tartozó modelleket vetek össze. A
-család tengelyén azonos méretosztályú, kvantálású és módú modellek állnak
-szemben egymással. Ennek érdekében a Gemma-4 31B és a Qwen3.8 27B modellt közös,
-30B méretosztályba soroltam, %szb: ez így fura:
-% "kizárólag azonos családba tartozó modelleket vetek össze"
-% vs. "közös, 30B méretosztályba soroltam"
-% ez nem ellentmondás?
-% szimplán annyi lenne a dolog, hogy a qwen3.8-at ne vesd direktbe össze a kisebb qwen 3.5-ökkel, mert nem ugyanaz a modellcsalád
-% ... de azért persze említsd meg, hogy az nyílván mennyivel jobban teljesít, azzal a kiegészítésével, hogy nem közvetlenül összehasonlítható,
-%        de azért nyilván jobban összevethető mint mondjuk egy gemma modellel
-% ugyanakkor a gemma-4-et ne vond össze a qwen 3.8-cal, annak nincs értelme sztem. A gemma 4 közvelten összevethető annak kisebb variánsaival.
-% ne keveredjenek a modellek
-így a családok közötti összehasonlításban e két modell mérete nem teljesen
-azonos. A Qwen 3.8 négybites változataként az \textbf{Unsloth Dynamic} (UD)
-kvantálási módszerrel ellátott %szb: nem X kvantálási módszerrel ellátott, hanem X módszerrel kvantált.
-verziót használtam, mert a modellek tárolójában %szb: tároló?
-a kutatómunka készítése idejében nem szerepelt a szokásos Q4\_K\_M kvantálású
-változat. %szb: ezt nem kell ennyire részletezni. Ez UD volt elérhető a sima helyett, és kész
-Mindkét módszer vegyes pontosságú négybites kvantálás, azaz a súlyok jelentős
-részét négybites formában tárolják, a kényesebb részeket pedig magasabb
-pontosságon tartják meg. Az eltérés abban rejlik, hogy a \textit{Q4\_K\_M}
-ezeket a részeket előre rögzített szabály szerint jelöli ki, míg az UD eljárás
-rétegenként, azok érzékenysége alapján teszi ugyanezt. %szb: ez talán elég csak footnote-nak
-% TODO: hivatkozás (Unsloth dokumentáció a dinamikus kvantálásról)
-A modellek leírásában ezért a Qwen3.8 négybites változatának kvantálását a többi
-négybites modellel azonos (\textit{Q4\_K\_M})-ként rögzítettem, hogy a kvantálás
-és a család tengelyén össze lehessen vetni velük. A két eljárás különbségét a
-kísérlet nem méri, mert nincs olyan modell, amely UD és UD-nélküli formában is
-szerepelne. %szb: nagyon túl van ragozva ez a kvantálás. Szimán annyit kéne írni, hogy használsz 8bites és 4bites számábrázolású modelleket
-%, és a 4biteseket így kvantálták, és kész. itt elég 1x említeni a k_m módszert, meg az ud-s módszert is, aztán
-% mindenhol máshol csak 4bitesként vagy 8bitesként hivatkozni ezekre
+A tengelyeken kialakított párok alapján adható meg a válasz a második kutatási
+kérdésre:
 
-A tengelyeken kialakított modellpárok alapján adható meg a válasz a második
-kutatási kérdésre (\textbf{RQ2}): milyen hatással van a kvantálás, a
-modellméret, a gondolkodási mód, a modellcsalád és a promptolási stratégia az
-LLM-ek és az emberek pontszámainak egyezésére.
-%szb: ugyanaz vonatkozik erre és mindegyik a kutatási kérdésre, mint amit fentebb írtam
+\textbf{RQ2:} \textit{Milyen hatással van a kvantálás, a modellméret, a
+gondolkodási mód, a modellcsalád és a promptolási stratégia az LLM-ek és az
+emberek pontszámainak egyezésére?}
 
 \section{A kódrészletek LLM-ek általi pontozásának menete}
 \label{sec:method:judging}
 
-Valamennyi modell minden promptolási stratégiával %szb: van oka, hogy csak a promptolási stratégiát említed? És nem pl. a kvantálást?
-végigfut az adathalmazon, és pontozza az egyes kódrészleteket. Egy modellnek egy
-adott promptolási stratégiával végzett pontozását a továbbiakban
-\textbf{futásnak} nevezem. Az adathalmaz 421 kódrészletét mind a 24 modell mind
-a négy promptolási stratégiával pontozza, ami összesen 96 futást eredményez.
-Minden futásban minden kódrészletre egyetlen választ kérek. %szb: ez a "kérek" picit kevéssé formális, fura olvasata van
+A modellek mindegyike mindkét kvantálásban, mindkét gondolkodási módban és minden
+promptolási stratégiával végigfut az adathalmazon, és pontozza az egyes kódrészleteket.
+Egy modellnek egy adott kvantálással, gondolkodási móddal és promptolási stratégiával
+végzett pontozását a továbbiakban \textbf{futásnak} nevezem.
+A hat modell, a két kvantálás, a két gondolkodási mód és a négy
+promptolási stratégia összesen 96 futást eredményez. Minden futásban a modell
+minden kódrészletet egyszer pontoz.
 
 A négy promptolási stratégia abban tér el egymástól, hogy mennyire pontosan
-fogalmazzák meg a kérést. A \textit{zero-shot} stratégia közvetlenül pontszámot
+fogalmazzák meg a feladatot. A \textit{zero-shot} stratégia közvetlenül pontszámot
 kér, és csupán a skála két végpontját (1 - legrosszabb, 5 - legjobb) határozza
 meg. A \textit{zero-shot-detailed} stratégia ezen túl felsorolja az értékelés
 szempontjait (elnevezések, szerkezet és vezérlési folyam, formázás,
 megjegyzések, idiómák), valamint szavakkal leírja az öt pontozási szintet. A
 \textit{one-shot} stratégia egyetlen, kiváló (5-ös) példát mutat a modellnek, a
 \textit{few-shot} stratégia pedig három példát, amelyek pontszáma 1, 3 és 5. A
-példák Java-nyelvben íródtak és kifejezetten erre a célra készültek. Nem
-származnak az adathalmazból, %szb: nem az adathalmazból származnak
-így nem befolyásolják a modelleket az értékelésben. A három példa ugyanazt a
-feladatot (az adott pontszám feletti, aktív felhasználók nevének visszaadását)
-oldja meg három különböző olvashatósági szinten.
-%TODO: insert hivatkozás to appendix
-%szb: a promptokat úgy ahogy vannak, bele kell írnod a diplomadolgozatba, ha más nem, az appendixbe
+példák Java nyelven íródtak és kifejezetten erre a célra készültek.
+Nem az adathalmazból származnak, így nem befolyásolják a modelleket az értékelésben.
+A három adott példa ugyanazt a feladatot oldja meg három különböző olvashatósági szinten.
+A promptok teljes szövege az \ref{app:prompts}.~függelékben található.
 
-Minden stratégia esetén a rendszerüzenet %szb: esetleg zárójelbe, hogy system prompt... meg az üzenetet szerintem következetesen hívd prompt-nak, 
-% ha már fentebb is promptnak hívtad
+Minden stratégia esetén a rendszerprompt (\textit{system prompt})
 szigorú olvashatósági értékelő szerepébe helyezi a modellt, és rögzíti, hogy a
-válasz egyetlen, 1 és 5 közötti egész szám kell, %szb: tehát akkor a zero shot promptban is benne van az 1-5 skála, meg a sys promptban is?
+válasz egyetlen, 1 és 5 közötti egész szám kell,
 hogy legyen, amelyet \texttt{\{"score": int\}} formátumú JSON-objektumban kell
-megadni. Ez után a nyelv megnevezése (\texttt{Language: Java}), valamint a
-kódrészlet következnek. A promptok teljes szövege az
-\ref{app:prompts}.~függelékben található. A modellek az emberi
-átlagpontszámokkal azonos, %szb: megegyező ink.
-1-től 5-ig terjedő skálán pontoznak, ám egész pontszámot adnak, míg az emberi
-pontszám több értékelő átlaga. %szb: ha már itt említed ezt a folytonos vs. diszkrét eltérést, akkor le kéne írni, hogy mi ennek a vonatkozása
-% és hogyan értelmezendőek így az eredmények
+megadni. A skáláról tehát a rendszerpromptból tudnak a modellek, viszont leírást nem kapnak hozzá.
+Ez már a felhasználói prompt (\textit{user prompt}) szerepe. A skála leírásának további része,
+a nyelv megnevezése (\texttt{Language: Java}), valamint a kódrészletek így mind a felhasználói promptba kerülnek.
+A promptok teljes szövege az \ref{app:prompts}.~függelékben található.
+A modellek az emberi átlagpontszámokkal megegyező, 1-től 5-ig terjedő skálán pontoznak,
+ám egész pontszámot adnak, míg az emberi pontszám több értékelő átlaga.
+Emiatt a modell pontszáma csak ritkán egyezhet meg pontosan az emberi átlaggal, és sok
+kódrészlet kaphat a modelltől másikkal azonos pontszámot.
+Emiatt az emberi és modell által adott pontszámok értéke közvetlenül nem vethető össze,
+ezért az egyezést elsősorban a sorrend egyezésével mérem.
+A pontszámok értékének összehasonlításánál azt egyezésnek tekintem,
+ha a modell pontszáma egy pontnál kevesebbel tér el az emberi átlagtól.
 
-A válasz formáját a llama.cpp %szb: nem értem, hogy jön ide a llamacpp? az egy implementációs detail, amit leírhatsz persze, de itt 
-% nem illik a kontextusba az a pluszinfó , hogy ezzel futtattál. Ezeket így a gondolatmenet/bekezdés/section végén, mellékes infóként szokás megemlíteni
-% vagy footnoteként
-a JSON-sémából épített nyelvtannal kényszeríti ki, %szb: nem értem, mi az, hogy json-sémából épített nyelvtan. Nyelvtan alatt valami
-% formális grammatikára gondolsz? és hogy jön ehhez a json formátum? 
-így a modell kizárólag 1 és 5 közötti egész pontszámot képes generálni. %szb: ezek LLM-ek, bármit képesek generálni, ez így helytelen
-A válaszra legfeljebb 64 token áll rendelkezésre. Ha a válasz a keret kimerülése
-miatt csonkul, az nem tekinthető értékelhető válasznak: rögzítem, és a
-válaszadási arányba beszámítom, de nem pótolom vagy próbálkozok másik válasz
-kérésével. Hasonlóképpen nem értékelhető az a válasz, amelyből hiányzik a
-pontszám, vagy amely a skálán kívül esik.
+A modell válasza legfeljebb 64 token lehet.
+Gondolkodó módban a gondolkodás és a válasz közösen legfeljebb 4096 tokent használhat.
+Ha a válasz a keret kimerülése miatt csonkul, az nem tekinthető értékelhető válasznak:
+rögzítem, és a válaszadási arányba beszámítom, de nem pótolom új válasszal.
+Hasonlóképpen nem értékelhető az a válasz, amelyből hiányzik a pontszám, vagy amely a skálán
+kívül esik.
 
-A mintavételi beállításokat %szb: ezelé jöhetne egy bevezető mondat, hogy a modelleket többféle paraméterrel is lehet futtatni, és ez a f
-% uttatás az amire gondolsz mintavétel alatt. Aki nem az LLMekkel kel/fekszik, nincs meg neki, hogy mintavétel = llm futtatás
+Egy LLM a válaszát tokenekből állítja elő. Minden tokent szavakká formáló lépésben
+a token által definiált lehetséges folytatások közül választ.
+A választás véletlenszerűségét a mintavételi beállítások szabályozzák,
+ilyen például a hőmérséklet (\textit{temperature}).
+A mintavételi beállításokat
 a modellek készítőinek ajánlásai alapján adom meg, külön a gondolkodó és a
 közvetlenül válaszoló módokra is egyaránt (\ref{tab:method:sampling}.~táblázat).
-Ezeket a beállításokat minden kéréshez mellékelem. A meg nem adott paraméterek a
-llama.cpp alapértelmezett értékét veszik fel. A véletlen mag
-%szb: ezt komolyan így mondják magyarul? még sosem hallottam, nagyon fura...
-minden kérésnél ugyanaz (35420), a kontextusméret 8192 token, a szerver pedig
-egyszerre egy kérést dolgoz fel.
+Ezeket a beállításokat minden kéréshez mellékelem.
+A meg nem adott paraméterek az alapértelmezett értékét veszik fel.
+A véletlenszám-generátor kezdőértéke minden pontozáskor ugyanaz (35420).
 
 \begin{table}[htb]
 	\centering
@@ -742,6 +703,181 @@ egyszerre egy kérést dolgoz fel.
 	használatát jelöli.}
 	\label{tab:method:sampling}
 \end{table}
+
+\section{Az egyezés mérésének és a statisztikai elemzés módszerei}
+\label{sec:method:statistics}
+
+Ebben a szakaszban azokat a módszereket mutatom be, amelyekkel az első három kutatási kérdésre keresem a választ.
+Elsőként azokat a mérőszámokat ismertetem, amelyek segítségével egy futás pontszámait kódrészletenként
+összevetem az emberi átlagpontszámokkal (RQ1).
+Ezután az eredmények megbízhatóságának becslését írom le, valamint hogy miként hasonlítom össze a tengelyek párjait
+és a promptolási stratégiákat (RQ2).
+Végül arra is kitérek, hogy hogyan vetem össze az LLM-eket a korábbi,
+nem LLM-alapú olvashatósági modellekkel (RQ3).
+
+\subsection{Az egyezés mérőszámai}
+
+Az egyezés fő mérőszáma a \textbf{Spearman-féle rangkorreláció}. Ez azt méri,
+mennyire egyezik a kódrészletek sorrendje, ha egyszer a futásban kapott, egyszer az
+emberi pontszámok szerint rendezzük őket. Azért ez a fő mérőszám, mivel az
+emberi átlagpontszámok folytonosak, az LLM-ek pontszámai egészek, és a két
+sorozat sorrendjének egyezése a lényeges. Az azonos pontszámot kapott
+kódrészletek a sorrendben közös, átlagos helyezést kapnak.
+Mivel a Spearman-korreláció csak a sorrendet veszi figyelembe, ezért a mérést öt
+további mérőszámmal egészítem ki, amelyek az egyezés más oldalait mutatják meg.
+
+A \textbf{Pearson-korreláció} a pontszámok tényleges értékeinek lineáris együttmozgását
+méri, vagyis azt, hogy ha az emberi pontszám nő, a futásban kapott pontszám is mindig nagyjából
+ugyanakkora mértékben nő-e. A korábbi munkák is közlik ezt az értéket~\cite{buse2010learning,ouedraogo2025coreeval}, így az eredmények ezekkel
+összevethetők.
+
+A \textbf{Kendall-féle $\tau_b$} a Spearman-féle rangkorrelációhoz hasonlóan
+a sorrend egyezését méri, de a kódrészleteket párosával hasonlítja össze.
+Minden kódrészletpárnál azt nézi meg, hogy az éppen vizsgált futás és az
+emberek pontszámai szerint ugyanaz a kódrészlet-e az olvashatóbb.
+Értéke annál nagyobb, minél több párnál egyezik a két ítélet, és minél
+kevesebbnél ellentétes. Ha a pár két kódrészlete a futásban
+azonos pontszámot kap, a pár sem egyezőnek, sem ellentétesnek nem számít.
+Ez gyakran előfordul,
+mert az ötfokú skálán az LLM-ek sok kódrészletnek ugyanazt a pontszámot adják,
+míg az emberi átlagpontszámok szinte mind különböznek. A $\tau_b$ változat
+ezeket a párokat úgy kezeli, hogy ne húzzák a nulla felé az értéket. Az azonos
+pontszám ugyanis nem a futás és az emberek ellentétes ítéletéből fakad, hanem
+abból, hogy a skálán csak öt érték van.
+
+A korrelációk nem érzékenyek
+arra, ha egy LLM minden kódrészletet következetesen magasabbra pontoz az
+embereknél. Ez akkor jelent problémát, ha az LLM pontszámát önmagában,
+abszolút értékként használjuk. Egy következetesen optimista LLM például ugyan jól
+visszaadhatja a sorrendet, mégis olvashatónak minősíthet olyan kódot, amelyet az
+emberek csupán közepesnek tartanak. Ezt a fajta eltolódást az \textbf{átlagos abszolút eltérés}
+(\textit{Mean Absolute Error}, MAE) mutatja meg. Ez azt méri, hány ponttal tér el
+átlagosan a futás pontszáma az emberi átlagtól. A \textbf{pontos egyezések aránya}
+ugyanezt szemléletesebben adja meg: azt, hogy a válaszok mekkora része esik
+közel az emberi átlaghoz. Pontos egyezésnek az számít, ha a futás pontszáma az
+emberi átlagtól kevesebb mint egy ponttal tér el.
+
+Két értékelő pontszáma véletlenül is egyezhet, főleg ha mindkettő a skála közepét használja,
+ezért a \textbf{négyzetesen súlyozott Cohen-féle $\kappa$} (\textit{quadratic weighted kappa}, QWK)
+ezt a várható véletlen egyezést levonja.
+A QWK azt méri, hogy az éppen vizsgált futás és az emberek ugyanazt az értéket adják-e
+az egyes kódrészleteknek az 1-től 5-ig terjedő skálán. Értéke 1, ha a
+futás pontszáma mindig megegyezik az emberek kerekített pontszámával, és 0, ha az egyezés nem jobb a véletlennél.
+A négyzetes súlyozás a nevében azt jelenti, hogy az eltérés büntetése a távolság négyzetével nő:
+az egypontos eltérés kevéssé, a kétpontos már négyszer annyira számít. A QWK
+a korrelációktól eltérően érzékeny a következetes eltolódásra, az átlagos
+eltéréstől eltérően pedig nem jutalmazza azt a futást, amelyben minden
+kódrészlet a skála közepéhez közeli pontszámot kap. Mivel a QWK csak egész
+pontszámokat tud összevetni, ezért az emberi átlagpontszámokat a legközelebbi egészre
+kerekítem.
+
+Minden futásra megadom továbbá a \textbf{ROC-görbe alatti területet} (\textit{area under the ROC curve}, AUC) is.
+Ennek a számításához az olvasható és a nem olvasható kódrészleteket a teljes adathalmaz emberi mediánja választja el.
+Az AUC annak a valószínűségét adja meg, hogy ha az emberek által
+olvashatónak és nem olvashatónak ítélt kódrészletek közül egyet-egyet
+véletlenszerűen párban kiválasztunk, az olvasható kódrészlet kap a futásban magasabb pontszámot.
+Ha a kettő azonos pontszámot kap, a pár fél találatnak számít. Ez
+végül egy 0 és 1 közötti értéket eredményez, ahol a 0,5-ös érték a véletlen
+találgatásnak, az 1 a hibátlan elválasztásnak felel meg. A korábbi olvashatósági
+modellek bináris osztályozást végeztek, és pontosságot vagy AUC-t közöltek,
+ezért ez a mérőszám áll legközelebb az eredményeikhez, bár közvetlenül nem
+hasonlítható össze velük.
+A korábbi modelleket ugyanis betanították, és más adathalmazokon, más küszöbbel
+értékelték.
+
+Végül rögzítem a \textbf{válaszadási arányt} is, vagyis azt, hogy a
+kódrészletek hányadára született a futásban értékelhető pontszám. A mérőszámokat csak az
+értékelhető válaszokon számolom, ezért a válaszadási arány nélkül nem látszana,
+ha egy futásban a kódrészletek egy részére nem született válasz.
+
+\subsection{Az eredmények megbízhatósága}
+
+A mérőszámok közötti kis eltérések a véletlenből is fakadhatnak, ezért minden
+eredménynél megadom, hogy az mennyire megbízható.
+Erre a célra a \textit{bootstrap} eljárást alkalmazom \cite{efron1979bootstrap}.
+Az eljárás azt becsli meg, mennyire változna egy mérőszám értéke (például egy futás Spearman-korrelációja),
+ha egy másik, hasonló adathalmazon számolnánk ki.
+Kimenete a mérőszám értékének egy \textbf{95\%-os konfidenciaintervalluma}:
+minél szűkebb, annál megbízhatóbb a mérőszám eredménye.
+Az eljáráshoz szükséges véletlenszerű lépéseket rögzített kezdőértékkel (seed) végzem,
+így az elemzés determinisztikus.
+
+Két eredmény összehasonlításakor, például két futás Spearman-korrelációjának
+vizsgálatakor, a két érték közötti kis különbség abból is adódhat, hogy éppen ezek a
+specifikus kódrészletek kerültek az adathalmazba.
+Ezt a \textbf{p-érték} mutatja meg: minél kisebb, annál kevésbé
+valószínű, hogy ekkora különbség csak az adathalmaz összetétele miatt jöjjön létre.
+Ha a p-érték 0,05 alatt van, a különbséget szignifikánsnak tekintem.
+A p-értéket szintén a bootstrap eljárással becsülöm.
+
+\subsection{Az eredmények összehasonlítása}
+
+Egy modellt egy adott kvantálással és gondolkodási móddal a továbbiakban
+\textbf{modellváltozatnak} nevezek, így minden modellváltozathoz négy futás
+tartozik, promptolási stratégiánként egy.
+
+A tengelyek hatását modellváltozatok párjainak összehasonlításán keresztül vizsgálom.
+Egy pár két modellváltozata kizárólag egy vizsgált tulajdonságban különbözik, például
+ugyanannak a modellnek a négy- és nyolcbites változata ugyanabban a gondolkodási
+módban.
+A két modellváltozat Spearman-korrelációját csak azokon a kódrészleteken
+számolom ki, amelyek mindkettő futásaiban értékelhető pontszámot kaptak, így a
+két modellváltozatot ugyanazokon a kódrészleteken vizsgálom.
+A két korreláció különbségének p-értékét a bootstrap eljárással becsülöm.
+A modellváltozatok Spearman-korrelációját kétféleképpen hasonlítom össze: a négy
+promptolási stratégiával készült futás korrelációinak átlagán, valamint
+stratégiánként külön-külön is, mivel egy tulajdonság hatását a prompt is befolyásolhatja.
+Egy tengelyen több párt hasonlítok össze, és minél több az összehasonlítás,
+annál nagyobb az esélye annak, hogy valamelyik csak véletlenül tűnik szignifikánsnak.
+Ennek ellensúlyozására a \textbf{Holm-korrekciót} alkalmazom, amely szigorúbbá teszi a
+szignifikancia küszöbét.
+
+A Spearman-korreláció mellett azt is megvizsgálom, hogy a modellváltozat-pár melyik
+modellváltozatának pontszámai esnek közelebb az emberi átlagpontszámokhoz.
+Ehhez minden kódrészletnél kiszámolom, hogy átlagosan hány ponttal tér el a két modellváltozat
+pontszáma az emberi átlagtól a modellváltozat négy futására nézve.
+Azt, hogy az egyik modellváltozat eltérései következetesen kisebbek-e,
+a Wilcoxon-féle előjeles rangpróbával döntöm el.
+A próba szintén p-értéket ad, amelyre ugyanúgy alkalmazom a Holm-korrekciót.
+
+A promptolási stratégiákat kétféleképpen hasonlítom össze.
+Az első a \textbf{Friedman-próba}, amely minden modellváltozat esetében sorba rendezi a négy stratégiát
+aszerint, hogy melyik stratégia használatával egyezik a modell a legjobban az emberi pontszámokkal.
+A próba ezután azt vizsgálja, hogy valamelyik stratégia a modellváltozatok többségénél
+következetesen előrébb vagy hátrébb kerül-e, mint ami a véletlenből adódna. Így
+minden modellváltozatot egyetlen adatként kezel, és arra ad választ, hogy van-e
+általánosan jobb stratégia.
+A második eljárás a stratégiákat páronként hasonlítja össze a bootstrap eljárás segítségével.
+Egy stratégiapárnál az összes modell átlagos Spearman-korrelációját vetem össze,
+és minden húzásban ugyanazokat a kódrészleteket használom mindkét stratégiára.
+A négy stratégiából hat pár adódik, ezért itt is Holm-korrekciót alkalmazok.
+Ugyanezt az összehasonlítást modellenként külön is elvégzem, viszont a két eljárás eltérő eredményt is adhat.
+A Friedman-próba stratégiánként csupán 24 értéket lát, minden modellből egyet, a
+bootstrap eljárás viszont mind a 421 kódrészletet felhasználja, így a kisebb
+különbségeket is kimutathatja. Ezért az eredmények közlésekor mindig rögzítem,
+hogy az adott állítás melyik eljáráson alapul.
+
+\subsection{Összevetés a korábbi olvashatósági modellekkel}
+
+A harmadik kutatási kérdés a következő:
+
+\textbf{RQ3:} \textit{Hogyan viszonyulnak az LLM-ek a korábbi, nem LLM-alapú
+olvashatósági modellekhez?}
+
+Számszerű összevetést kizárólag Scalabrino és munkatársai átfogó modelljével tudok
+végezni, mivel ennek a modellnek a kimeneteit Ouédraogo és munkatársai ugyanerre
+az adathalmazra közzétették \cite{scalabrino2018comprehensive,ouedraogo2025coreeval}.
+A modell kimeneteire ugyanúgy kiszámolom az emberi átlagpontszámokkal vett Spearman-korrelációt, és
+ezt minden saját modellváltozatom négy futásának átlagos Spearman-korrelációjával vetem össze. 
+A különbség p-értékét a bootstrap eljárással becsülöm, és a 24
+összehasonlításra Holm-korrekciót alkalmazok.
+A futásokra kiszámolt AUC viszont nem hasonlítható közvetlenül a Scalabrino-féle modell közölt AUC-jéhez.
+Az a modell egy betanított osztályozó, amelyet 660 kódrészleten, más küszöbbel
+értékeltek, az LLM-ek viszont semmilyen tanítást nem kaptak, és 421
+kódrészleten futnak.
+
+A többi, korábbi modellek eredményei más adatokon és más feltételek mellett születtek,
+ezért az LLM-eket velük csak szempontok szerint vetem össze.
 
 \section{A kódrészleteken kiértékelt metrikák}
 \label{sec:method:metrics}
@@ -784,7 +920,7 @@ válasz alakját ugyanúgy JSON-séma kényszeríti ki, mint a pontszámoknál. 
 Az LLM-ekkel pontozott metrikák másfajta kompromisszummal járnak, mint a
 képlettel számolt metrikák. %szb: másfajta kompromisszum? mert az előző mivel járt? Ezelőtt nem szerepel a kompromisszum szó, nincs viszonyítási alap
 A képlettel számoltak csupán a szövegfelszínt képesek méri, míg az LLM-értékelő
-ezzel szemben a jelentést is figyelembe veheti, és kódtöredékeken %szb: kódrészlet
+ezzel szemben a jelentést is figyelembe veheti, és kódrészlet
 is jól alkalmazható. Ezt szemlélteti jól például a megjegyzések és a kód
 összhangja: Scalabrino és munkatársai a megjegyzések és az azonosítók közös
 szavait számolják, ezért egy elavult megjegyzés is magas értéket kaphat, ha sok
@@ -831,129 +967,6 @@ húzódik, ha a metrika valójában fontos. Az ilyen metrika alacsony rangsorhel
 így azt jelenti, hogy a metrikát nem sikerült megbízhatóan mérni, és nem azt,
 hogy nincs hatása.
 
-\section{Az egyezés mérésének és a statisztikai elemzés módszerei}
-\label{sec:method:statistics}
-
-A futások pontszámait kódrészletenként vetem össze az emberi átlagpontszámokkal
-(RQ1). %szb: most hirtelen visszaváltottunk az eredeti "fő" kérdéskörhöz? nehé követni a fonalat, mert csomó "ideig" az a metrikás irány volt
-Az egyezés fő mérőszáma a Spearman-féle rangkorreláció, mivel az emberi
-átlagpontszámok folytonosak, a modellek pontszámai egészek, és a két sorozat
-sorrendjének egyezése a lényeges. Az azonos pontszámokat átlagos rangokkal
-kezelem.
-
-Mivel a Spearman-korreláció csak a sorrendet veszi figyelembe, ezért a mérést öt
-további mérőszámmal egészítem ki, amelyek az egyezés más oldalait mutatják meg.
-A Pearson-korreláció a pontszámok tényleges értékeinek lineáris együttmozgását
-méri, azaz ha az emberi pontszám nő, a modell pontszáma is mindig nagyjából
-ugyanakkora mértékben nő-e. Ilyenkor a pontpárok egy egyenes mentén helyezkednek
-el. A korábbi munkák is közlik ezt az értéket
-\cite{buse2010learning,ouedraogo2025coreeval}, így az eredmények ezekkel
-összevethetők. A Kendall-féle $\tau_b$ szintén rangkorreláció, amely a
-kódrészletek párjait hasonlítja össze. Minden párnál azt vizsgálja, hogy a
-modell és az emberek ugyanabban, vagy éppen fordított sorrendben rangsorolják-e
-a két kódrészletet. Ha a modell a két kódrészletnek azonos pontszámot ad, a pár
-egyik csoportba sem tartozik, és a $\tau_b$ úgy számol, hogy ezek a
-holtversenyek ne rontsák az értéket. Erre azért van szükség, mert az ötfokú
-skálán a modellek sok kódrészletnek ugyanazt a pontszámot adják, míg az emberi
-átlagpontszámok szinte mind különböznek. Korrekció nélkül ezek a holtversenyek a
-nulla felé húznák az eredményeket, pedig nem a modell és az emberek ellentétes
-ítéletéből, hanem a skála durvaságából fakadnak. A korrelációk nem érzékenyek
-arra, ha egy modell minden kódrészletet következetesen magasabbra pontoz az
-embereknél. Ez akkor jelent problémát, ha a modell pontszámát önmagában,
-abszolút értékként használjuk: egy következetesen optimista modell ugyan jól
-visszaadhatja a sorrendet, mégis olvashatónak minősíthet olyan kódot, amelyet az
-emberek csupán közepesnek tartanak. Ezt a fajta eltolódást az átlagos abszolút
-eltérés (Mean Average Error, MAE) mutatja meg. Ez azt méri, hány ponttal tér el
-átlagosan a modell pontszáma az emberi átlagtól. A pontos egyezések aránya
-ugyanezt szemléletesebben adja meg: azt, hogy a válaszok mekkora része esik
-közel az emberi átlaghoz. Pontos egyezésnek az számít, ha a modell pontszáma az
-emberi átlagtól kevesebb mint egy ponttal tér el. Két értékelő pontszáma
-véletlenül is egyezhet, főleg ha mindkettő a skála közepét használja, ezért a
-négyzetesen súlyozott Cohen-féle $\kappa$ (QWK) ezt a várható véletlen egyezést
-levonja. A QWK azt méri, hogy a modell és az emberek ugyanazt az értéket adják-e
-az egyes kódrészleteknek az 1-től 5-ig terjedő skálán. Értéke 1, ha a
-pontszintek mindig egyeznek, és 0, ha az egyezés nem jobb a véletlennél. A
-négyzetes súlyozás azt jelenti, hogy az eltérés büntetése a távolság négyzetével
-nő: az egypontos eltérés kevéssé, a kétpontos már négyszer annyira számít. A QWK
-a korrelációktól eltérően érzékeny a következetes eltolódásra, az átlagos
-eltéréstől eltérően pedig nem jutalmazza azt a modellt, amely minden
-kódrészletre a skála közepéhez közeli pontszámot ad. Mivel a QWK pontszinteket
-hasonlít össze, ezért az emberi átlagpontszámokat a legközelebbi egészre
-kerekítem. %szb: ezeket szépen leírod és magyarázod szerintem, de valahogy ki kéne emelni ezeket a mérőszámokat, hogy ha visszakukkant 
-% az ember a kiértékelés módszertanára, akkor rögtön ki is szúrja ezeket a számokat. Pl. lehet felsorolás, vagy az is, hogy a fő dolgokat 
-% kiemeled félkövérre a szövegben
-
-Emellett minden futásra megadom a ROC-görbe alatti területet (AUC), amelyhez az
-olvasható és a nem olvasható kódrészleteket a teljes adathalmaz emberi mediánja
-választja el. Az AUC annak a valószínűségét adja meg, hogy ha az emberek által
-olvashatónak és nem olvashatónak ítélt kódrészletek közül egyet-egyet
-véletlenszerűen kiválasztunk, a modell az olvashatónak ad magasabb pontszámot.
-Ha a modell a kettőnek azonos pontszámot ad, a pár fél találatnak számít. Ez
-végül egy 0 és 1 közötti érték lesz, ahol a 0,5-ös érték a véletlen
-találgatásnak felel meg, az 1 a hibátlan elválasztásnak. A korábbi olvashatósági
-modellek bináris osztályozást végeztek, és pontosságot vagy AUC-t közöltek,
-ezért ez a mérőszám áll legközelebb az eredményeikhez, bár közvetlenül nem
-hasonlítható össze velük. %szb: miért is nem? fent írod, hogy megdod az auc-t és akkor mások is megadták, akkor mi a baj ezzel?
-Végül rögzítem a válaszadási arányt is, vagyis azt, hogy a kódrészletek
-hányadára adott a modell értékelhető pontszámot. A mérőszámokat csak az
-értékelhető válaszokon számolom, ezért a válaszadási arány nélkül nem látszana,
-ha egy modell a kódrészletek egy részére nem ad választ.
-
-A mérőszámok közötti kis eltérések a véletlenből is fakadhatnak, ezért minden
-eredménynél megadom, hogy az mennyire megbízható. Mivel új adathalmazt nem tudok
-gyűjteni, %szb: ez hogy jön szóba? miért csinálnál újat? és egyébként tudnál, ha akarnál, csak nyilván időigényes lenne, meg nem is scope
-% de by default nem scope, így nem hiszem, hogy említeni kéne csak így a semmiből...
-ezért erre a célra a \textit{bootstrap} eljárást alkalmazom. Az eljárás a
-meglévő 421 kódrészletből véletlenszerű húzással 2000 új adathalmazt készít, és
-mindegyiken újraszámolja az eredményt. %szb: mely eredményt?
-Bármilyen mérőszámra alkalmazható, és nem igényel előzetes feltevést arról,
-hogyan oszlanak el az értékek. Kimenete egy 95\%-os konfidenciaintervallum,
-vagyis az a tartomány, amelyen belül az eredmény a húzások 95\%-ában marad:
-minél szűkebb, annál megbízhatóbb az eredmény. Két modell vagy két promptolási
-stratégia összehasonlításakor a különbségük intervallumát vizsgálom. Ha ez nem
-tartalmazza a nullát, a különbség szignifikáns, vagyis nem a véletlen műve, amit
-a 0,05 alatti p-érték is jelez. A húzásokat rögzített kezdőértékkel végzem, így
-az elemzés megismételve ugyanazokat a számokat adja. %szb: kicsit ez a bekezdés nehezen értelmezhető számpmra
-
-A tengelyek hatását modellpárok %szb: nem modelleket hasonlítasz, hanem futtatásokat inkább.
-% tehát ha ugyanazt a modellt 2 kvantálással öszsehasonlítod, az ugyanaz a modell, nem modellpár
-összehasonlításán keresztül vizsgálom. Egy pár két modellje kizárólag egy
-vizsgált tulajdonságban különbözik, például ugyanannak a modellnek a négy- és
-nyolcbites változata. A két modell Spearman-korrelációját csak azokra a
-kódrészletekre számolom ki, amelyekre mindkettő értékelhető pontszámot adott,
-így a két modellt ugyanazon az anyagon mérem. %szb: anyagon mérem - ez nagyon fura így olvasni
-A két korreláció különbségét a bootstrap eljárással vizsgálom, és minden
-bootstrap-húzásban ugyanazokat a kódrészleteket használom mindkét modellre, hogy
-a különbség csakis a modellekből fakadjon.
-% Ehhez talán érteni kell a bootstrapet. Erről kellene vajon írnom egy részletes bemutatást hogy hogy működik?
-%szb: jaja, ha más nem, akkor legalább hivatkozd be. De én röviden elmagyaráznám
-Az összehasonlítást elvégzem a négy promptolási stratégia átlagára, valamint
-külön minden stratégiára is. Egy tengelyen több modellpárt hasonlítok össze, és
-minél több az összehasonlítás, annál nagyobb az esélye annak, hogy valamelyik
-csak véletlenül tűnik szignifikánsnak. Ezt a Holm-korrekcióval ellensúlyozom,
-amely ilyenkor szigorúbbá teszi a szignifikancia küszöbét. Emellett azt is
-megvizsgálom, hogy melyik modell pontszámai esnek közelebb az emberekéhez:
-kódrészletenként összevetem a két modell eltérését az emberi pontszámtól, és a
-Wilcoxon-féle előjeles rangpróbával döntöm el, hogy a különbség véletlen-e. %szb: én eléggé elvesztem itt...
-
-A promptolási stratégiákat két, egymást kiegészítő eljárással hasonlítom össze. %szb: elgondokkoztam hogy mire gondolsz az eljárás alatt...
-%majd továbbolvastam, és megértettem. Elég annyi, hogy kétféleképpen, és kész. Eljárás alatt kicsit többre vagy bonyolultabb dologra gondolok
-Az első a Friedman-próba, amely minden modellnél sorba rendezi a négy stratégiát
-aszerint, hogy melyik használatával egyezik a modell a legjobban az emberekkel.
-A próba ezután azt vizsgálja, hogy valamelyik stratégia a modellek többségénél
-következetesen előrébb vagy hátrébb kerül-e, mint ami a véletlenből adódna. Így
-minden modellt egyetlen adatként kezel, és arra ad választ, hogy van-e
-általánosan jobb stratégia. A második eljárás a stratégiákat páronként
-hasonlítja össze a bootstrap eljárással. Egy stratégiapárnál az összes modell
-átlagos Spearman-korrelációját vetem össze, és minden húzásban ugyanazokat a
-kódrészleteket használom mindkét stratégiára. A négy stratégiából hat pár
-adódik, ezért itt is Holm-korrekciót alkalmazok. Ugyanezt az összehasonlítást
-modellenként külön is elvégzem, viszont a két eljárás eltérő eredményt is adhat.
-A Friedman-próba stratégiánként csupán 24 értéket lát, minden modellből egyet, a
-bootstrap eljárás viszont mind a 421 kódrészletet felhasználja, így a kisebb
-különbségeket is kimutathatja. Ezért az eredmények közlésekor mindig rögzítem,
-hogy az adott állítás melyik eljáráson alapul.
-
 A metrikák és a pontszámok kapcsolatát (RQ3) szintén Spearman-korrelációval
 mérem. Minden metrikára kiszámolom, mennyire mozog együtt a metrika értéke az
 emberek, illetve az egyes modellek pontszámaival, azokon a kódrészleteken,
@@ -999,20 +1012,6 @@ nem különböznek szignifikánsan. Ennek oka, hogy egy rangsorban nagyon sok
 metrikapárt hasonlítok össze, és a Holm-korrekció ilyenkor szigorúbbá teszi a
 küszöböt, ezért csak a nagy különbségek bizonyulnak szignifikánsnak.
 
-A negyedik kutatási kérdés (\textbf{RQ4}) arra irányul, hogy hogyan viszonyulnak
-az LLM-ek a korábbi, nem LLM-alapú olvashatósági modellekhez. Számszerű
-összevetést kizárólag Scalabrino és munkatársai átfogó modelljével végzek, mivel
-ennek a modellnek a kimeneteit Ouédraogo és munkatársai ugyanerre az
-adathalmazra közzétették
-\cite{scalabrino2018comprehensive,ouedraogo2025coreeval}. A korábbi modellek
-eredményei más adatokon és más feltételek mellett születtek, ezért az LLM-eket
-velük csak szempontok szerint vetem össze. Ilyen szempont például, hogy mennyi
-adat kell a tanításukhoz, mennyire működnek új kódon, és mennyire érthető, mi
-alapján döntenek. A futásokra az AUC-t is kiszámolom, de ez nem hasonlítható
-közvetlenül a Scalabrino-féle modell AUC-jéhez. Az a modell egy betanított
-osztályozó, amelyet 660 kódrészleten, más küszöbbel értékeltek, az LLM-ek
-viszont semmilyen tanítást nem kaptak, és 421 kódrészleten futnak.
-
 %szb: összfoglaló vélemény a módszertanról:
 % tök érthetően indult, de aztán nagyon elvesztem sajnos.
 % A 3.4-nél kezdtem egyre nehezebben érteni a dolgokat
@@ -1031,10 +1030,8 @@ viszont semmilyen tanítást nem kaptak, és 421 kódrészleten futnak.
 \chapter{Eredmények}
 \label{ch:results}
 
-Ez a fejezet a kutatómunka eredményeit ismerteti, az értelmezésükre a
-\ref{ch:discussion}.~fejezetben kerül sor. %szb: ne hivatkozd rögtön a másik fejezetet, fura
-Az első szakasz %szb: szakasz alatt section-ra gondolsz? az ink legyen alfejezet
-a futások válaszadását tekinti át, a második az emberi pontszámokkal való
+Ez a fejezet a kutatómunka eredményeit ismerteti.
+Az első alfejezet a futások válaszadását tekinti át, a második az emberi pontszámokkal való
 egyezést mutatja be (RQ1). A harmadik és a negyedik szakasz a
 modelltulajdonságok és a promptolási stratégiák hatását tárgyalja (RQ2). Az
 ötödik szakasz a pontszámokkal együtt mozgó kódtulajdonságokat (RQ3), a hatodik
@@ -1046,8 +1043,7 @@ pedig a Scalabrino-féle modellel való összevetést (RQ4) tartalmazza.
 A 24 modell a négy promptolási stratégiával összesen 96 futást teljesített,
 futásonként 421 kódrészlettel, ami 40\,416 választ eredményezett. Ezek közül
 39\,112 válasz bizonyult értékelhetőnek, 1304 válasz (3,2\%) pedig nem.
-Valamennyi %szb: sokszor használod ezt a szót, alapból ok, de itt sztem zavaró. Akkor most mindegyik, vagy csak néhány?
-nem értékelhető válasz csonkult válasz volt: a modell a rendelkezésére álló
+Minden nem értékelhető válasz csonkult válasz volt: a modell a rendelkezésére álló
 tokenkeret kimerüléséig nem adott meg pontszámot. Ilyen válasz kizárólag
 gondolkodó módban fordult elő, a közvetlenül válaszoló módban minden futás
 minden kódrészletre adott pontszámot. A futások válaszadási arányának mediánja
@@ -1352,7 +1348,9 @@ a 4B méretosztályban a Gemma-4, a 30B méretosztályban a Qwen3.8 modell elté
 		31B/27B, Q8, közv.: Gemma-4 $\rightarrow$ Qwen3.8 & $+0{,}006$ & [$-0{,}044$; $0{,}058$] & $1{,}000$ \\
 		\hline
 	\end{tabular}
-	\caption[A modellcsalád hatása]{A modellcsalád hatása: a Spearman-korreláció különbsége ($\Delta\rho$, a második mínusz az első család) a négy promptolási stratégia átlagában, páros bootstrap konfidenciaintervallummal és Holm-korrigált $p$-értékkel. A csillag a szignifikáns különbséget jelöli.}
+	\caption[A modellcsalád hatása]{A modellcsalád hatása: a Spearman-korreláció különbsége ($\Delta\rho$, a második mínusz az első család)
+	a négy promptolási stratégia átlagában, páros bootstrap konfidenciaintervallummal és Holm-korrigált $p$-értékkel.
+	A csillag a szignifikáns különbséget jelöli.}
 	\label{tab:results:axis:family}
 \end{table}
 
@@ -1656,6 +1654,156 @@ kódrészleteket vettem figyelembe, amelyekre mind a négy futásuk értékelhet
 
 \chapter{A promptok szövege}
 \label{app:prompts}
+
+Ez a függelék a négy promptolási stratégia promptjait tartalmazza szó szerint.
+Minden kérés két részből áll: a rendszerprompt (\textit{system prompt}) a modell
+szerepét, a skálát és a válasz formáját rögzíti, a felhasználói prompt
+(\textit{user prompt}) pedig az értékelendő kódrészletet tartalmazza.
+
+\section*{A rendszerprompt közös része}
+
+Mind a négy stratégia rendszerpromptja ezzel a szöveggel kezdődik:
+
+\begin{lstlisting}[breaklines=true, literate={—}{{---}}1]
+You are a strict, deterministic code readability rater.
+Reply with ONLY compact JSON: {"score": int}, where score is an integer from 1 to 5. 1 = very poor readability, 5 = excellent readability.
+Judge only how easy the code is to read and understand. Do not include correctness, performance, or style preference.
+\end{lstlisting}
+
+\section*{Zero-shot}
+
+A rendszerprompt csak a közös részből áll. A felhasználói prompt:
+
+\begin{lstlisting}[breaklines=true]
+Language: Java
+
+Rate the readability of this code:
+-----BEGIN-CODE-----
+{kódrészlet}
+-----END-CODE-----
+
+Return only the JSON object.
+\end{lstlisting}
+
+\section*{Zero-shot-detailed}
+
+A rendszerprompt a közös rész után egy üres sorral folytatódik:
+
+\begin{lstlisting}[breaklines=true]
+Consider these criteria:
+- Naming: do identifiers describe their purpose?
+- Structure and control flow: is the logic simple, short and shallowly nested?
+- Formatting: are indentation, spacing and line length consistent and easy on the eye?
+- Comments and documentation: do they explain what is not obvious from the code?
+- Idioms: does the code use the language's familiar constructs?
+
+Score levels:
+- 1 = Very poor: hard to follow even with effort; cryptic or misleading names, tangled or deeply nested control flow, inconsistent layout, no helpful comments.
+- 2 = Poor: understandable only with significant effort; several unclear names, long or convoluted logic, distracting formatting.
+- 3 = Acceptable: understandable with moderate effort; mostly reasonable names and structure, but with noticeable problems.
+- 4 = Good: easy to follow; clear names, sensible structure and consistent formatting, with only minor issues.
+- 5 = Excellent: immediately understandable; descriptive names, simple and well-organised logic, clean formatting, comments where they help.
+\end{lstlisting}
+
+A felhasználói prompt:
+
+\begin{lstlisting}[breaklines=true]
+Language: Java
+
+Rate the readability of this code using the criteria and score levels:
+-----BEGIN-CODE-----
+{kódrészlet}
+-----END-CODE-----
+
+Return only the JSON object.
+\end{lstlisting}
+
+\section*{One-shot}
+
+A rendszerprompt a közös rész után ezzel a mondattal folytatódik:
+
+\begin{lstlisting}[breaklines=true]
+Use the scored example to calibrate your rating.
+\end{lstlisting}
+
+A felhasználói prompt a few-shot prompt 3. példáját tartalmazza:
+
+\begin{lstlisting}[breaklines=true]
+Language: Java
+
+Example:
+-----BEGIN-CODE-----
+/** Returns the names of the active users whose score exceeds {@code minScore}. */
+public List<String> activeUsersAboveScore(List<User> users, int minScore) {
+    return users.stream()
+            .filter(user -> user.isActive() && user.getScore() > minScore)
+            .map(User::getName)
+            .toList();
+}
+-----END-CODE-----
+{"score": 5}
+
+Now rate the readability of this code:
+-----BEGIN-CODE-----
+{kódrészlet}
+-----END-CODE-----
+
+Return only the JSON object.
+\end{lstlisting}
+
+\section*{Few-shot}
+
+A rendszerprompt a közös rész után ezzel a mondattal folytatódik:
+
+\begin{lstlisting}[breaklines=true]
+Use the scored examples to calibrate your ratings.
+\end{lstlisting}
+
+A felhasználói prompt:
+
+\begin{lstlisting}[breaklines=true]
+Language: Java
+
+Example 1:
+-----BEGIN-CODE-----
+public List<String> f(List<Object[]> l,int t){List<String> r=new ArrayList<>();
+for(int i=0;i<l.size();i++){if((int)l.get(i)[1]>t){if((boolean)l.get(i)[2]==true){r.add((String)l.get(i)[0]);}}}
+return r;}
+-----END-CODE-----
+{"score": 1}
+
+Example 2:
+-----BEGIN-CODE-----
+public List<String> getNames(List<User> lst, int n) {
+    List<String> r = new ArrayList<>();
+    for (User e : lst) {
+        if (e.score > n && e.active)
+            r.add(e.name);
+    }
+    return r;
+}
+-----END-CODE-----
+{"score": 3}
+
+Example 3:
+-----BEGIN-CODE-----
+/** Returns the names of the active users whose score exceeds {@code minScore}. */
+public List<String> activeUsersAboveScore(List<User> users, int minScore) {
+    return users.stream()
+            .filter(user -> user.isActive() && user.getScore() > minScore)
+            .map(User::getName)
+            .toList();
+}
+-----END-CODE-----
+{"score": 5}
+
+Now rate the readability of this code:
+-----BEGIN-CODE-----
+{kódrészlet}
+-----END-CODE-----
+
+Return only the JSON object.
+\end{lstlisting}
 
 \chapter{A kódmetrikák definíciói}
 \label{app:metrics}
