@@ -493,36 +493,43 @@ entrópia mozgott együtt \cite{szalontai2025readability}.
 \chapter{Módszertan}
 \label{ch:method}
 
+%szb: picit túl messziről írod. Inkább a kísérlet jön fel, mint általános dolog,
+% ezzel szembemn lehetne konkretizálni. Apróságokra gondolok, hogy pl. bemutatom az adathalmazt helyett
+% bemutatom az emberek által annotált adathalmazt, amely forráskódrészletekert és azok olvashatósági 
+% értékeléseit tartalmazzák.
 Ez a fejezet a kísérlet felépítését ismerteti. Kiindulásként bemutatom az
 adathalmazt, amelyen a kísérlet zajlott. Ezt követik a vizsgált modellek, a
 vizsgálati tengelyek, a pontozás menete és a kódmetrikák leírásai. A fejezet a
 statisztikai elemzés módszereinek bemutatásával zárul. A dolgozat négy kutatási
 kérdését (RQ1-RQ4) azon a ponton fogalmazom meg, ahol a megválaszolásukhoz
 szükséges módszer szóba kerül, az Eredmények fejezet szakaszai pedig ezekre
-hivatkoznak vissza.
+hivatkoznak vissza. %Szb: utiolsó mondat kicsit fura, felesleges infónak tűnik, de végülis maradhat
 
 \section{A kísérletekhez használt adathalmaz}
 \label{sec:method:dataset}
 
 A kísérletekhez a \ref{sec:related:models}. alfejezetben ismertetett három,
 emberek által pontozott adathalmaz Java-nyelvű kódrészleteit használom. Ezeket a
-részleteket Krodinger egyetlen, 421 kódrészletből álló adathalmazba gyűjtötte, és
-tette közzé a Hugging Face platformon \cite{krodinger2023merged}. Az adathalmaz
-minden kódrészlet esetében tartalmazza magát a kódot és az emberi pontszámok
-átlagát egy 1-től 5-ig terjedő skálán, ahol az 1 a nagyon nehezen, az 5 a nagyon
-könnyen olvasható kódot jelöli. Az átlagoláson kívül más feldolgozást nem
-végeztek az adatokon. A CoReEval benchmark Java-részhalmaza ugyanezt a 421
-kódrészletet tartalmazza, ami lehetővé teszi az eredmények közvetlen
-összevetését \cite{ouedraogo2025coreeval}.
+részleteket Krodinger egyetlen, 421 kódrészletből álló adathalmazba gyűjtötte,
+és tette közzé a Hugging Face platformon \cite{krodinger2023merged}. Az
+adathalmaz minden kódrészlet esetében tartalmazza magát a kódot %szb: kód helyett kódrészlet (mindenütt)
+és az emberi pontszámok átlagát egy 1-től 5-ig terjedő skálán, ahol az 1 a
+nagyon nehezen, az 5 a nagyon könnyen olvasható kódot jelöli. Az átlagoláson
+kívül más feldolgozást nem végeztek az adatokon. A CoReEval benchmark
+Java-részhalmaza ugyanezt a 421 kódrészletet tartalmazza, ami lehetővé teszi az
+eredmények közvetlen összevetését \cite{ouedraogo2025coreeval}. %szb: kicsit megtévesztő, mert így is úgy tűnik
+% mintha ugyanazokon értékelne ki mindkettőtök.
+% egy olyan kulcsszó, hogy "többek között" már sokat segít pl.
 
-A három forrásból származó részletek több szempontból is különböznek egymástól.
-Buse és Weimer 100 részlete rövidebb, átlagosan 7,7 soros kódrészleteket
-tartalmaz, és valamennyit ugyanaz a 120 hallgató értékelte
-\cite{buse2008metric}. Dorn 121 Java-részlete nagyjából egyenlő arányban 10, 30
-és 50 soros részletekből áll, és részletenként átlagosan mintegy 214 értékelést
-kapott \cite{dorn2012general}. Scalabrino és munkatársai 200 részlete pedig
-teljes, 10--50 soros metódusokat foglal magába, amelyek mindegyikét kilenc
-hallgató értékelte \cite{scalabrino2016improving}.
+A három forrásból származó részletek %szb: legyen következetesen kódrészletek. jelnelg egyszer kód, egyszer részlet
+% és az olvasó nem biztos h tudja h ugyanarra gondolsz
+több szempontból is különböznek egymástól. Buse és Weimer 100 részlete rövidebb,
+átlagosan 7,7 soros kódrészleteket tartalmaz, és valamennyit ugyanaz a 120
+hallgató értékelte \cite{buse2008metric}. Dorn 121 Java-részlete nagyjából
+egyenlő arányban 10, 30 és 50 soros részletekből áll, és részletenként átlagosan
+mintegy 214 értékelést kapott \cite{dorn2012general}. Scalabrino és munkatársai
+200 részlete pedig teljes, 10--50 soros metódusokat foglal magába, amelyek
+mindegyikét kilenc hallgató értékelte \cite{scalabrino2016improving}.
 
 % TODO: ezt a táblázatot majd formázni kell mert undorítóan néz ki pdf-ben
 % mondjuk pl elfelezni kettőbe, vagy valahogy aggresszíven középre igazítani az egész táblázatot (nem a szöveget benne)
@@ -547,26 +554,34 @@ hallgató értékelte \cite{scalabrino2016improving}.
 		Összesen & 421 & 23,1 & -- & 3,46 & 0,58 \\
 		\hline
 	\end{tabular}
-	\caption[Az egyesített adathalmaz összetétele]{Az egyesített adathalmaz összetétele forrásonként.
-	Az értékelések száma a forráspublikációk adatain alapul.}
+	\caption[Az egyesített adathalmaz összetétele]{Az egyesített adathalmaz
+	összetétele forrásonként. Az értékelések száma a forráspublikációk adatain
+	alapul.}
 	\label{tab:method:dataset}
 \end{table}
 
-Az LLM-ek pontszámainak összehasonlítási alapját az adathalmaz emberi átlagpontszámai adják.
-Az első kutatási kérdés (\textbf{RQ1}) arra irányul, hogy a lokálisan futtatott LLM-ek pontszámai
-mennyire egyeznek az emberi átlagpontszámokkal, és mely modellek mutatnak jobb,
-illetve rosszabb egyezést.
+Az LLM-ek pontszámainak összehasonlítási alapját az adathalmaz emberi
+átlagpontszámai adják. Az első kutatási kérdés (\textbf{RQ1}) arra irányul, hogy
+a lokálisan futtatott LLM-ek pontszámai mennyire egyeznek az emberi
+átlagpontszámokkal, és mely modellek mutatnak jobb, illetve rosszabb egyezést.
+%szb: ok, hogy erre irányul, de mi az első kutatási kérdés? Mármint konkrétan. Ha RQ-kkal dolgozol (ez amúgy opcionális)
+% akkor azoknak nagggyon konkrétnak kell lenniük és át kell szőniük a diplomamunka egészét
+% ha az olvasó RQ-t lát, akkor egy rövid tömör explicit kérdésre gondol, ami valahogy nagyon egyéretlműen ki van emelve
+% a dolgozatban, és többsazör van említve. 2 opciót látok: vagy átformálod a stílust itt-ott hogy az RQ központibb szerepet ű
+% kapjon vagy csak simán elhagyod a számozást
 
-\section{Modellek és vizsgálati tengelyek}
+\section{Modellek és vizsgálati tengelyek} %lehetnének a címek picikét bővebbek, pl. Modellek helyett A kísérlethez használt modellek
 \label{sec:method:models}
 
-A kísérlet folyamán tizenkét lokálisan futtatott modellt vizsgálok, amelyek három modellcsaládból származnak.
-A Gemma-4 család három méretben (E4B, 12B és 31B), a Qwen3.5 család két méretben (4B és 9B),
-a Qwen3.8 család pedig egyetlen méretben (27B) szerepel. Mindegyik modell két kvantálásban érhető el:
-nyolcbites (\textit{Q8\_0}), illetve négybites (\textit{Q4\_K\_M}) számábrázolással.
+A kísérlet folyamán tizenkét lokálisan futtatott modellt vizsgálok, amelyek
+három modellcsaládból származnak. A Gemma-4 család három méretben (E4B, 12B és
+31B), a Qwen3.5 család két méretben (4B és 9B), a Qwen3.8 család pedig egyetlen
+méretben (27B) szerepel. Mindegyik modell két kvantálásban érhető el: nyolcbites
+(\textit{Q8\_0}), illetve négybites (\textit{Q4\_K\_M}) számábrázolással.
 
-A modellek mindegyike GGUF fájl formátumú, futtatásukat egy \textit{llama-server} végzi (verziószám: b11804-c7fc50941).
-A modelleket a következő táblázat összegzi:
+A modellek mindegyike GGUF fájl formátumú, futtatásukat egy
+\textit{llama-server} végzi (verziószám: b11804-c7fc50941). A modelleket a
+következő táblázat összegzi:
 
 \begin{table}[htb]
 	\centering
@@ -593,29 +608,45 @@ A modelleket a következő táblázat összegzi:
 	\label{tab:method:models}
 \end{table}
 
-A modellek mindegyike hibrid, vagyis képes gondolkodó (\textit{thinking}) és közvetlen válaszadó (\textit{no-thinking}) módban is
-ugyanazokkal a súlyokkal futni. Valamennyi modellfájlt mindkét módban lefuttatom, a két módot pedig külön modellként kezelem,
-aminek következtében a vizsgált modellek száma 24-re nő. Mivel a két mód súlyai megegyeznek,
-a közöttük tapasztalható eltérés csakis a gondolkodásból eredhet, ezért a gondolkodás hatása
-egyéb tényezők befolyásától függetlenül elemezhető. Gondolkodó módban a modell legfeljebb
-4096 token hosszan gondolkodhat a válasz megadása előtt.
+A modellek mindegyike hibrid, vagyis képes gondolkodó (\textit{thinking}) és
+közvetlen válaszadó (\textit{no-thinking}) módban is ugyanazokkal a súlyokkal
+futni. Valamennyi modellfájlt mindkét módban lefuttatom, a két módot pedig külön
+modellként kezelem, aminek következtében a vizsgált modellek száma 24-re nő. %szb: ez hibás. 
+% Attó, hogy 2féleképpen futtatsz 1 modellt, attól az nem lesz 2 modell, emiatt te se kezelheted 2 modellként
+% az h reasoninggal vagy nélküle futtatsz, csak egy "random" beállítás, mint a kvantálás
+Mivel a két mód súlyai %szb: helytelen terminológia, a modelleknek vannak súlyai, nem a módoknak
+megegyeznek, a közöttük tapasztalható eltérés csakis a gondolkodásból eredhet,
+ezért a gondolkodás hatása egyéb tényezők befolyásától függetlenül elemezhető.
+Gondolkodó módban a modell legfeljebb 4096 token hosszan gondolkodhat a válasz
+megadása előtt.
 
-A vizsgálati tengelyek azokat a tényezőket jelentik, amelyek hatással lehetnek a modellek viselkedésére.
-A modelltulajdonságok közül négy tengelyt elemzek: a kvantálást, a modellméretet, a gondolkodási módot
-és a modellcsaládot. Ezek mellett ötödikként egy modellfüggetlen tengely, a promptolási stratégia is szerepel a vizsgálatban,
-amelyet minden modellen kipróbálok. Egy tengely hatását úgy mérem, hogy olyan modellpárokat hasonlítok össze,
-amelyek a vizsgált tulajdonságon kívül minden másban megegyeznek. Ennek megfelelően a kvantálás tengelyén 12,
-a méret tengelyén 16, a gondolkodás tengelyén 12, a család tengelyén pedig 8 modellpár áll rendelkezésre.
+A vizsgálati tengelyek azokat a tényezőket jelentik, %szb: most vezeted be a vizsgálati tengelyeket, holott épp 
+% az előbb már az egyiket leírtad (reasoning vs. no reasoning)
+amelyek hatással lehetnek a modellek viselkedésére. %szb: kimeneteire, teljesítményére
+A modelltulajdonságok közül négy tengelyt elemzek: a kvantálást, a
+modellméretet, a gondolkodási módot és a modellcsaládot. Ezek mellett ötödikként
+egy modellfüggetlen tengely, %szb: sztem fura ezt elkülöníteni, nem szükséges. Amúgy sem az a lényeg
+% hogy a modellnek mik a beállításai, hanem az, hogy a kiértékelés/futtatás milyen "paraméterekkel" történik
+% és a prompt ugyanúgy egy paramétere a futtatásnak, mint az, hogy mely modellt nézed
+a promptolási stratégia is szerepel a vizsgálatban, amelyet minden modellen
+kipróbálok. Egy tengely hatását úgy mérem, hogy olyan modellpárokat hasonlítok
+össze, amelyek a vizsgált tulajdonságon kívül minden másban megegyeznek. Ennek
+megfelelően a kvantálás tengelyén 12, a méret tengelyén 16, a gondolkodás
+tengelyén 12, a család tengelyén pedig 8 modellpár áll rendelkezésre.
 
-A méret tengelyén kizárólag azonos családba tartozó modelleket vetek össze.
-A család tengelyén azonos méretosztályú, kvantálású és módú modellek állnak szemben egymással.
-Ennek érdekében a Gemma-4 31B és a Qwen3.8 27B modellt közös, 30B méretosztályba soroltam,
-így a családok közötti összehasonlításban e két modell mérete nem teljesen azonos.
-A Qwen 3.8 négybites változataként az \textbf{Unsloth Dynamic} (UD) kvantálási módszerrel ellátott verziót használtam,
-mert a modellek tárolójában a kutatómunka készítése idejében nem szerepelt a szokásos Q4\_K\_M kvantálású változat. 
-Mindkét módszer vegyes pontosságú négybites kvantálás, azaz a súlyok jelentős részét négybites formában tárolják,
-a kényesebb részeket pedig magasabb pontosságon tartják meg. Az eltérés abban rejlik, hogy a \textit{Q4\_K\_M}
-ezeket a részeket előre rögzített szabály szerint jelöli ki, míg az UD eljárás rétegenként, azok érzékenysége alapján teszi ugyanezt.
+A méret tengelyén kizárólag azonos családba tartozó modelleket vetek össze. A
+család tengelyén azonos méretosztályú, kvantálású és módú modellek állnak
+szemben egymással. Ennek érdekében a Gemma-4 31B és a Qwen3.8 27B modellt közös,
+30B méretosztályba soroltam, így a családok közötti összehasonlításban e két
+modell mérete nem teljesen azonos. A Qwen 3.8 négybites változataként az
+\textbf{Unsloth Dynamic} (UD) kvantálási módszerrel ellátott verziót használtam,
+mert a modellek tárolójában a kutatómunka készítése idejében nem szerepelt a
+szokásos Q4\_K\_M kvantálású változat. Mindkét módszer vegyes pontosságú
+négybites kvantálás, azaz a súlyok jelentős részét négybites formában tárolják,
+a kényesebb részeket pedig magasabb pontosságon tartják meg. Az eltérés abban
+rejlik, hogy a \textit{Q4\_K\_M} ezeket a részeket előre rögzített szabály
+szerint jelöli ki, míg az UD eljárás rétegenként, azok érzékenysége alapján
+teszi ugyanezt.
 % TODO: hivatkozás (Unsloth dokumentáció a dinamikus kvantálásról; llama.cpp quantize README a Q4_K_M felépítéséről), ellenőrzéssel.
 A modellek leírásában ezért a Qwen3.8 négybites változatának kvantálását a többi négybites modellel azonos (\textit{Q4\_K\_M})-ként rögzítettem,
 hogy a kvantálás és a család tengelyén össze lehessen vetni velük. A két eljárás különbségét a kísérlet nem méri, mert nincs
