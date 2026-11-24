@@ -625,70 +625,100 @@ tengelyén 12, a család tengelyén pedig 8 modellpár áll rendelkezésre.
 A méret tengelyén kizárólag azonos családba tartozó modelleket vetek össze. A
 család tengelyén azonos méretosztályú, kvantálású és módú modellek állnak
 szemben egymással. Ennek érdekében a Gemma-4 31B és a Qwen3.8 27B modellt közös,
-30B méretosztályba soroltam, így a családok közötti összehasonlításban e két
-modell mérete nem teljesen azonos. A Qwen 3.8 négybites változataként az
-\textbf{Unsloth Dynamic} (UD) kvantálási módszerrel ellátott verziót használtam,
-mert a modellek tárolójában a kutatómunka készítése idejében nem szerepelt a
-szokásos Q4\_K\_M kvantálású változat. Mindkét módszer vegyes pontosságú
-négybites kvantálás, azaz a súlyok jelentős részét négybites formában tárolják,
-a kényesebb részeket pedig magasabb pontosságon tartják meg. Az eltérés abban
-rejlik, hogy a \textit{Q4\_K\_M} ezeket a részeket előre rögzített szabály
-szerint jelöli ki, míg az UD eljárás rétegenként, azok érzékenysége alapján
-teszi ugyanezt.
+30B méretosztályba soroltam, %szb: ez így fura:
+% "kizárólag azonos családba tartozó modelleket vetek össze"
+% vs. "közös, 30B méretosztályba soroltam"
+% ez nem ellentmondás?
+% szimplán annyi lenne a dolog, hogy a qwen3.8-at ne vesd direktbe össze a kisebb qwen 3.5-ökkel, mert nem ugyanaz a modellcsalád
+% ... de azért persze említsd meg, hogy az nyílván mennyivel jobban teljesít, azzal a kiegészítésével, hogy nem közvetlenül összehasonlítható,
+%        de azért nyilván jobban összevethető mint mondjuk egy gemma modellel
+% ugyanakkor a gemma-4-et ne vond össze a qwen 3.8-cal, annak nincs értelme sztem. A gemma 4 közvelten összevethető annak kisebb variánsaival.
+% ne keveredjenek a modellek
+így a családok közötti összehasonlításban e két modell mérete nem teljesen
+azonos. A Qwen 3.8 négybites változataként az \textbf{Unsloth Dynamic} (UD)
+kvantálási módszerrel ellátott %szb: nem X kvantálási módszerrel ellátott, hanem X módszerrel kvantált.
+verziót használtam, mert a modellek tárolójában %szb: tároló?
+a kutatómunka készítése idejében nem szerepelt a szokásos Q4\_K\_M kvantálású
+változat. %szb: ezt nem kell ennyire részletezni. Ez UD volt elérhető a sima helyett, és kész
+Mindkét módszer vegyes pontosságú négybites kvantálás, azaz a súlyok jelentős
+részét négybites formában tárolják, a kényesebb részeket pedig magasabb
+pontosságon tartják meg. Az eltérés abban rejlik, hogy a \textit{Q4\_K\_M}
+ezeket a részeket előre rögzített szabály szerint jelöli ki, míg az UD eljárás
+rétegenként, azok érzékenysége alapján teszi ugyanezt. %szb: ez talán elég csak footnote-nak
 % TODO: hivatkozás (Unsloth dokumentáció a dinamikus kvantálásról)
-A modellek leírásában ezért a Qwen3.8 négybites változatának kvantálását a többi négybites modellel azonos (\textit{Q4\_K\_M})-ként rögzítettem,
-hogy a kvantálás és a család tengelyén össze lehessen vetni velük. A két eljárás különbségét a kísérlet nem méri, mert nincs
-olyan modell, amely UD és UD-nélküli formában is szerepelne.
+A modellek leírásában ezért a Qwen3.8 négybites változatának kvantálását a többi
+négybites modellel azonos (\textit{Q4\_K\_M})-ként rögzítettem, hogy a kvantálás
+és a család tengelyén össze lehessen vetni velük. A két eljárás különbségét a
+kísérlet nem méri, mert nincs olyan modell, amely UD és UD-nélküli formában is
+szerepelne. %szb: nagyon túl van ragozva ez a kvantálás. Szimán annyit kéne írni, hogy használsz 8bites és 4bites számábrázolású modelleket
+%, és a 4biteseket így kvantálták, és kész. itt elég 1x említeni a k_m módszert, meg az ud-s módszert is, aztán
+% mindenhol máshol csak 4bitesként vagy 8bitesként hivatkozni ezekre
 
-A tengelyeken kialakított modellpárok alapján adható meg a válasz a második kutatási kérdésre (\textbf{RQ2}):
-milyen hatással van a kvantálás, a modellméret, a gondolkodási mód, a modellcsalád
-és a promptolási stratégia az LLM-ek és az emberek pontszámainak egyezésére.
+A tengelyeken kialakított modellpárok alapján adható meg a válasz a második
+kutatási kérdésre (\textbf{RQ2}): milyen hatással van a kvantálás, a
+modellméret, a gondolkodási mód, a modellcsalád és a promptolási stratégia az
+LLM-ek és az emberek pontszámainak egyezésére.
+%szb: ugyanaz vonatkozik erre és mindegyik a kutatási kérdésre, mint amit fentebb írtam
 
 \section{A pontozás menete}
 \label{sec:method:judging}
 
-Valamennyi modell minden promptolási stratégiával végigfut az adathalmazon,
-és pontozza az egyes kódrészleteket. Egy modellnek egy adott promptolási
-stratégiával végzett pontozását a továbbiakban \textbf{futásnak} nevezem.
-Az adathalmaz 421 kódrészletét mind a 24 modell mind a négy promptolási
-stratégiával pontozza, ami összesen 96 futást eredményez. Minden futásban
-minden kódrészletre egyetlen választ kérek.
+Valamennyi modell minden promptolási stratégiával %szb: van oka, hogy csak a promptolási stratégiát említed? És nem pl. a kvantálást?
+végigfut az adathalmazon, és pontozza az egyes kódrészleteket. Egy modellnek egy
+adott promptolási stratégiával végzett pontozását a továbbiakban
+\textbf{futásnak} nevezem. Az adathalmaz 421 kódrészletét mind a 24 modell mind
+a négy promptolási stratégiával pontozza, ami összesen 96 futást eredményez.
+Minden futásban minden kódrészletre egyetlen választ kérek. %szb: ez a "kérek" picit kevéssé formális, fura olvasata van
 
-A négy promptolási stratégia abban tér el egymástól, hogy mennyire pontosan fogalmazzák meg a kérést.
-A \textit{zero-shot} stratégia közvetlenül pontszámot kér, és csupán a skála két végpontját
-(1 - legrosszabb, 5 - legjobb) határozza meg.
-A \textit{zero-shot-detailed} stratégia ezen túl felsorolja az értékelés szempontjait
-(elnevezések, szerkezet és vezérlési folyam, formázás, megjegyzések, idiómák),
-valamint szavakkal leírja az öt pontozási szintet.
-A \textit{one-shot} stratégia egyetlen, kiváló (5-ös) példát mutat a modellnek,
-a \textit{few-shot} stratégia pedig három példát, amelyek pontszáma 1, 3 és 5.
-A példák Java-nyelvben íródtak és kifejezetten erre a célra készültek.
-Nem származnak az adathalmazból, így nem befolyásolják a modelleket az értékelésben.
-A három példa ugyanazt a feladatot
-(az adott pontszám feletti, aktív felhasználók nevének visszaadását)
-oldja meg három különböző olvashatósági szinten. %TODO: lásd lejjebb + hivatkozás
+A négy promptolási stratégia abban tér el egymástól, hogy mennyire pontosan
+fogalmazzák meg a kérést. A \textit{zero-shot} stratégia közvetlenül pontszámot
+kér, és csupán a skála két végpontját (1 - legrosszabb, 5 - legjobb) határozza
+meg. A \textit{zero-shot-detailed} stratégia ezen túl felsorolja az értékelés
+szempontjait (elnevezések, szerkezet és vezérlési folyam, formázás,
+megjegyzések, idiómák), valamint szavakkal leírja az öt pontozási szintet. A
+\textit{one-shot} stratégia egyetlen, kiváló (5-ös) példát mutat a modellnek, a
+\textit{few-shot} stratégia pedig három példát, amelyek pontszáma 1, 3 és 5. A
+példák Java-nyelvben íródtak és kifejezetten erre a célra készültek. Nem
+származnak az adathalmazból, %szb: nem az adathalmazból származnak
+így nem befolyásolják a modelleket az értékelésben. A három példa ugyanazt a
+feladatot (az adott pontszám feletti, aktív felhasználók nevének visszaadását)
+oldja meg három különböző olvashatósági szinten. %szb: ezeket a promptokat bele kell írnod a diplomadolgozatba, ha más nem, az appendixbe
+%TODO: lásd lejjebb + hivatkozás
 
-Minden stratégia esetén a rendszerüzenet szigorú olvashatósági értékelő szerepébe helyezi a modellt,
-és rögzíti, hogy a válasz egyetlen, 1 és 5 közötti egész szám kell, hogy legyen,
-amelyet \texttt{\{"score": int\}} formátumú JSON-objektumban kell megadni.
-Ez után a nyelv megnevezése (\texttt{Language: Java}), valamint a kódrészlet következnek.
-A promptok teljes szövege az \ref{app:prompts}.~függelékben található.
-A modellek az emberi átlagpontszámokkal azonos, 1-től 5-ig terjedő skálán pontoznak,
-ám egész pontszámot adnak, míg az emberi pontszám több értékelő átlaga.
+Minden stratégia esetén a rendszerüzenet %szb: esetleg zárójelbe, hogy system prompt... meg az üzenetet szerintem következetesen hívd prompt-nak, 
+% ha már fentebb is promptnak hívtad
+szigorú olvashatósági értékelő szerepébe helyezi a modellt, és rögzíti, hogy a
+válasz egyetlen, 1 és 5 közötti egész szám kell, %szb: tehát akkor a zero shot promptban is benne van az 1-5 skála, meg a sys promptban is?
+hogy legyen, amelyet \texttt{\{"score": int\}} formátumú JSON-objektumban kell
+megadni. Ez után a nyelv megnevezése (\texttt{Language: Java}), valamint a
+kódrészlet következnek. A promptok teljes szövege az
+\ref{app:prompts}.~függelékben található. A modellek az emberi
+átlagpontszámokkal azonos, %szb: megegyező ink.
+1-től 5-ig terjedő skálán pontoznak, ám egész pontszámot adnak, míg az emberi
+pontszám több értékelő átlaga. %szb: ha már itt említed ezt a folytonos vs. diszkrét eltérést, akkor le kéne írni, hogy mi ennek a vonatkozása
+% és hogyan értelmezendőek így az eredmények
 
-A válasz formáját a llama.cpp a JSON-sémából épített nyelvtannal kényszeríti ki,
-így a modell kizárólag 1 és 5 közötti egész pontszámot képes generálni.
-A válaszra legfeljebb 64 token áll rendelkezésre. Ha a válasz a keret kimerülése miatt csonkul,
-az nem tekinthető értékelhető válasznak: rögzítem, és a válaszadási arányba
-beszámítom, de nem pótolom vagy próbálkozok másik válasz kérésével.
-Hasonlóképpen nem értékelhető az a válasz, amelyből hiányzik a pontszám, vagy amely a skálán kívül esik.
+A válasz formáját a llama.cpp %szb: nem értem, hogy jön ide a llamacpp? az egy implementációs detail, amit leírhatsz persze, de itt 
+% nem illik a kontextusba az a pluszinfó , hogy ezzel futtattál. Ezeket így a gondolatmenet/bekezdés/section végén, mellékes infóként szokás megemlíteni
+% vagy footnoteként
+a JSON-sémából épített nyelvtannal kényszeríti ki, %szb: nem értem, mi az, hogy json-sémából épített nyelvtan. Nyelvtan alatt valami
+% formális grammatikára gondolsz? és hogy jön ehhez a json formátum? 
+így a modell kizárólag 1 és 5 közötti egész pontszámot képes generálni. %szb: ezek LLM-ek, bármit képesek generálni, ez így helytelen
+A válaszra legfeljebb 64 token áll rendelkezésre. Ha a válasz a keret kimerülése
+miatt csonkul, az nem tekinthető értékelhető válasznak: rögzítem, és a
+válaszadási arányba beszámítom, de nem pótolom vagy próbálkozok másik válasz
+kérésével. Hasonlóképpen nem értékelhető az a válasz, amelyből hiányzik a
+pontszám, vagy amely a skálán kívül esik.
 
-A mintavételi beállításokat a modellek készítőinek ajánlásai alapján adom meg,
-külön a gondolkodó és a közvetlenül válaszoló módokra is egyaránt (\ref{tab:method:sampling}.~táblázat).
-Ezeket a beállításokat minden kéréshez mellékelem.
-A meg nem adott paraméterek a llama.cpp alapértelmezett értékét veszik fel.
-A véletlen mag minden kérésnél ugyanaz (35420), a kontextusméret 8192 token,
-a szerver pedig egyszerre egy kérést dolgoz fel.
+A mintavételi beállításokat %szb: ezelé jöhetne egy bevezető mondat, hogy a modelleket többféle paraméterrel is lehet futtatni, és ez a f
+% uttatás az amire gondolsz mintavétel alatt. Aki nem az LLMekkel kel/fekszik, nincs meg neki, hogy mintavétel = llm futtatás
+a modellek készítőinek ajánlásai alapján adom meg, külön a gondolkodó és a
+közvetlenül válaszoló módokra is egyaránt (\ref{tab:method:sampling}.~táblázat).
+Ezeket a beállításokat minden kéréshez mellékelem. A meg nem adott paraméterek a
+llama.cpp alapértelmezett értékét veszik fel. A véletlen mag
+%szb: ezt komolyan így mondják magyarul? még sosem hallottam, nagyon fura...
+minden kérésnél ugyanaz (35420), a kontextusméret 8192 token, a szerver pedig
+egyszerre egy kérést dolgoz fel.
 
 \begin{table}[htb]
 	\centering
@@ -715,32 +745,40 @@ a szerver pedig egyszerre egy kérést dolgoz fel.
 	\label{tab:method:sampling}
 \end{table}
 
-\section{Metrikák}
-\label{sec:method:metrics}
+\section{Metrikák} %szb: itt is lehetne kicsit hosszanbb a cím. Milyen vag mire hazsnált metrikákat fog itt látni az olvasó? Minden címet 
+\label{sec:method:metrics} % érdemes átgondolni, hogy hogy pontosítsd / tedd szebbé, beszédesebbé
 
-A harmadik kutatási kérdés (\textbf{RQ3}) arra irányul,
-hogy az LLM-ek és az emberek pontszámai milyen mérhető kódtulajdonságokkal mozognak együtt,
-és e tekintetben mennyire hasonlítanak egymáshoz.
-Ennek érdekében minden kódrészletre kódmetrikákat számolok.
-A metrikák egy részét képlettel, algoritmikusan lehet kiszámítani,
-a másik részüket, amelyeket nem lehet determinisztikus módon meghatározni, LLM-ek pontozzák.
-A metrikákat ezután aszerint rangsorolom,
-hogy mennyire korrelálnak az emberek, illetve az egyes modellek pontszámaival.
-Ha a két rangsor hasonló, akkor az azt jelenti, hogy az LLM-ek és az emberek pontszámai
-hasonló kódtulajdonságokkal mozognak együtt.
+A harmadik kutatási kérdés (\textbf{RQ3}) arra irányul, hogy az LLM-ek és az
+emberek pontszámai milyen mérhető kódtulajdonságokkal mozognak együtt, és e
+tekintetben mennyire hasonlítanak egymáshoz. Ennek érdekében minden kódrészletre
+kódmetrikákat számolok. A metrikák egy részét képlettel, algoritmikusan lehet
+kiszámítani, a másik részüket, amelyeket nem lehet determinisztikus módon
+meghatározni, LLM-ek pontozzák. %szb: ezelőtt a bekezdés előtt, de legalábbis ezelőtt a mondat előtt mindenképp írd, hogy mik ezek a metrikák
+% meg a bekezdés elé egy emlékeztető is jól jönne, hogy mi itt a cél a metrikák kapcsán
+A metrikákat ezután aszerint rangsorolom, hogy mennyire korrelálnak az emberek,
+illetve az egyes modellek pontszámaival. %szb: nem a rangsoroláson van lényeg. Oké, hogy majd lehet úgy tünteted fel, de ez már részletkérdés
+Ha a két rangsor hasonló, akkor az azt jelenti, hogy az LLM-ek és az emberek
+pontszámai hasonló kódtulajdonságokkal mozognak együtt.
+%szb: nem értem igazán... Attól, hogy a rangsor ugyanaz, attól a korrelációs értékek lehetnek totál elütőek is, nem?
+% pl. a-0.05, b-0.01, c-0.03 -> a,c,b és
+%     a-0.99, b-0.00, c-0.50 -> a,c,b
+% nagyon másak, mégis ugyanaz a sorrend
 
-Az elemzés 24 metrikát használ, amelyek két csoportba sorolhatók.
-Tizenhárom algoritmikus metrika a forráskódból közvetlenül, képlettel számítható.
-Ezek a formázást, a méretet és a komplexitást, a megjegyzéseket, valamint az elnevezéseket mérik.
-A ciklomatikus komplexitást az elágazást jelző kulcsszavak gyakoriságával közelítem.
-A metrikák pontos definícióját az \ref{app:metrics}.~függelék tartalmazza.
+Az elemzés 24 metrikát használ, amelyek két csoportba sorolhatók. Tizenhárom
+algoritmikus metrika a forráskódból közvetlenül, képlettel számítható. Ezek a
+formázást, a méretet és a komplexitást, a megjegyzéseket, valamint az
+elnevezéseket mérik. A ciklomatikus komplexitást %szb: kicsit random, hogy 1-et kiemelsz a 13 közül. Itt tételes felsorolásra van szükség.
+az elágazást jelző kulcsszavak gyakoriságával közelítem. %szb: ez tényleg cska egy közelített érték amúgy?
+A metrikák pontos definícióját az \ref{app:metrics}.~függelék tartalmazza. %szb: ez nem függellék szintű infó, ez központi, ide kerüljenek
 
-Tizenegy metrikát LLM-ek pontoznak, mivel ezek jelentéssel kapcsolatos szempontok,
-amelyekre nem áll rendelkezésre megbízható képlet.
-Mindegyik metrika 0 és 100 közötti egész pontszámot kap,
-és a kérés megadja, hogy a magasabb érték jobb vagy rosszabb olvashatóságot jelent.
-Egy kérésben egy kódrészlet mind a tizenegy metrikáját pontoztatom,
-és a válasz alakját ugyanúgy JSON-séma kényszeríti ki, mint a pontszámoknál.
+%szb: jelzés magamtól magambak: idáig jutottam a merge előtt
+
+Tizenegy metrikát LLM-ek pontoznak, mivel ezek jelentéssel kapcsolatos
+szempontok, amelyekre nem áll rendelkezésre megbízható képlet. Mindegyik metrika
+0 és 100 közötti egész pontszámot kap, és a kérés megadja, hogy a magasabb érték
+jobb vagy rosszabb olvashatóságot jelent. Egy kérésben egy kódrészlet mind a
+tizenegy metrikáját pontoztatom, és a válasz alakját ugyanúgy JSON-séma
+kényszeríti ki, mint a pontszámoknál.
 
 Az LLM-ekkel pontozott metrikák másfajta kompromisszummal járnak, mint a képlettel számolt metrikák.
 A képlettel számoltak csupán a szövegfelszínt képesek méri, míg az LLM-értékelő ezzel szemben a jelentést
