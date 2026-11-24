@@ -485,14 +485,14 @@ entrópia mozgott együtt \cite{szalontai2025readability}.
 \chapter{Módszertan}
 \label{ch:method}
 
-%szb: picit túl messziről írod. Inkább a kísérlet jön fel, mint általános dolog,
-% ezzel szembemn lehetne konkretizálni. Apróságokra gondolok, hogy pl. bemutatom az adathalmazt helyett
-% bemutatom az emberek által annotált adathalmazt, amely forráskódrészletekert és azok olvashatósági 
-% értékeléseit tartalmazzák.
-Ez a fejezet a kísérlet felépítését ismerteti. Kiindulásként bemutatom az
-adathalmazt, amelyen a kísérlet zajlott. Ezt követik a vizsgált modellek, a
-vizsgálati tengelyek, a pontozás menete és a kódmetrikák leírásai. A fejezet a
-statisztikai elemzés módszereinek bemutatásával zárul.
+Ez a fejezet azt a kísérletet ismerteti. Kiindulásként bemutatom az
+emberek által annotált adathalmazt, amely a kódrészleteket és azok olvashatósági pontszámait tartalmazza.
+Ezt követi a vizsgált LLM-ek, valamint azon vizsgálati tengelyek leírása,
+amelyek mentén az LLM-ek egyezését összehasonlítom. 
+Ezután a következő szakaszban azokat a kódmetrikákat mutatom be,
+amelyeknek a pontszámokkal való együttmozgását vizsgálom.
+A fejezet azoknak a statisztikai módszereknek a bemutatásával zárul,
+amelyekkel az egyezést, a tengelyek hatását és a metrikák szerepét mérem.
 
 \section{A kísérletekhez használt adathalmaz}
 \label{sec:method:dataset}
@@ -504,14 +504,11 @@ részleteket Krodinger egyetlen, 421 kódrészletből álló adathalmazba gyűjt
 adathalmaz minden bejegyzés esetében tartalmazza magát a kódrészletet
 és az emberi pontszámok átlagát egy 1-től 5-ig terjedő skálán, ahol az 1 a
 nagyon nehezen, az 5 a nagyon könnyen olvasható kódot jelöli. Az átlagoláson
-kívül más feldolgozást nem végeztek az adatokon. A CoReEval benchmark
-Java-részhalmaza ugyanezt a 421 kódrészletet tartalmazza, ami lehetővé teszi az
-eredmények közvetlen összevetését \cite{ouedraogo2025coreeval}. %szb: kicsit megtévesztő, mert így is úgy tűnik
-% mintha ugyanazokon értékelne ki mindkettőtök.
-% egy olyan kulcsszó, hogy "többek között" már sokat segít pl.
+kívül más feldolgozást nem végeztek az adatokon. A CoReEval benchmark többek
+között ugyanezt a 421 kódrészletet tartalmazza, ezért a két munka eredményei ezeken
+a kódrészleteken közvetlenül összehasonlíthatóak \cite{ouedraogo2025coreeval}.
 
-A három forrásból származó részletek %szb: legyen következetesen kódrészletek. jelnelg egyszer kód, egyszer részlet
-% és az olvasó nem biztos h tudja h ugyanarra gondolsz
+A három forrásból származó kódrészletek
 több szempontból is különböznek egymástól. Buse és Weimer 100 részlete rövidebb,
 átlagosan 7,7 soros kódrészleteket tartalmaz, és valamennyit ugyanaz a 120
 hallgató értékelte \cite{buse2008metric}. Dorn 121 Java-részlete nagyjából
@@ -527,9 +524,9 @@ mindegyikét kilenc hallgató értékelte \cite{scalabrino2016improving}.
 	\begin{tabular}{ | l | r | r | r | r | r | }
 		\hline
 		\textbf{Forrás} &
-		\textbf{Részletek} &
+		\textbf{Kódrészletek} &
 		\makecell{\textbf{Átlagos}\\\textbf{sorszám}} &
-		\makecell{\textbf{Értékelés}\\\textbf{részletenként}} &
+		\makecell{\textbf{Értékelés}\\\textbf{kódrészletenként}} &
 		\makecell{\textbf{Átlag-}\\\textbf{pontszám}} &
 		\textbf{Szórás} \\
 		\hline \hline
@@ -555,10 +552,10 @@ a lokálisan futtatott LLM-ek pontszámai mennyire egyeznek az emberi
 %szb: ok, hogy erre irányul, de mi az első kutatási kérdés? Mármint konkrétan. Ha RQ-kkal dolgozol (ez amúgy opcionális)
 % akkor azoknak nagggyon konkrétnak kell lenniük és át kell szőniük a diplomamunka egészét
 % ha az olvasó RQ-t lát, akkor egy rövid tömör explicit kérdésre gondol, ami valahogy nagyon egyéretlműen ki van emelve
-% a dolgozatban, és többsazör van említve. 2 opciót látok: vagy átformálod a stílust itt-ott hogy az RQ központibb szerepet ű
+% a dolgozatban, és többször van említve. 2 opciót látok: vagy átformálod a stílust itt-ott hogy az RQ központibb szerepet ű
 % kapjon vagy csak simán elhagyod a számozást
 
-\section{A kísérlethez használt modellek és vizsgálati tengelyek} %lehetnének a címek picikét bővebbek
+\section{A kísérlethez használt modellek és vizsgálati tengelyek}
 \label{sec:method:models}
 
 A kísérlet folyamán tizenkét lokálisan futtatott modellt vizsgálok, amelyek
@@ -644,7 +641,7 @@ A tengelyeken kialakított modellpárok alapján adható meg a válasz a másodi
 milyen hatással van a kvantálás, a modellméret, a gondolkodási mód, a modellcsalád
 és a promptolási stratégia az LLM-ek és az emberek pontszámainak egyezésére.
 
-\section{A pontozás menete}
+\section{A kódrészletek LLM-ek általi pontozásának menete}
 \label{sec:method:judging}
 
 Valamennyi modell minden promptolási stratégiával végigfut az adathalmazon,
@@ -666,7 +663,7 @@ A példák Java-nyelvben íródtak és kifejezetten erre a célra készültek.
 Nem származnak az adathalmazból, így nem befolyásolják a modelleket az értékelésben.
 A három példa ugyanazt a feladatot
 (az adott pontszám feletti, aktív felhasználók nevének visszaadását)
-oldja meg három különböző olvashatósági szinten. %TODO: lásd lejjebb + hivatkozás
+oldja meg három különböző olvashatósági szinten. %TODO: insert hivatkozás to appendix
 
 Minden stratégia esetén a rendszerüzenet szigorú olvashatósági értékelő szerepébe helyezi a modellt,
 és rögzíti, hogy a válasz egyetlen, 1 és 5 közötti egész szám kell, hogy legyen,
@@ -715,7 +712,7 @@ a szerver pedig egyszerre egy kérést dolgoz fel.
 	\label{tab:method:sampling}
 \end{table}
 
-\section{Metrikák}
+\section{A kódrészleteken kiértékelt metrikák}
 \label{sec:method:metrics}
 
 A harmadik kutatási kérdés (\textbf{RQ3}) arra irányul,
@@ -787,7 +784,7 @@ akkor is a nulla felé húzódik, ha a metrika valójában fontos.
 Az ilyen metrika alacsony rangsorhelye így azt jelenti,
 hogy a metrikát nem sikerült megbízhatóan mérni, és nem azt, hogy nincs hatása.
 
-\section{Statisztikai elemzés}
+\section{Az egyezés mérésének és a statisztikai elemzés módszerei}
 \label{sec:method:statistics}
 
 A futások pontszámait kódrészletenként vetem össze az emberi átlagpontszámokkal (RQ1).
@@ -881,10 +878,10 @@ A második eljárás a stratégiákat páronként hasonlítja össze a bootstrap
 Egy stratégiapárnál az összes modell átlagos Spearman-korrelációját vetem össze,
 és minden húzásban ugyanazokat a kódrészleteket használom mindkét stratégiára.
 A négy stratégiából hat pár adódik, ezért itt is Holm-korrekciót alkalmazok.
-Ugyanezt az összehasonlítást modellenként külön is elvégzem. A két eljárás eltérő eredményt is adhat.
+Ugyanezt az összehasonlítást modellenként külön is elvégzem, viszont a két eljárás eltérő eredményt is adhat.
 A Friedman-próba stratégiánként csupán 24 értéket lát, minden modellből egyet,
 a bootstrap eljárás viszont mind a 421 kódrészletet felhasználja, így a kisebb különbségeket is kimutathatja.
-Ezért az eredmények közlésekor megadom, hogy az adott állítás melyik eljáráson alapul.
+Ezért az eredmények közlésekor mindig rögzítem, hogy az adott állítás melyik eljáráson alapul.
 
 A metrikák és a pontszámok kapcsolatát (RQ3) szintén Spearman-korrelációval mérem.
 Minden metrikára kiszámolom, mennyire mozog együtt a metrika értéke az emberek,
@@ -1203,17 +1200,20 @@ a Qwen3.5 modelleknél pedig a közvetlenül válaszoló mód eltérése nagyobb
 		Qwen3.8 27B, Q8: közv. $\rightarrow$ gond. & $-0{,}042$ & [$-0{,}081$; $-0{,}002$] & $0{,}451$ \\
 		\hline
 	\end{tabular}
-	\caption[A gondolkodási mód hatása]{A gondolkodási mód hatása: a Spearman-korreláció különbsége ($\Delta\rho$, a gondolkodó mínusz a közvetlenül válaszoló mód) a négy promptolási stratégia átlagában, páros bootstrap konfidenciaintervallummal és Holm-korrigált $p$-értékkel. A csillag a szignifikáns különbséget jelöli.}
+	\caption[A gondolkodási mód hatása]{A gondolkodási mód hatása: a Spearman-korreláció különbsége
+	($\Delta\rho$, a gondolkodó mínusz a közvetlenül válaszoló mód) a négy promptolási stratégia átlagában,
+	páros bootstrap konfidenciaintervallummal és Holm-korrigált $p$-értékkel.
+	A csillag a szignifikáns különbséget jelöli.}
 	\label{tab:results:axis:reasoning}
 \end{table}
 
-A család tengelyén a nyolc párból egynél kimutatható a különbség
-(\ref{tab:results:axis:family}.~táblázat): a nyolcbites, közvetlenül válaszoló 4B méretosztályban a
-Gemma-4 E4B korrelációja $0{,}104$-gyel magasabb a Qwen3.5 4B modellénél. Ugyanennél a párnál a
-\textit{few-shot} stratégiával külön is kimutatható a különbség ($0{,}159$), és ez az egyetlen
-ilyen eredmény a stratégiánkénti összehasonlítások között. Az átlagos abszolút eltérésben hat
-párnál van kimutatható különbség: a 4B méretosztályban a Gemma-4, a 30B méretosztályban a Qwen3.8
-modell eltérése kisebb.
+A család tengelyén a nyolc párból egy esetében mutatható ki különbség
+(\ref{tab:results:axis:family}.~táblázat): a nyolcbites, közvetlenül válaszoló 4B méretosztályban
+a Gemma-4 E4B korrelációja $0{,}104$-gyel magasabb, mint a Qwen3.5 4B modellé.
+Ugyanennél a párnál a \textit{few-shot} stratégiával külön is kimutatható a különbség ($0{,}159$),
+és a stratégiánkénti összehasonlítások között ez az egyetlen ilyen eredmény.
+Az átlagos abszolút eltérésben hat párnál mutatható ki különbség:
+a 4B méretosztályban a Gemma-4, a 30B méretosztályban a Qwen3.8 modell eltérése kisebb.
 
 \begin{table}[htbp]
 	\centering
@@ -1247,11 +1247,11 @@ modell eltérése kisebb.
 \section{A promptolási stratégiák hatása}
 \label{sec:results:prompting}
 
-A promptolási stratégiák összehasonlítását a \ref{tab:results:strategies}.~táblázat foglalja
-össze (RQ2). A négy stratégia átlagos Spearman-korrelációja 0,381 és 0,397 között van. A
-\textit{few-shot} stratégia átlagos rangja a legjobb (2,13), és a 24 modellből kilencnél ez adta a
-legmagasabb korrelációt. A Friedman-próba szerint a stratégiák között nincs kimutatható különbség
-($\chi^2(3) = 3{,}95$, $p = 0{,}267$).
+A promptolási stratégiák összehasonlítását a \ref{tab:results:strategies}.~táblázat foglalja össze (RQ2).
+A négy stratégia átlagos Spearman-korrelációja 0,381 és 0,397 közé esik.
+A \textit{few-shot} stratégia átlagos rangja a legjobb (2,13),
+és a 24 modellből kilencnél ez eredményezte a legmagasabb korrelációt.
+A Friedman-próba szerint a stratégiák között nincs kimutatható különbség ($\chi^2(3) = 3{,}95$, $p = 0{,}267$).
 
 \begin{table}[htbp]
 	\centering
