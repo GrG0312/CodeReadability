@@ -916,77 +916,206 @@ ezért az LLM-eket velük csak szempontok szerint vetem össze.
 \section{A kódrészleteken kiértékelt metrikák}
 \label{sec:method:metrics}
 
-%szb: future balázs: szerintem jó lenne valami frappáns bevezetés ide, ami felkészíti az olasót arra, hogy 
-% most egy abszolút más szemszögbeli dolgo lesz, egy kvázi mellékszál következik.
+Elvben előfordulhat, hogy egy LLM pontszámai az emberekével egyeznek, viszont teljesen más szempontok szerint
+alakulnak ki. A jelen szakasz ezért más nézőpontból közelít a pontszámokhoz: nem az egyezésük mértékére
+kérdez rá, hanem arra, hogy milyen kódtulajdonságokkal mozognak együtt. Kódmetrikán a forráskód olyan mérhető
+tulajdonságát értem, mint a sorok hossza, a beágyazás mélysége vagy az elnevezések kifejezősége.
+A negyedik kutatási kérdés ehhez a gondolatmenethez kapcsolódik:
 
-A harmadik kutatási kérdés (\textbf{RQ3}) arra irányul, hogy az LLM-ek és az
-emberek pontszámai milyen mérhető kódtulajdonságokkal mozognak együtt, és e
-tekintetben mennyire hasonlítanak egymáshoz. Ennek érdekében minden kódrészletre
-kódmetrikákat számolok. A metrikák egy részét képlettel, algoritmikusan lehet
-kiszámítani, a másik részüket, amelyeket nem lehet determinisztikus módon
-meghatározni, LLM-ek pontozzák. %szb: ezelőtt a bekezdés előtt, de legalábbis ezelőtt a mondat előtt mindenképp írd, hogy mik ezek a metrikák
-% meg a bekezdés elé egy emlékeztető is jól jönne, hogy mi itt a cél a metrikák kapcsán
-A metrikákat ezután aszerint rangsorolom, hogy mennyire korrelálnak az emberek,
-illetve az egyes modellek pontszámaival. %szb: nem a rangsoroláson van lényeg. Oké, hogy majd lehet úgy tünteted fel, de ez már részletkérdés
-Ha a két rangsor hasonló, akkor az azt jelenti, hogy az LLM-ek és az emberek
-pontszámai hasonló kódtulajdonságokkal mozognak együtt.
-%szb: nem értem igazán... Attól, hogy a rangsor ugyanaz, attól a korrelációs értékek lehetnek totál elütőek is, nem?
-% pl. a-0.05, b-0.01, c-0.03 -> a,c,b és
-%     a-0.99, b-0.00, c-0.50 -> a,c,b
-% nagyon másak, mégis ugyanaz a sorrend
+\textbf{RQ4:} \textit{Milyen mérhető kódtulajdonságokkal mozognak együtt az
+LLM-ek és az emberek pontszámai, és e tekintetben mennyire hasonlítanak
+egymáshoz?}
 
-Az elemzés 24 metrikát használ, amelyek két csoportba sorolhatók. Tizenhárom
-algoritmikus metrika a forráskódból közvetlenül, képlettel számítható. Ezek a
-formázást, a méretet és a komplexitást, a megjegyzéseket, valamint az
-elnevezéseket mérik. A ciklomatikus komplexitást %szb: kicsit random, hogy 1-et kiemelsz a 13 közül. Itt tételes felsorolásra van szükség.
-az elágazást jelző kulcsszavak gyakoriságával közelítem. %szb: ez tényleg cska egy közelített érték amúgy?
-A metrikák pontos definícióját az \ref{app:metrics}.~függelék tartalmazza. %szb: ez nem függellék szintű infó, ez központi, ide kerüljenek
+Ennek érdekében minden kódrészletre különböző kódmetrikákat számolok.
+A metrikák egy részét képlettel, algoritmikusan lehet kiszámítani.
+A fennmaradó metrikákat, amelyeket determinisztikus módon nem lehet meghatározni, LLM-ek pontozzák.
+Ezután metrikánként megvizsgálom, hogy az emberek pontszámaival és az egyes modellváltozatok pontszámaival mennyire mozog együtt.
+Ha mindkét fél pontszámaival ugyanazon metrikák hasonló erősséggel mozognak együtt,
+akkor az LLM-ek és az emberek pontszámai hasonló kódtulajdonságokkal járnak együtt.
 
-Tizenegy metrikát LLM-ek pontoznak, mivel ezek jelentéssel kapcsolatos
-szempontok, amelyekre nem áll rendelkezésre megbízható képlet. Mindegyik metrika
-0 és 100 közötti egész pontszámot kap, %szb: miért más a skála, mint a többihez? 
-% hisz elvégre az a cél értelmezésem szerint, hogy korrelációt nézzünk... és akkor már adná magát, hogy ugyanazt a skálát használjuk, nem?
-% gondolom last minute nem fogod újrafuttatni a mindent is, csak készülj fel potenciáisan erről kérdésre a bíráktól
-és a kérés megadja, hogy a magasabb érték jobb vagy rosszabb olvashatóságot
-jelent. Egy kérésben egy kódrészlet mind a tizenegy metrikáját pontoztatom, és a
-válasz alakját ugyanúgy JSON-séma kényszeríti ki, mint a pontszámoknál. %szb: ezeket is itt tételesen fel kéne sorolni
+\subsection{A vizsgált kódmetrikák}
 
-Az LLM-ekkel pontozott metrikák másfajta kompromisszummal járnak, mint a
-képlettel számolt metrikák. %szb: másfajta kompromisszum? mert az előző mivel járt? Ezelőtt nem szerepel a kompromisszum szó, nincs viszonyítási alap
-A képlettel számoltak csupán a szövegfelszínt képesek méri, míg az LLM-értékelő
-ezzel szemben a jelentést is figyelembe veheti, és kódrészlet
-is jól alkalmazható. Ezt szemlélteti jól például a megjegyzések és a kód
-összhangja: Scalabrino és munkatársai a megjegyzések és az azonosítók közös
-szavait számolják, ezért egy elavult megjegyzés is magas értéket kaphat, ha sok
-közös szót tartalmaz a kóddal. A \texttt{consistency\_of\_comments\_and\_code}
-metrika ezzel szemben arra kérdez rá, hogy a megjegyzés valóban azt mondja-e,
-amit a kód csinál \cite{scalabrino2018comprehensive}. Az LLM-ekkel végzett
-értékelés ára viszont az, hogy kevésbé átlátható, %szb: miért kevésbé átlátható? végső soron az is 1 szám, és ennyi, nem?
-és értékelőnként eltérhet, %szb: mármint értékelő llm-re gondolsz?
-ezért az értékelők egyezését is mérem.
+Az elemzés összesen 24 metrikát használ, és ezek két csoportba oszthatók.
+Tizenhárom algoritmikus metrika, amik a forráskódból közvetlenül, képlettel számíthatóak
+(\ref{tab:method:algmetrics}.~táblázat). Ezek a formázást,
+a méretet és a komplexitást, a megjegyzéseket, valamint az elnevezéseket mérik.
 
-A felsorolt tizenkét modell mindegyike minden kódrészlethez minden LLM-metrikát
-egyszer pontoz, gondolkodás nélküli módban. Itt is az ajánlott mintavételi
-beállításokat alkalmazom. Egy LLM-metrika egy adott kódrészlethez tartozó értéke
-az értékelők pontszámainak átlaga. Amikor egy modell pontszámait elemzem, az
-átlagból kihagyom ugyanannak a modellfájlnak a saját pontszámait
-(\textit{leave-one-out}). Ellenkező esetben a modell pontszámainak egy része a
-saját értékelésével való egyezést tükrözné, mivel ugyanazok a modellek értékelik
-az olvashatóságot és a metrikákat is. Ellenőrzésképpen minden modellre
-kiszámolom a korrelációkat a teljes, mind a tizenkét értékelőt tartalmazó
-átlaggal is. A két változat közötti különbség mutatja meg, hogy mennyivel járul
-hozzá a modell saját értékelése a korrelációhoz: ha a különbség kicsi, akkor a
-modell metrikaértékei nem a saját értékelésével való egyezésből erednek.
+% ALGORITMIKUS METRIKA TÁBLÁZAT
+\begin{table}[htb]
+	\centering
+	\small
+	\begin{tabular}{ | p{4.4cm} | p{9.2cm} | }
+		\hline
+		\textbf{Metrika} & \textbf{Leírás} \\
+		\hline \hline
+		\multicolumn{2}{|l|}{\textit{Formázás}} \\
+		\hline
+		Behúzás következetessége \newline \texttt{indentation\_consistency} &
+		A behúzott sorok hány százalékának behúzása négy szóköz többszöröse. \\
+		\hline
+		Átlagos sorhossz \newline \texttt{average\_line\_length} &
+		A nem üres sorok átlagos karakterszáma. \\
+		\hline
+		Szóközhasználat \newline \texttt{whitespace\_usage} &
+		A kétoperandusú műveleti jelek és a vesszők hány százalékát választja el
+		szóköz a környezetétől. \\
+		\hline
+		Kapcsos zárójelek következetessége \newline \texttt{bracing\_style\_consistency} &
+		A nyitó kapcsos zárójelek hány százaléka követi a kódrészletben gyakoribb
+		elhelyezést (a sor végén vagy külön sorban). \\
+		\hline
+		Legnagyobb beágyazási mélység \newline \texttt{nesting\_depth} &
+		Az egymásba ágyazott blokkok legnagyobb mélysége. \\
+		\hline
+		\multicolumn{2}{|l|}{\textit{Méret és komplexitás}} \\
+		\hline
+		Ciklomatikus komplexitás \newline \texttt{cyclomatic\_complexity} &
+		A döntési pontot jelző kulcsszavak (\texttt{if}, \texttt{for},
+		\texttt{while}, \texttt{case}, \texttt{catch}) száma plusz egy. \\
+		\hline
+		Halstead-térfogat \newline \texttt{halstead\_volume} &
+		A program hossza (a műveleti jelek és az operandusok száma) szorozva a
+		különböző műveleti jelek és operandusok számának kettes alapú
+		logaritmusával. \\
+		\hline
+		Kódsorok száma \newline \texttt{lines\_of\_code} &
+		A nem üres és nem megjegyzésből álló sorok száma. \\
+		\hline
+		\multicolumn{2}{|l|}{\textit{Megjegyzések}} \\
+		\hline
+		Megjegyzéssűrűség \newline \texttt{comment\_density} &
+		A megjegyzéssorok aránya a megjegyzés- és kódsorok összes számához képest,
+		százalékban. \\
+		\hline
+		Dokumentációs megjegyzések sűrűsége \newline \texttt{docstring\_density} &
+		Ugyanez az arány csak a dokumentációs megjegyzésekre (Javában a
+		\texttt{/** */} blokkokra). \\
+		\hline
+		\multicolumn{2}{|l|}{\textit{Elnevezések}} \\
+		\hline
+		Elnevezési konvenció követése \newline \texttt{naming\_convention\_adherence} &
+		Az azonosítók hány százaléka követi a nyelv szokásos írásmódját (Javában a
+		kis kezdőbetűs camelCase-t vagy a nagy kezdőbetűs neveket). \\
+		\hline
+		Átlagos azonosítóhossz \newline \texttt{identifier\_length} &
+		Az azonosítók átlagos karakterszáma. \\
+		\hline
+		Foglalt nevek elfedése \newline \texttt{reserved\_name\_shadowing} &
+		Hány deklaráció kap egy foglalt szóval vagy egy jól ismert beépített névvel
+		egyező nevet. \\
+		\hline
+	\end{tabular}
+	\caption[Az algoritmikus metrikák]{Az algoritmikus metrikák. A
+	számításukból a karakterláncok és a megjegyzések előtte kimaradnak, kivéve a
+	megjegyzéseket mérő metrikákat.}
+	\label{tab:method:algmetrics}
+\end{table}
 
-Mivel az LLM-metrikákat több modell pontozza, azt is megvizsgálom, hogy az
+További tizenegy metrikát LLM-ek pontoznak, mert ezek jelentéssel kapcsolatos szempontok,
+és megbízható képlet nem áll rendelkezésre a kiszámolásukhoz (\ref{tab:method:llmmetrics}.~táblázat).
+Minden metrika 0 és 100 közötti egész pontszámot kap.
+A prompt metrikánként megadja, hogy a magasabb érték jobb vagy rosszabb olvashatóságot jelez.
+Egyetlen promptban az LLM egy kódrészlet mind a tizenegy metrikáját pontozza.
+A prompt teljes szövege az \ref{app:prompts}.~függelékben olvasható.
+A metrikák és a pontszámok kapcsolatát rangkorrelációval mérem.
+
+% LLM METRIKA TÁBLÁZAT
+\begin{table}[htb]
+	\centering
+	\small
+	\begin{tabular}{ | p{4.4cm} | p{7.4cm} | p{1.5cm} | }
+		\hline
+		\textbf{Metrika} & \textbf{Leírás} & \textbf{Magasabb érték} \\
+		\hline \hline
+		\multicolumn{3}{|l|}{\textit{Elnevezések}} \\
+		\hline
+		Elnevezések találósága \newline \texttt{appropriateness\_of\_names} &
+		Mennyire tükrözik a változók, függvények és osztályok nevei a céljukat és
+		a használatukat. & jobb \\
+		\hline
+		Elnevezések következetessége \newline \texttt{consistency\_of\_naming} &
+		Mennyire következetesen alkalmazza a kód az elnevezési szabályokat. & jobb \\
+		\hline
+		Nevek kiejthetősége \newline \texttt{pronounceability\_of\_names} &
+		Mennyire könnyen kiejthetők a változók, függvények és osztályok nevei. &
+		jobb \\
+		\hline
+		\multicolumn{3}{|l|}{\textit{Megjegyzések}} \\
+		\hline
+		Megjegyzések világossága \newline \texttt{clarity\_of\_comments} &
+		Mennyire világosak és informatívak a megjegyzések. & jobb \\
+		\hline
+		Megjegyzések hasznossága \newline \texttt{usefulness\_of\_comments} &
+		Mennyire segítik a megjegyzések a kód megértését. & jobb \\
+		\hline
+		Megjegyzések és kód összhangja \newline
+		\texttt{consistency\_of\_comments\_and\_code} &
+		Mennyire egyeznek a megjegyzések a kód tényleges működésével. & jobb \\
+		\hline
+		\multicolumn{3}{|l|}{\textit{Komplexitás és érthetőség}} \\
+		\hline
+		Átfogó érthetőség \newline \texttt{high\_level\_understandability} &
+		Mennyire könnyű megérteni a kód általános szerkezetét és célját. & jobb \\
+		\hline
+		Kognitív terhelés \newline \texttt{cognitive\_load} &
+		Mekkora szellemi erőfeszítést igényel a kód megértése. & rosszabb \\
+		\hline
+		Idiómák használata \newline \texttt{use\_of\_idioms} &
+		Mennyire használja a kód a nyelv megszokott szerkezeteit és mintáit. &
+		jobb \\
+		\hline
+		\multicolumn{3}{|l|}{\textit{Hibakezelés és konvenciók}} \\
+		\hline
+		Hibakezelés világossága \newline \texttt{error\_handling\_clarity} &
+		Mennyire világosan kezeli a kód a hibákat és a kivételeket. & jobb \\
+		\hline
+		Projektkonvenciók követése \newline
+		\texttt{adherence\_to\_project\_conventions} &
+		Mennyire követi a kód a hasonló projektekben szokásos konvenciókat és
+		irányelveket. & jobb \\
+		\hline
+	\end{tabular}
+	\caption[Az LLM-ekkel pontozott metrikák]{Az LLM-ekkel pontozott metrikák.
+	Mindegyik 0 és 100 közötti egész pontszámot kap. Az utolsó oszlop azt mutatja,
+	hogy a prompt szerint a magasabb érték jobb vagy rosszabb olvashatóságot
+	jelent.}
+	\label{tab:method:llmmetrics}
+\end{table}
+
+A képlettel számolt és az LLM-ekkel pontozott metrikák eltérő előnyökkel és hátrányokkal járnak.
+A képlettel számolt metrikák csak a forráskód szövegének felszínét tudják mérni,
+az LLM-ek viszont a kód jelentését is figyelembe tudják venni.
+Jó példa erre a megjegyzések és a kód összhangja.
+Scalabrino és munkatársai a megjegyzések és az azonosítók közös szavait számolják, ezért egy
+elavult megjegyzés is magas értéket kaphat, ha sok közös szót tartalmaz a kóddal
+\cite{scalabrino2018comprehensive}. A saját \texttt{consistency\_of\_comments\_and\_code} metrikám ezzel
+szemben azt vizsgálja, hogy a megjegyzés valóban azt mondja-e, amit a kód csinál.
+Az LLM-ekkel pontozott metrikák hátránya, hogy értékük keletkezése nem követhető, mert nem képlet adja.
+Ráadásul különböző LLM-ek ugyanarra a kódrészletre eltérő pontszámot adhatnak. Ezért ugyanazt a
+metrikát több LLM is pontozza, és mérem, mennyire értenek egyet egymással.
+
+\subsection{Az LLM-ekkel pontozott metrikák értékelői és megbízhatóságuk}
+
+A tizenkét gondolkodás nélküli modellváltozat mindegyike kódrészletenként minden LLM-metrikát egyszer pontoz.
+Az ajánlott mintavételi beállításokat itt is alkalmazom.
+Egy adott kódrészlethez tartozó LLM-metrika értékét az értékelők pontszámainak átlaga adja.
+Amikor egy modellváltozat olvashatósági pontszámait elemzem, az átlagból
+kihagyom az ugyanazon modell ugyanazzal a kvantálással adott metrikapontszámait (\textit{leave-one-out},
+azaz egy értékelő kihagyása). Ellenkező esetben a korreláció egy része ezekkel a pontszámokkal való
+egyezést tükrözné, mivel ugyanazok a modellek pontozzák az olvashatóságot és a metrikákat is. Ellenőrzésképpen
+minden modellváltozatra kiszámolom a korrelációkat a teljes, mind a tizenkét értékelőt tartalmazó átlaggal is.
+A két számítás különbsége mutatja meg, mennyivel járul hozzá a modellváltozat saját értékelése a korrelációhoz.
+Ha a különbség kicsi, akkor a modellváltozat korrelációi nem a kihagyott pontszámokkal való egyezésből erednek.
+
+Mivel az LLM-metrikákat több modellváltozat pontozza, azt is megvizsgálom, hogy az
 értékelők mennyire értenek egyet egymással. Ehhez metrikánként az osztályon
-belüli korrelációt (\textit{intraclass correlation}, ICC) használom. %szb: cite esetleg? - nem ismerem ezt
+belüli korrelációt (\textit{intraclass correlation}, ICC) használom \cite{shrout1979intraclass}.
 Ez a mutató azt méri, hogy az átlagolt pontszámok eltérései mekkora részben
 fakadnak a kódrészletek valódi különbségeiből, és mekkora részben az értékelők
 nézeteltéréséből. Értéke 0 és 1 közé esik, és minél közelebb van az 1-hez, annál
 megbízhatóbb az átlag. A mutatónak több változata van, ezek közül az ICC(3,k)-t
 választom. A 3-as típus azt jelenti, hogy az értékelők mindig ugyanazok a
-modellek, és minden kódrészletet mindegyikük pontoz. A $k$ arra utal, hogy nem
+modellváltozatok, és minden kódrészletet mindegyikük pontoz. A $k$ arra utal, hogy nem
 egy-egy értékelő, hanem a $k$ értékelő átlagának megbízhatóságát mérem, mert az
 elemzés is az átlagot használja. Az osztályon belüli korrelációnak jelen esetben
 a konzisztencia-típusú változatát használom. Ez csak azt nézi, hogy az értékelők
@@ -1001,7 +1130,9 @@ húzódik, ha a metrika valójában fontos. Az ilyen metrika alacsony rangsorhel
 így azt jelenti, hogy a metrikát nem sikerült megbízhatóan mérni, és nem azt,
 hogy nincs hatása.
 
-A metrikák és a pontszámok kapcsolatát (RQ3) szintén Spearman-korrelációval
+\subsection{A metrikák és a pontszámok kapcsolatának elemzése}
+
+A metrikák és a pontszámok kapcsolatát (RQ4) szintén Spearman-korrelációval
 mérem. Minden metrikára kiszámolom, mennyire mozog együtt a metrika értéke az
 emberek, illetve az egyes modellek pontszámaival, azokon a kódrészleteken,
 amelyekhez mindkét érték rendelkezésre áll. Egy modell négy futásának (a négy
@@ -1013,29 +1144,31 @@ egyenletesebb skálára transzformálom őket, majd az így kapott átlagot
 visszaalakítom korrelációvá. Ugyanígy járok el valamennyi modell korrelációjának
 összevonásakor is. A metrikákat ezután aszerint rangsorolom, hogy milyen erősen
 mozognak együtt a pontszámokkal, vagyis a korreláció abszolút értéke szerint.
-Mindegyik metrikánál megadom %szb: ezt biztos te adod meg? nem a korreláció "előjele" lesz?
-az irányt is: a pozitív előjel azt jelenti, hogy a metrika magasabb értéke
-olvashatóbb kóddal jár együtt, a negatív pedig azt, hogy kevésbé olvashatóval. A
-metrikák helyezésére bootstrap konfidenciaintervallumot számolok, amely
+Az együttmozgás irányát a korreláció előjele mutatja meg: a pozitív előjel azt jelenti, hogy a
+metrika magasabb értéke olvashatóbb kóddal jár együtt, a negatív pedig azt, hogy
+kevésbé olvashatóval. A metrikák helyezésére bootstrap konfidenciaintervallumot számolok, amely
 megmutatja, mennyire biztos egy metrika helye a rangsorban.
 
-A rangsorokon többféle összehasonlítást is elvégzek. A metrikapárok esetében azt
+A korrelációkon többféle összehasonlítást is elvégzek. A metrikapárok esetében azt
 vizsgálom, hogy valamelyik szignifikánsan erősebben mozog-e együtt a
-pontszámokkal, mint egy másik. Metrikánként azt is megnézem, hogy egy modell
-erősebben vagy gyengébben követi-e az adott metrikát, mint az emberek. Mindkét
-esetben egyszerre sok összehasonlítás történik, ezért Holm-korrekciót
+pontszámokkal, mint egy másik. Metrikánként azt is megnézem, hogy egy
+modellváltozat pontszámai erősebben vagy gyengébben mozognak-e együtt az adott
+metrikával, mint az emberek pontszámai.
+Ez az összehasonlítás a korrelációk értékét hasonlítja össze, és így azt is megmutatja,
+ha a modellváltozat és az emberek pontszámai ugyanazzal a metrikával eltérő erősséggel mozognak együtt.
+A p-értékeket mindkét esetben a bootstrap
+eljárással becsülöm, és mivel egyszerre sok összehasonlítás történik, ezért Holm-korrekciót
 alkalmazok. Azt, hogy a modell és az emberek hasonló metrikákat tartanak-e
-fontosnak, a két rangsor Spearman-korrelációjával mérem: ha ez magas, a modell
-és az emberek hasonló sorrendben követik a metrikákat. Külön vizsgálom azt is,
-hogy a modell olvashatósági pontszámai mennyire követik a saját maga által adott
-metrikapontszámokat (önkonzisztencia). Végül a leave-one-out és a teljes
-átlaggal kapott korrelációk különbségére is bootstrap konfidenciaintervallumot
-számolok mind modellenként, mind az összes modellre összesítve. Ez a különbséget
-egy ellenőrzés, amely arra a kérdésre felel, hogy mennyit számít a leave-one-out
-döntés?
+fontosnak, a két rangsor Spearman-korrelációjával mérem.
+Ez a mérőszám csak a sorrendet nézi, a korrelációk értékét nem, ezért
+két rangsor akkor is azonos lehet, ha az értékek nagyon eltérnek. Az értékek
+eltérését az előző, metrikánkénti összehasonlítás mutatja meg.
+Külön vizsgálom azt is,
+hogy egy modellváltozat olvashatósági pontszámai mennyire követik a saját maga által adott
+metrikapontszámokat (önkonzisztencia).
 
 A korrelációk csupán azt mutatják, hogy egy pontszám és egy metrika együtt
-mozog, azt viszont nem, hogy az értékelő ténylegesen a metrika alapján dönt.
+mozog, azt viszont nem, hogy az értékelő ténylegesen a metrika alapján dönt-e.
 Ráadásul több metrika egymással is együtt mozog: a hosszabb kódnak általában
 nagyobb a Halstead-térfogata, több benne az elágazás, és mélyebb a beágyazása.
 Egy metrika ezért akkor is korrelálhat a pontszámokkal, ha valójában egy másik,
@@ -1045,19 +1178,6 @@ fogalmazom meg, hogy a pontszám együtt mozog egy metrikával, és nem úgy, ho
 nem különböznek szignifikánsan. Ennek oka, hogy egy rangsorban nagyon sok
 metrikapárt hasonlítok össze, és a Holm-korrekció ilyenkor szigorúbbá teszi a
 küszöböt, ezért csak a nagy különbségek bizonyulnak szignifikánsnak.
-
-%szb: összfoglaló vélemény a módszertanról:
-% tök érthetően indult, de aztán nagyon elvesztem sajnos.
-% A 3.4-nél kezdtem egyre nehezebben érteni a dolgokat
-% azt érzem, hogy néhány dolog kicsit össze-vissza van, áttérsz a metrikás dolgokra, majd utána írsz ismét a fő kutatási krédésről
-% meg nekem összekeverő, hogy mit hogy párosítasz, meg hogy nem párosítasz, meg hogy átlagolsz, meg most mi számít 1 modellnek
-% Így, hogy nem látom át, nagyon nehéz konkrét javaslatokat adni. Viszont szerintem szükséges lenne ezen tisztítgatni kicsit
-% az lenne a cél, hogy az olvasó miután elolvasta a methodot, úgy menjen az eredményekre, hogy vágja, mire kell ott majd fókuszálni, 
-% 	és ezen ne kelljen sokat gondolkoznia
-% Esetleg ahogy így írom, az jutott eszembe, h megtehetnéd, hogy kettészeded picit a methodot. Jelenleg összekeveredik a különböző 
-% 	metrikák magyarázása és maga a módszer. Helyette szerintem egyik sectionban leírhatod a lényeget, majd egy másik sectionban pedig
-% 	a különféle metrikákat magyarázhatod. Sorrend az lehet így lehet úgy jó, idk.
-
 
 \cleardoublepage
 
@@ -1677,7 +1797,7 @@ kódrészleteket vettem figyelembe, amelyekre mind a négy futásuk értékelhet
 % javaslat: ne pc-zd ki a spearmant, hanem jelents mindet (meg MAE, meg ilyenek). Hisz annyi mindent beígérsz a módszer részben, akkor azokat ilyenkor
 % kutya kötelességed jelenteni az eredmények részben.
 % Illetve másik nagyon dolog, hogy így is rengeteg a szám. Jó lenne, ha kicsit tudnál szűkíteni, ritkítani. Pl. ha kiderül, hogy q4 és q8 között
-% nincs nagy különbség, akkor pl. elég a q8-at jelenteni, és a többit lent az appendixben csak
+% nincs (nagy) különbség, akkor pl. elég a q8-at jelenteni (vagy összevonva a kettőt), és a többit lent az appendixben csak
 % Vagy másik, hogy ábrák > táblázat. Tehát oszlopdiagrammok és scatterplotok mehetnének táblák helyére ahol csak lehet, hisz sokkal jobban érthetőek
 % és akkor majd az appendixbe kerüljön a sok szám csak. Persze nem azt mondom, hogy nem kell szám az eredményekbe, csak jelenleg az olvasó nem biztos
 % hogy ráérez arra, hogy mik a legfontosabb számok
@@ -1858,8 +1978,67 @@ Now rate the readability of this code:
 Return only the JSON object.
 \end{lstlisting}
 
-\chapter{A kódmetrikák definíciói}
-\label{app:metrics}
+\section*{Az LLM-ekkel pontozott metrikák promptja}
+
+A metrikák pontozásakor minden kódrészlethez egyetlen prompt tartozik, amely
+mind a tizenegy metrikát tartalmazza. A rendszerprompt:
+
+\begin{lstlisting}[breaklines=true]
+You are a strict, deterministic code readability evaluator.
+Return ONLY compact JSON matching {"scores":[{"id":string,"score":int}]}.
+Use exactly the metric ids you are given, score every one of them, and respect each metric's stated range.
+No explanations, no markdown, no extra fields.
+\end{lstlisting}
+
+A felhasználói prompt:
+
+\begin{lstlisting}[breaklines=true]
+Evaluate the following code for readability across the listed metrics.
+Language: Java
+
+Metrics:
+- [appropriateness_of_names]
+	Appropriateness of Names:
+	Evaluates how well the names of variables, functions, and classes reflect their purpose and usage.
+	Appropriate naming can significantly enhance readability. (range 0-100, higher is better)
+- [consistency_of_naming]
+	Consistency of Naming: Assesses how consistently naming conventions are applied throughout the codebase.
+	Consistent naming can improve readability and reduce cognitive load. (range 0-100, higher is better)
+- [pronounceability_of_names]
+	Pronounceability of Names: Evaluates how easily the names of variables, functions, and classes can be pronounced.
+	Easily pronounceable names can improve readability and communication among developers. (range 0-100, higher is better)
+- [clarity_of_comments]
+	Clarity of Comments: Assesses how clear and informative the comments in the code are.
+	Clear comments can help explain complex logic and improve readability. (range 0-100, higher is better)
+- [usefulness_of_comments]
+	Usefulness of Comments: Evaluates how useful the comments are in understanding the code.
+	Useful comments can provide context and explanations that enhance readability. (range 0-100, higher is better)
+- [consistency_of_comments_and_code]
+	Consistency of Comments and Code: Assesses how well the comments align with the actual code.
+	Inconsistent comments can lead to confusion and reduce readability. (range 0-100, higher is better)
+- [high_level_understandability]
+	High-Level Understandability: Evaluates how easily a developer can understand the overall structure and purpose of the code.
+	High-level understandability can improve readability and ease of navigation. (range 0-100, higher is better)
+- [cognitive_load]
+	Cognitive Load: Assesses the mental effort required to understand the code.
+	Convoluted or tricky logic can increase cognitive load and reduce readability. (range 0-100, higher is worse)
+- [use_of_idioms]
+	Use of Idioms: Evaluates how well the code uses common language idioms and patterns.
+	Proper use of idioms can enhance readability by leveraging familiar constructs. (range 0-100, higher is better)
+- [error_handling_clarity]
+	Error Handling Clarity: Assesses how clearly the code handles errors and exceptions.
+	Clear error handling can improve readability by making it easier to understand how the code responds to unexpected conditions. (range 0-100, higher is better)
+- [adherence_to_project_conventions]
+	Adherence to Project Conventions: Evaluates how well the code follows any specific conventions or guidelines established for similar projects.
+	Adherence to project conventions can enhance readability by providing a consistent style and structure. (range 0-100, higher is better)
+
+Code:
+-----BEGIN-CODE-----
+{kódrészlet}
+-----END-CODE-----
+
+Return only the JSON object.
+\end{lstlisting}
 
 \chapter{Részletes eredmények}
 \label{app:results}
