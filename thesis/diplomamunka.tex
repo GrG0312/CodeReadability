@@ -509,7 +509,7 @@ A három forrásból származó kódrészletek
 több szempontból is különböznek egymástól. Buse és Weimer 100 kódrészlete rövidebb.
 Átlagosan 7,7 soros kódrészleteket tartalmaz, és valamennyit ugyanaz a 120
 hallgató értékelte \cite{buse2008metric}. Dorn 121 kódrészlete nagyjából
-egyenlő arányban 10, 30 és 50 soros részletekből áll, és kódrészletenként átlagosan
+egyenlő arányban 10, 30 és 50 soros kódrészletekből áll, és kódrészletenként átlagosan
 mintegy 214 értékelést kapott \cite{dorn2012general}. Scalabrino és munkatársai
 200 kódrészlete pedig teljes, 10-50 soros metódusokat foglal magába, amelyek
 mindegyikét kilenc hallgató értékelte \cite{scalabrino2016improving}.
@@ -575,19 +575,19 @@ A modelleket a következő táblázat összegzi:
 	\small
 	\begin{tabular}{ | l | l | l | l | }
 		\hline
-		\textbf{Modell} & \textbf{Család} & \textbf{Méretosztály} & \textbf{Kvantálások} \\
+		\textbf{Modell} & \textbf{Család} & \textbf{Méret} & \textbf{Kvantálások} \\
 		\hline \hline
 		gemma-4-E4B-it & Gemma-4 & 4B & 4 bit, 8 bit \\
 		\hline
 		gemma-4-12b-it & Gemma-4 & 12B & 4 bit, 8 bit \\
 		\hline
-		gemma-4-31B-it & Gemma-4 & 30B & 4 bit, 8 bit \\
+		gemma-4-31B-it & Gemma-4 & 31B & 4 bit, 8 bit \\
 		\hline
 		Qwen3.5-4B & Qwen3.5 & 4B & 4 bit, 8 bit \\
 		\hline
 		Qwen3.5-9B & Qwen3.5 & 9B & 4 bit, 8 bit \\
 		\hline
-		Qwen3.8-27B & Qwen3.8 & 30B & 4 bit\textsuperscript{*}, 8 bit \\
+		Qwen3.8-27B & Qwen3.8 & 27B & 4 bit\textsuperscript{*}, 8 bit \\
 		\hline
 	\end{tabular}
 	\caption[A vizsgált modellek]{A vizsgált modellek. \textsuperscript{*}A Qwen3.8
@@ -597,8 +597,8 @@ A modelleket a következő táblázat összegzi:
 
 A vizsgálati tengelyek azokat a tényezőket jelentik,
 amelyek hatással lehetnek a modellek teljesítményére.
-Öt tengelyt elemzek: a kvantálást, a modellméretet,
-a gondolkodási módot, a modellcsaládot és a promptolási stratégiát.
+Négy tengelyt elemzek: a kvantálást, a modellméretet,
+a gondolkodási módot és a promptolási stratégiát.
 
 A modellek mindegyike hibrid, vagyis képes gondolkodó (\textit{thinking}) és
 közvetlen válaszadó (\textit{no-thinking}) módban is ugyanazokkal a súlyokkal
@@ -609,15 +609,16 @@ Gondolkodó módban a modell legfeljebb 4096 token hosszan gondolkodhat a válas
 megadása előtt.
 
 A méret tengelyén kizárólag azonos családba tartozó modelleket vetek össze.
-A család tengelyén hasonló méretű, azonos kvantálású és módú modellek állnak
-szemben egymással. Mivel kevés modellt vizsgálok, így egy általánosabb következtetést
+A különböző családba tartozó modelleket nem vetem össze egymással, mert ezek
+nem csak egy tulajdonságban térnek el. A Qwen3.8 27B egyetlen méretben szerepel,
+ezért a méret tengelyén nem kap párt. Mivel kevés modellt vizsgálok, így egy általánosabb következtetést
 csak akkor fogalmazok meg, ha a méret szerinti párok összevetése minden családban hasonló eredményt ad.
 
 A tengelyeken kialakított párok alapján adható meg a válasz a második kutatási
 kérdésre:
 
 \textbf{RQ2:} \textit{Milyen hatással van a kvantálás, a modellméret, a
-gondolkodási mód, a modellcsalád és a promptolási stratégia az LLM-ek és az
+gondolkodási mód és a promptolási stratégia az LLM-ek és az
 emberek pontszámainak egyezésére?}
 
 \section{A kódrészletek LLM-ek általi pontozásának menete}
@@ -648,35 +649,30 @@ Minden stratégia esetén a rendszerprompt (\textit{system prompt})
 szigorú olvashatósági értékelő szerepébe helyezi a modellt, és rögzíti, hogy a
 válasz egyetlen, 1 és 5 közötti egész szám kell,
 hogy legyen, amelyet \texttt{\{"score": int\}} formátumú JSON-objektumban kell
-megadni. A skáláról tehát a rendszerpromptból tudnak a modellek, viszont leírást nem kapnak hozzá.
-Ez már a felhasználói prompt (\textit{user prompt}) szerepe. A skála leírásának további része,
-a nyelv megnevezése (\texttt{Language: Java}), valamint a kódrészletek így mind a felhasználói promptba kerülnek.
-A promptok teljes szövege az \ref{app:prompts}.~függelékben található.
+megadni. A skála és két végpontja tehát nem a stratégiák része, hanem a rendszerprompt közös része,
+amely minden stratégiánál ugyanaz. A felhasználói prompt (\textit{user prompt}) a nyelv megnevezésével
+(\texttt{Language: Java}) kezdődik, amelyet a stratégia esetleges példái, majd az értékelendő kódrészlet követnek.
 A modellek az emberi átlagpontszámokkal megegyező, 1-től 5-ig terjedő skálán pontoznak,
 ám egész pontszámot adnak, míg az emberi pontszám több értékelő átlaga.
-Emiatt a modell pontszáma csak ritkán egyezhet meg pontosan az emberi átlaggal, és sok
-kódrészlet kaphat a modelltől másikkal azonos pontszámot.
-Emiatt az emberi és modell által adott pontszámok értéke közvetlenül nem vethető össze,
+Emiatt az emberi és a modell által adott pontszámok értéke közvetlenül nem vethető össze,
 ezért az egyezést elsősorban a sorrend egyezésével mérem.
 A pontszámok értékének összehasonlításánál azt egyezésnek tekintem,
 ha a modell pontszáma egy pontnál kevesebbel tér el az emberi átlagtól.
 
 A modell válasza legfeljebb 64 token lehet.
-Gondolkodó módban a gondolkodás és a válasz közösen legfeljebb 4096 tokent használhat.
+Gondolkodó módban a gondolkodás legfeljebb 4096 tokent használhat.
 Ha a válasz a keret kimerülése miatt csonkul, az nem tekinthető értékelhető válasznak:
 rögzítem, és a válaszadási arányba beszámítom, de nem pótolom új válasszal.
 Hasonlóképpen nem értékelhető az a válasz, amelyből hiányzik a pontszám, vagy amely a skálán
 kívül esik.
 
-Egy LLM a válaszát tokenekből állítja elő. Minden tokent szavakká formáló lépésben
-a token által definiált lehetséges folytatások közül választ.
+Egy LLM a választ tokenenként állítja elő, és minden lépésben a lehetséges folytatások közül választ.
 A választás véletlenszerűségét a mintavételi beállítások szabályozzák,
 ilyen például a hőmérséklet (\textit{temperature}).
 A mintavételi beállításokat
 a modellek készítőinek ajánlásai alapján adom meg, külön a gondolkodó és a
 közvetlenül válaszoló módokra is egyaránt (\ref{tab:method:sampling}.~táblázat).
-Ezeket a beállításokat minden kéréshez mellékelem.
-A meg nem adott paraméterek az alapértelmezett értékét veszik fel.
+A meg nem adott paraméterek alapértelmezett értéket vesznek fel.
 A véletlenszám-generátor kezdőértéke minden pontozáskor ugyanaz (35420).
 
 \begin{table}[htb]
@@ -799,7 +795,7 @@ Az eljárás azt becsli meg, mennyire változna egy mérőszám értéke (péld�
 ha egy másik, hasonló adathalmazon számolnánk ki.
 Kimenete a mérőszám értékének egy \textbf{95\%-os konfidenciaintervalluma}:
 minél szűkebb, annál megbízhatóbb a mérőszám eredménye.
-Az eljáráshoz szükséges véletlenszerű lépéseket rögzített kezdőértékkel (seed) végzem,
+Az eljáráshoz szükséges véletlenszerű lépéseket rögzített kezdőértékkel (\textit{seed}) végzem,
 így az elemzés determinisztikus.
 
 Két eredmény összehasonlításakor, például két futás Spearman-korrelációjának
@@ -842,20 +838,20 @@ A próba szintén p-értéket ad, amelyre ugyanúgy alkalmazom a Holm-korrekció
 
 A promptolási stratégiákat kétféleképpen hasonlítom össze.
 Az első a \textbf{Friedman-próba}, amely minden modellváltozat esetében sorba rendezi a négy stratégiát
-aszerint, hogy melyik stratégia használatával egyezik a modell a legjobban az emberi pontszámokkal.
+aszerint, hogy melyik stratégiával készült futás egyezik a legjobban az emberi pontszámokkal.
 A próba ezután azt vizsgálja, hogy valamelyik stratégia a modellváltozatok többségénél
 következetesen előrébb vagy hátrébb kerül-e, mint ami a véletlenből adódna. Így
 minden modellváltozatot egyetlen adatként kezel, és arra ad választ, hogy van-e
 általánosan jobb stratégia.
-A második eljárás a stratégiákat páronként hasonlítja össze a bootstrap eljárás segítségével.
-Egy stratégiapárnál az összes modell átlagos Spearman-korrelációját vetem össze,
-és minden húzásban ugyanazokat a kódrészleteket használom mindkét stratégiára.
+A második módszer a stratégiákat páronként hasonlítja össze.
+Egy stratégiapárnál az összes modellváltozat átlagos Spearman-korrelációját vetem össze,
+és a különbség p-értékét a bootstrap eljárással becsülöm.
 A négy stratégiából hat pár adódik, ezért itt is Holm-korrekciót alkalmazok.
-Ugyanezt az összehasonlítást modellenként külön is elvégzem, viszont a két eljárás eltérő eredményt is adhat.
-A Friedman-próba stratégiánként csupán 24 értéket lát, minden modellből egyet, a
+Ugyanezt az összehasonlítást modellváltozatonként külön is elvégzem. A két módszer eltérő eredményt is adhat.
+A Friedman-próba stratégiánként csupán 24 értéket lát, minden modellváltozatból egyet, a
 bootstrap eljárás viszont mind a 421 kódrészletet felhasználja, így a kisebb
 különbségeket is kimutathatja. Ezért az eredmények közlésekor mindig rögzítem,
-hogy az adott állítás melyik eljáráson alapul.
+hogy az adott állítás melyik módszeren alapul.
 
 \subsection{Összevetés a korábbi olvashatósági modellekkel}
 
@@ -1100,14 +1096,14 @@ hogy nincs hatása.
 
 A metrikák és a pontszámok kapcsolatát (RQ4) szintén Spearman-korrelációval
 mérem. Minden metrikára kiszámolom, mennyire mozog együtt a metrika értéke az
-emberek, illetve az egyes modellek pontszámaival, azokon a kódrészleteken,
-amelyekhez mindkét érték rendelkezésre áll. Egy modell négy futásának (a négy
+emberek, illetve az egyes modellváltozatok pontszámaival, azokon a kódrészleteken,
+amelyekhez mindkét érték rendelkezésre áll. Egy modellváltozat négy futásának (a négy
 promptolási stratégiának) a korrelációit egyetlen értékké vonom össze. Mivel a
-korrelációk értékei nem egyenletesen oszlanak el a -1 +1 skálán (a 0,90 és a
+korrelációk értékei nem egyenletesen oszlanak el a $-1$ és $+1$ közötti skálán (a 0,90 és a
 0,95 közötti eltérés jóval nagyobb különbséget jelez, mint a 0,10 és a 0,15
 közötti), ezért átlagolás előtt a Fisher-féle $z$-transzformációval
 egyenletesebb skálára transzformálom őket, majd az így kapott átlagot
-visszaalakítom korrelációvá. Ugyanígy járok el valamennyi modell korrelációjának
+visszaalakítom korrelációvá. Ugyanígy járok el valamennyi modellváltozat korrelációjának
 összevonásakor is. A metrikákat ezután aszerint rangsorolom, hogy milyen erősen
 mozognak együtt a pontszámokkal, vagyis a korreláció abszolút értéke szerint.
 Az együttmozgás irányát a korreláció előjele mutatja meg: a pozitív előjel azt jelenti, hogy a
@@ -1124,14 +1120,14 @@ Ez az összehasonlítás a korrelációk értékét hasonlítja össze, és így
 ha a modellváltozat és az emberek pontszámai ugyanazzal a metrikával eltérő erősséggel mozognak együtt.
 A p-értékeket mindkét esetben a bootstrap
 eljárással becsülöm, és mivel egyszerre sok összehasonlítás történik, ezért Holm-korrekciót
-alkalmazok. Azt, hogy a modell és az emberek hasonló metrikákat tartanak-e
-fontosnak, a két rangsor Spearman-korrelációjával mérem.
+alkalmazok. Azt, hogy egy modellváltozat és az emberek hasonló sorrendben követik-e
+a metrikákat, a két rangsor Spearman-korrelációjával mérem.
 Ez a mérőszám csak a sorrendet nézi, a korrelációk értékét nem, ezért
 két rangsor akkor is azonos lehet, ha az értékek nagyon eltérnek. Az értékek
 eltérését az előző, metrikánkénti összehasonlítás mutatja meg.
 Külön vizsgálom azt is,
-hogy egy modellváltozat olvashatósági pontszámai mennyire követik a saját maga által adott
-metrikapontszámokat (önkonzisztencia).
+hogy egy modellváltozat olvashatósági pontszámai mennyire követik az ugyanazon modell ugyanazzal
+a kvantálással adott metrikapontszámait (önkonzisztencia).
 
 A korrelációk csupán azt mutatják, hogy egy pontszám és egy metrika együtt
 mozog, azt viszont nem, hogy az értékelő ténylegesen a metrika alapján dönt-e.
