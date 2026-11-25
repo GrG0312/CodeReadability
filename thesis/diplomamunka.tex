@@ -1212,15 +1212,15 @@ négybites változat eltérése kisebb.
 	\label{tab:results:axis:quantization}
 \end{table}
 
-A méret tengelyén a 16 párból kettőnél kimutatható a különbség,
-mindkettő a nagyobb modell javára, közvetlenül válaszoló módban
-(\ref{tab:results:axis:size}.~táblázat).
-A Gemma-4 négybites E4B és 31B modellje között a különbség $+0{,}076$,
-a Qwen3.5 nyolcbites 4B és 9B modellje között pedig $+0{,}091$.
-Az átlagos abszolút eltérésben nyolc párnál van kimutatható különbség:
-a Gemma-4 családban mind a hat ilyen párnál a kisebb,
-a Qwen3.5 családban mindkét párnál a nagyobb modell eltérése bizonyul kisebbnek.
+A méret tengelyén a 16 párból kettőnél kimutatható a különbség, mindkettő a
+nagyobb modell javára, közvetlenül válaszoló módban
+(\ref{tab:results:axis:size}.~táblázat). A Gemma-4 négybites E4B és 31B modellje
+között a különbség $+0{,}076$, a Qwen3.5 nyolcbites 4B és 9B modellje között
+pedig $+0{,}091$. Az átlagos abszolút eltérésben nyolc párnál van kimutatható
+különbség: a Gemma-4 családban mind a hat ilyen párnál a kisebb, a Qwen3.5
+családban mindkét párnál a nagyobb modell eltérése bizonyul kisebbnek.
 
+%szb: nem nevezném modellpárnak ugynaazon modell különbözőképpen kvantált verzióját
 \begin{table}[htbp]
 	\centering
 	\small
@@ -1265,15 +1265,18 @@ a Qwen3.5 családban mindkét párnál a nagyobb modell eltérése bizonyul kise
 	\caption[A modellméret hatása]{A modellméret hatása: a Spearman-korreláció különbsége
 	($\Delta\rho$, a nagyobb mínusz a kisebb modell) a négy promptolási stratégia átlagában,
 	páros bootstrap konfidenciaintervallummal és Holm-korrigált $p$-értékkel.
-	A csillag a szignifikáns különbséget jelöli.}
+	A csillag a szignifikáns különbséget jelöli.} %szb: milyen csillag? Keresem, de nem látom... 
+	%Meg én nem értem ezt a 95%os intervallumot, de lehet majd ha elolvasom ismét a methodot, akkor majd jó lesz..
 	\label{tab:results:axis:size}
 \end{table}
+%szb: szerintem ez nehezen értelmezhető, egy plot sokkal jobb lenne ehhez, és úgy amúgy is, az ilyenekhez. 
+% pl egy scatterplot, ahol ott lenne minden eredmény + az ugyanolyan modellcsaládhoz tartozó modellek lennének összekötve, és akkor látszódna a trend
 
-A gondolkodás tengelyén a 12 pár egyikénél sincs kimutatható különbség a korrelációk között
-(\ref{tab:results:axis:reasoning}.~táblázat).
-Az átlagos abszolút eltérésben nyolc párnál van kimutatható különbség:
-a Gemma-4 modelleknél a gondolkodó,
-a Qwen3.5 modelleknél pedig a közvetlenül válaszoló mód eltérése nagyobb.
+A gondolkodás tengelyén a 12 pár egyikénél sincs kimutatható különbség a
+korrelációk között (\ref{tab:results:axis:reasoning}.~táblázat). Az átlagos
+abszolút eltérésben nyolc párnál van kimutatható különbség: a Gemma-4
+modelleknél a gondolkodó, a Qwen3.5 modelleknél pedig a közvetlenül válaszoló
+mód eltérése nagyobb.
 
 \begin{table}[htbp]
 	\centering
@@ -1314,6 +1317,7 @@ a Qwen3.5 modelleknél pedig a közvetlenül válaszoló mód eltérése nagyobb
 	A csillag a szignifikáns különbséget jelöli.}
 	\label{tab:results:axis:reasoning}
 \end{table}
+%szb: ehylett/emellé pedig szerintem egy barplot, ahol minden modellhez van 2 bar, és látszik akkor az, hogy hogyan térnek el egymástól
 
 A család tengelyén a nyolc párból egy esetében mutatható ki különbség
 (\ref{tab:results:axis:family}.~táblázat): a nyolcbites, közvetlenül válaszoló 4B méretosztályban
@@ -1628,6 +1632,21 @@ kódrészleteket vettem figyelembe, amelyekre mind a négy futásuk értékelhet
 	Páros bootstrap konfidenciaintervallum, Holm-korrigált $p$-érték; a csillag a szignifikáns különbséget jelöli.}
 	\label{tab:results:scalabrino}
 \end{table}
+
+%szb: összesített vélemény a results szekcióról
+% alapvetően jó, érdekesek a táblák, és a legtöbb tők jól érzékelteti a lényeget
+% kicsit szerintem sok a szöveg, néhol már határon van sztem hogy valóban csak az eredményeket jelented-e, és nem következtetéskeet vonsz le
+% nagyon hosszú lett a section, de szerintem több rész át tudna kerülni az eredmények értelmezéséhez. Tehát ja, talán lehetne kicsit lényegretörőbb
+% Ha jól nézem, mndenhol csak spearmaní korrelációt jelentesz? a többi metrikát hiányolom. Persze látom, hogy lent részletesen jelented a pearsont kentallt stb,
+% szóval gondolom annyi volt a cél, hogy ez a része a diplomamunkának ne legyen túl hosszú, ne legyen túl sok szám
+% de az a baj, hogy így is túl sok szám van, már rögtön a sp korrelációból...
+% javaslat: ne pc-zd ki a spearmant, hanem jelents mindet (meg MAE, meg ilyenek). Hisz annyi mindent beígérsz a módszer részben, akkor azokat ilyenkor
+% kutya kötelességed jelenteni az eredmények részben.
+% Illetve másik nagyon dolog, hogy így is rengeteg a szám. Jó lenne, ha kicsit tudnál szűkíteni, ritkítani. Pl. ha kiderül, hogy q4 és q8 között
+% nincs nagy különbség, akkor pl. elég a q8-at jelenteni, és a többit lent az appendixben csak
+% Vagy másik, hogy ábrák > táblázat. Tehát oszlopdiagrammok és scatterplotok mehetnének táblák helyére ahol csak lehet, hisz sokkal jobban érthetőek
+% és akkor majd az appendixbe kerüljön a sok szám csak. Persze nem azt mondom, hogy nem kell szám az eredményekbe, csak jelenleg az olvasó nem biztos
+% hogy ráérez arra, hogy mik a legfontosabb számok
 
 \cleardoublepage
 
