@@ -1541,17 +1541,6 @@ míg a négybitesek eredményeit a függelék tartalmazza.
 	\label{tab:results:axis:quantization}
 \end{table}
 
-A Gemma-4 négybites E4B és 31B
-modellje között a különbség $+0{,}076$, a Qwen3.5 nyolcbites 4B és 9B modellje
-között pedig $+0{,}091$. Az átlagos abszolút eltérésben nyolc párnál van
-kimutatható különbség: a Gemma-4 családban mind a hat ilyen párnál a kisebb, a
-Qwen3.5 családban mindkét párnál a nagyobb modell eltérése bizonyul kisebbnek. A
-Qwen3.8 27B modell, amely a méret tengelyén nem kap párt, mindkét kvantálással és
-mindkét gondolkodási módban magasabb átlagos korrelációt ér el a Qwen3.5 9B
-modellnél (nyolcbites, közvetlenül válaszoló módban például 0,458, illetve
-0,359). A két modell azonban más családba tartozik, ezért ez a különbség nem
-közvetlenül a méret hatása.
-
 A méret tengelyén 16 párból kettőnél mutatható ki különbség,
 és mindkettő a nagyobb modell javára szól, közvetlenül válaszoló módban
 (\ref{fig:results:size}.~ábra, \ref{tab:app:axis:size}.~függeléktáblázat).
@@ -1566,26 +1555,17 @@ Mivel a két modell más családba tartozik, ezért ez a különbség nem közve
 
 \begin{figure}[htbp]
 	\centering
-	% ÁBRA ELKÉSZÍTENDŐ (fig:results:size), majd a helykitöltő helyére \includegraphics.
-	% Típus: pontdiagram, összekötő vonalakkal.
-	% Adat: helpers/scripts/tables_net/figure_size.csv (family, size, quant, thinking, mean_spearman),
-	%   mind a 24 modellváltozat; mean_spearman = a négy promptolási stratégia futásainak átlagos
-	%   Spearman-korrelációja.
-	% X tengely: modellméret milliárd paraméterben (E4B = 4, 4B = 4, 9B = 9, 12B = 12, 27B = 27, 31B = 31),
-	%   felirat: „Modellméret (milliárd paraméter)”; a pontok mellé a méret neve (E4B, 12B, …).
-	% Y tengely: mean_spearman, felirat: „Átlagos Spearman-korreláció”, tartomány kb. 0,25–0,48.
-	% Szín: modellcsalád (Gemma-4, Qwen3.5, Qwen3.8). Jelölő: kvantálás (kör = 8 bit, háromszög = 4 bit).
-	%   Vonaltípus: gondolkodási mód (folytonos = közvetlen, szaggatott = gondolkodó).
-	% Összekötés: ugyanabba a családba, kvantálásba és módba tartozó pontok méret szerint összekötve
-	%   (Gemma-4: E4B–12B–31B, Qwen3.5: 4B–9B); a Qwen3.8 27B négy pontja nincs összekötve.
-	% Jelmagyarázat: család, kvantálás, mód. A két szignifikáns pár (Gemma-4 4 bit közv. E4B–31B,
-	%   Qwen3.5 8 bit közv. 4B–9B) vonala vastagabb vagy csillaggal jelölt, ezt a felirat magyarázza.
-	\fbox{\parbox{0.8\textwidth}{\centering\vspace{2em}Helykitöltő: a modellméret hatását bemutató ábra.\vspace{2em}}}
-	\caption[A modellméret hatása]{A modellváltozatok átlagos Spearman-korrelációja (a négy
-	promptolási stratégia átlaga) a modellméret szerint. Az azonos családba, kvantálásba és
-	gondolkodási módba tartozó modellváltozatok össze vannak kötve. A kiemelt vonalak a Holm-korrekció
-	után is szignifikáns különbséget jelölik. A Qwen3.8 családból egy méret szerepel, ezért ott nincs
-	összekötés.}
+	\includegraphics[width=0.49\textwidth]{figures/results_size_gemma.png}
+	\hfill
+	\includegraphics[width=0.49\textwidth]{figures/results_size_qwen.png}
+	\caption[A modellméret hatása]{A nyolcbites modellváltozatok átlagos Spearman-korrelációja (a négy
+	promptolási stratégia átlaga) a modellméret szerint, a Gemma-4 (balra) és a Qwen3.5 (jobbra)
+	családban, gondolkodási módonként. A csillag a Holm-korrekció után is szignifikáns különbséget
+	jelöli. A négybites változatok korrelációja egyik párnál sem tér el szignifikánsan a
+	nyolcbitesekétől. A négybites változatok közül a Gemma-4 E4B és 31B modell közvetlenül válaszoló
+	módú változata között szignifikáns a különbség; ezt és minden más párt a
+	\ref{tab:app:axis:size}.~függeléktáblázat tartalmaz. A Qwen3.8 családból egy méret szerepel, ezért
+	az ábrán nem jelenik meg.}
 	\label{fig:results:size}
 \end{figure}
 
@@ -1597,20 +1577,11 @@ mód eltérése a nagyobb.
 
 \begin{figure}[htbp]
 	\centering
-	% ÁBRA ELKÉSZÍTENDŐ (fig:results:reasoning), majd a helykitöltő helyére \includegraphics.
-	% Típus: csoportosított oszlopdiagram.
-	% Adat: helpers/scripts/tables_net/figure_thinking.csv (family, size, quant, spearman_no_thinking,
-	%   spearman_thinking), csak a quant = Q8 sorok (6 modell); az értékek a négy promptolási
-	%   stratégia futásainak átlagos Spearman-korrelációi.
-	% X tengely: a hat modell (Gemma-4 E4B, Gemma-4 12B, Gemma-4 31B, Qwen3.5 4B, Qwen3.5 9B,
-	%   Qwen3.8 27B), modellenként két egymás melletti oszlop: közvetlenül válaszoló és gondolkodó mód.
-	% Y tengely: „Átlagos Spearman-korreláció”, 0-tól kb. 0,5-ig.
-	% Szín: gondolkodási mód (két szín), jelmagyarázattal. Az oszlopok fölé az érték két tizedesre.
-	% Szignifikáns különbség nincs, ezért nincs jelölés.
-	\fbox{\parbox{0.8\textwidth}{\centering\vspace{2em}Helykitöltő: a gondolkodási mód hatását bemutató ábra.\vspace{2em}}}
+	\includegraphics[width=\textwidth]{figures/results_reasoning.png}
 	\caption[A gondolkodási mód hatása]{A nyolcbites modellváltozatok átlagos Spearman-korrelációja
-	(a négy promptolási stratégia átlaga) közvetlenül válaszoló és gondolkodó módban. A négybites
-	változatok a nyolcbitesekhez nagyon hasonló értékeket adnak; minden pár eredménye a
+	(a négy promptolási stratégia átlaga) közvetlenül válaszoló és gondolkodó módban. A két mód
+	között egyik párnál sem szignifikáns a különbség. A négybites változatok korrelációja egyik
+	párnál sem tér el szignifikánsan a nyolcbitesekétől; minden pár eredménye a
 	\ref{tab:app:axis:reasoning}.~függeléktáblázatban szerepel.}
 	\label{fig:results:reasoning}
 \end{figure}
