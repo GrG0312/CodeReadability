@@ -49,10 +49,10 @@
 
 Napjainkban a szoftverfejlesztők munkájának jelentős részét a meglévő kód
 megértése és karbantartása teszi ki. Emiatt különösen fontos, hogy egy projekt
-forráskódja olvasható legyen. A kódolvashatóság azonban nehezen %szb: esetleg kiegészíteni: kevéssé megfogható/definiálható fogalom, nehezen számszerűsíthető, ...
-számszerűsíthető, hiszen megítélése nagymértékben szubjektív: két programozó
+forráskódja olvasható legyen. A kódolvashatóság azonban kevéssé megfogható/definiálható fogalom,
+nehezen számszerűsíthető, hiszen megítélése nagymértékben szubjektív: két programozó
 ugyanazt a kódrészletet gyakran egészen eltérően értékeli. Az eltérés eredhet a
-fejlesztők tapasztalatából, %szb: eltérő tapasztalatából
+fejlesztők eltérő tapasztalatából,
 a programozási nyelv és a kódbázis ismeretéből, valamint a személyes
 stíluspreferenciákból is.
 
@@ -69,24 +69,24 @@ gépi tanulásos modellnél \cite{posnett2011simpler}. %szb: picit átfogalmazn�
 %a kód entrópiájára - támaszkodva becsli a kódolvashatóságot.
 Dorn már a kód vizuális megjelenését is figyelembe vette, és ehhez egy nagyobb,
 több programozási nyelvet felölelő adathalmazt használt \cite{dorn2012general}. %szb: ahhoz hogy itt írhasd, hogy több programozási nyelv, ahhoz fentebb említened kéne, hogy az csak java volt. Csak ennyit szúrj bele buse-hoz, hogy java kódrészlet a kódrészlet helyett. Sőt, akkor már itt zárójelesen említhetnéd a java python cuda-t is.
-Scalabrino és munkatársai az azonosítók és a megjegyzések szövegéből számolt %szb: talán számoltak, de idk, i dont speak madzsarszki
+Scalabrino és munkatársai az azonosítók és a megjegyzések szövegéből számolt
 jellemzőkkel egészítették ki a korábbiakat \cite{scalabrino2016improving}, majd
 következő munkájukban ezeket egyetlen átfogó modellben egyesítették
 \cite{scalabrino2018comprehensive}. Egy másik vizsgálatukban viszont azt is
-kimutatták, %szb: rávilágítottak arra esetleg
+rávilágítottak arra,
 hogy ezek a mérőszámok kevéssé tükrözik, hogy a fejlesztők valóban megértik-e a
 kódot \cite{scalabrino2017understandability}.
 
 Az utóbbi években a szoftverfejlesztés gyakorlatát jelentősen átalakította a
 nagy nyelvi modellek (\textit{Large Language Model}, továbbiakban LLM)
-elterjedése \cite{brown2020gpt3,touvron2023llama}. %szb: esetleg "megjelenése és elterjedése" - hisz akkor a cite jobban illik, mert ezek inkább a megjelenésre vonatkoznak, hisz ezek az első LLMek kb.
+megjelenése és elterjedése \cite{brown2020gpt3,touvron2023llama}.
 Az általános célú modellek mellett megjelentek a nyílt súlyú, kifejezetten
 szoftvertechnológiai feladatokra specializált modellek is, többek között a
 CodeLlama \cite{roziere2023codellama}, a DeepSeek-Coder
 \cite{guo2024deepseekcoder} és a Codestral \cite{mistral2024codestral}. Az ilyen
 általános célú és a kódra specializált LLM-eket ma már széles körben alkalmazzák
-kódkiegészítésre, hibajavításra illetve kódrészletek magyarázatára %szb: tán inkább magyarázására
-\cite{hou2024llm4se}. Kézenfekvő tehát a kérdés, %szb: felvethető tehát az a kérdés,  (annyira nem mondanám kézenfekvőnek, hisz akkor már sokan foglalkoznának ezzel nagyon)
+kódkiegészítésre, hibajavításra illetve kódrészletek magyarázására
+\cite{hou2024llm4se}. Felvethető tehát az a kérdés,
 hogy mennyire képesek az LLM-ek a kód olvashatóságát is megítélni.
 
 Azt, hogy az LLM-ek milyen pontossággal képesek a forráskód olvashatóságot
@@ -100,17 +100,15 @@ modelljénél. %szb: még 1-2 mondat elférne itt erről a munkáról, hogy azé
 A szerzők négy promptolási stratégiát és két értékelői szerepet is
 összevetettek, két kérdést azonban nyitva hagytak. A legtöbb modellcsaládból
 ugyanis csak egyetlen méretet vizsgáltak, ami miatt a modellméret hatása nem
-különíthető el %szb: "egyértelműen"
-a modellcsalád hatásától, %szb: ink. "egyéb tényezőktől"
-így %szb: ink. mondartvége és ". Ez megnehezíti ..."
-megnehezítve annak vizsgálatát, hogy a modellméret milyen módon függ össze a
+különíthető el egyértelműen egyéb tényezőktől.
+Ez megnehezíti annak vizsgálatát, hogy a modellméret milyen módon függ össze a
 teljesítménnyel. Emellett a modellek szempontjait kizárólag a saját szöveges
 indoklásaikból elemezték, azt viszont nem vizsgálták, hogy a pontszámok milyen
 mérhető kódtulajdonságokkal mozognak együtt.
 
-Dolgozatomban lokálisan futtatott %szb: ezelé még: nyílt súlyú
+Dolgozatomban nyílt súlyú, lokálisan futtatott
 LLM-ek kódolvashatósági pontszámait vetem össze emberi értékelésekkel. A
-kutatómunkám alapja Ouédraogo és munkatársai kutatása. %szb: vizsgálata
+kutatómunkám alapja Ouédraogo és munkatársai vizsgálata.
 Hozzájuk hasonlóan én is azt vizsgálom, mennyire egyeznek meg az LLM-ek és az
 emberek olvashatósági ítéletei. Tőlük eltérően azonban részletesebben elemzem,
 hogy hogyan függ ez az egyezés a modellek tulajdonságaitól vagy a futtatás
@@ -129,11 +127,11 @@ modellcsaládhoz tartozó két, különböző méretű modell, vagy egy hibrid m
 gondolkodással, illetve gondolkodás nélkül történő futtatása. E párok
 összevetésével egy-egy tényező hatása a többitől elkülönítve mérhető.
 
-A munkám %szb: során arra a kérdésre is megkísérlek választ adni, ...
-arra is kiterjed, hogy a modellek és az emberek hasonló szempontok alapján
+Munkám során arra a kérdésre is megkísérlek választ adni,
+hogy a modellek és az emberek hasonló szempontok alapján
 pontoznak-e. Ennek érdekében minden kódrészletre kódmetrikákat számolok, amelyek
-egy része képlettel %szb: algoritmikusan
-meghatározható (sorhossz, beágyazás mélysége) %szb: mivel ezek csak példák, legyen ott hogy pl.
+egy része algoritmikusan
+meghatározható (például sorhossz, beágyazás mélysége)
 más részüket pedig LLM-ek pontozzák, (elnevezések kifejezősége). Ezt követően
 azt vizsgálom, %szb: E metrikákkal az a célom, hogy ... - valami ilyesmi esetleg?
 hogy mely metrikák korrelálnak az emberek és az egyes modellek pontszámaival. Ha
@@ -143,8 +141,7 @@ kimondható, hogy hasonlóak a felek ítéletei. %szb: ez biztos jó? nekem itt 
 % és akkor levonsz következtetéseket. És persze kismilliófajta következtetést le tudsz vonni. Gondolom amit említesz az "csak" 1 a sokfajta
 % lehetséges kimenetből, de ezt nem biztos hogy kiemelném
 
-Először azt vizsgálom, mennyire korrelálnak a modellek pontszámai az emberi %szb: itt pontosíthatnál: olvashatósági pontszámai - ha jól értem (hogy egyértelmá legyen mely pontszámra utalsz
-% az 1 vagy a több bekezdéssel ezelőttire)
+Először azt vizsgálom, mennyire korrelálnak a modellek olvashatósági pontszámai az emberi
 pontszámokkal. Ezután azt elemzem, hogyan befolyásolják ezt az egyezést a fent
 bemutatott tengelyek. Megvizsgálom azt is, mely kódmetrikákkal mozognak együtt a
 modellek és az emberi értékelők pontszámai. Végül pedig azt vizsgálom, hogy
@@ -186,9 +183,9 @@ elhatárolják az olvashatóságot a kódolási szabványok követésétől is, 
 utóbbi elsősorban a kód egységességét szolgálja, nem közvetlenül az
 olvashatóságát \cite{buse2010learning}.
 
-Az olvashatóságtól meg kell különböztetni az érthetőséget is. %szb: nekem ez picit továbbra is homályos: az olvashatóság az első mondatban úgy van definiálva, hogy mennyire könnyű megérteni a szöveget (ergo olvashatóság = érthetőség), majd itt ellenkezőt állítasz
-Egy kód lehet könnyen olvasható, miközben %szb: annak ellenére, hogy ...
-a logikája nehezen érthető, vagyis egy magas olvashatósági pontszám nem
+Az olvashatóságtól meg kell különböztetni az érthetőséget, ugyanis %szb: nekem ez picit továbbra is homályos: az olvashatóság az első mondatban úgy van definiálva, hogy mennyire könnyű megérteni a szöveget (ergo olvashatóság = érthetőség), majd itt ellenkezőt állítasz
+egy kód lehet könnyen olvasható annak ellenére, hogy
+a logikája nehezen érthető. Egy magas olvashatósági pontszám nem
 feltétlenül jelenti azt, hogy a fejlesztők valóban megértették a kódot. Posnett
 és munkatársai párhuzama szerint az olvashatóság a szintaktikai, az érthetőség
 pedig a szemantikai elemzésnek felel meg. Az előbbi a kód felszíni, formai
@@ -219,7 +216,7 @@ boolean isPowerOfTwo(int n) {
 \section{Olvashatósági modellek és adathalmazaik}
 \label{sec:related:models}
 
-Az olvashatóság automatikus becslésére a 2010-es évek eleje óta több, %szb: szerintem nem kell vessző
+Az olvashatóság automatikus becslésére a 2010-es évek eleje óta több
 emberi értékelések alapján tanított modell született. A korai modellekhez a
 szerzők olyan adathalmazokat használtak, amelyek: %szb: a kettőspont előtti "tagmondat" nagyon kurta, hiányos. Talán nem kell kettőspont?
 emberekkel pontoztattak kódrészleteket, az átlagos pontszámokat egy küszöb
@@ -268,12 +265,11 @@ csúcs között itt volt természetes határ. Erre a bináris címkére tíz
 Weka-osztályozót %szb: itt esetleg zátójelesen pár pálda lehetne, hogy mikre kell gondolni
 tanítottak, melyek közül a legjobbak a kódrészletek 75-80\%-át sorolták a helyes
 csoportba \cite{buse2008metric}. A szerzők az osztályozók közül a
-Bayes-osztályozó kimenetét közvetlenül is összevetették a humán átlaggal, %szb: fentebb emberek vannak, itt humánok - midnenki tudja, h ugyanazt jelenti, de érdemes lenne következetesen használni
-% egyiket vagy másikat
+Bayes-osztályozó kimenetét közvetlenül is összevetették a emberi átlaggal,
 és erre 0,71-es Spearman-korrelációt kaptak. Ez magasabb egy átlagos értékelő
 0,55-ös értékénél, ám nem tekinthető független tesztnek, mert a modellt éppen
 arra az átlagra tanították, amellyel összevetik. A jellemzők közül az azonosítók
-és a karakterek soronkénti száma korrelált a legerősebben a humán átlaggal, míg
+és a karakterek soronkénti száma korrelált a legerősebben a emberi átlaggal, míg
 az átlagos azonosítóhossz ezzel szemben szinte egyáltalán nem, a megjegyzések
 aránya pedig csak mérsékelten \cite{buse2010learning}.
 
@@ -284,13 +280,13 @@ Posnett és munkatársai újraelemezték Buse és Weimer munkáját, és két po
 bírálták a modellüket \cite{posnett2011simpler}. Egyrészt túl összetettnek
 tartották, ugyanis egy bevett ökölszabály szerint egy modell minden egyes
 magyarázó változójához (prediktorához) 10-20 megfigyelés szükséges. Ennél
-kevesebb megfigyelésből nem lehetne %szb: esetleg: állításuk szerint nem lehet 
+kevesebb megfigyelésből nem lehetne
 megbízhatóan megállapítani, hogy az éppen figyelt jellemzők közül melyik
 befolyásolja ténylegesen a kimenetet. Eszerint 25 vizsgált jellemző esetén
-legalább 250-500 kódrészlet vizsgálatára lenne szükség, nem pedig 100-ra. %szb: lenne szükség a 100 helyett
+legalább 250-500 kódrészlet vizsgálatára lenne szükség a 100 helyett.
 Másrészt vitatták azt is, hogy Buse és Weimer állítása szerint jellemzőik
-függetlenek lennének az egyes kódrészletek méretétől. Posnett és munkatársai ki
-is mutatták, %szb: kimutatták ennek ellenkezőjét - vagy - Sőt, Posnett és ...
+függetlenek lennének az egyes kódrészletek méretétől. Posnett és munkatársai
+kimutatták ennek ellenkezőjét,
 hogy a jellemzők közül több is erősen korrelál a karakter- vagy szószámmal.
 
 Posnett és munkatársai három egyszerű jellemzőt javasoltak: a sorok számát, a
@@ -433,7 +429,7 @@ módszert, adatot és mérőszámot használtak.
 	\label{tab:related:models}
 \end{table}
 
-Sergeyuk és munkatársai arra voltak kíváncsiak, %szb: azt vizsgálták, hogy
+Sergeyuk és munkatársai azt vizsgálták, hogy
 mennyire egyezik Posnett, Dorn, Scalabrino, valamint Mi és munkatársai 2022-es
 modelljének ítélete a fejlesztőkével olyan új kódon, amely teljesen eltértek a
 modellek adathalmazában található forráskódoktól \cite{sergeyuk2024reassessing}.
@@ -1197,9 +1193,7 @@ Minden nem értékelhető válasz csonkult válasz volt: a modell a rendelkezés
 tokenkeret kimerüléséig nem adott meg pontszámot. Ilyen válasz kizárólag
 gondolkodó módban fordult elő, a közvetlenül válaszoló módban minden futás
 minden kódrészletre adott pontszámot. A futások válaszadási arányának mediánja
-100\% volt. %szb: ezt nem értem Milyen számok mediánját nézed?
-%szb: tudom, hogy fentebb leírod mit értesz futás alatt, de engem megzavar ez a szó. Egy olyan kifejezést kell a fejemben tartani az olvasás során,
-% ami nem széles körben használt. Szerintem lehetne expliciten kiírni ezeket a helyeken.
+100\% volt.
 
 A válaszadási arány 15 futásban maradt 95\% alatt, és ezek kivétel nélkül a
 Qwen3.5 család gondolkodó módban futó modelljeihez tartoznak: nyolc a 4B, hét a
@@ -1297,7 +1291,7 @@ A további mérőszámok is hasonló összképet rajzolnak. A Pearson-korreláci
 és 0,467, a Kendall-féle $\tau_b$ 0,193 és 0,384, a QWK pedig 0,074 és 0,418
 közötti értékeket vesz fel. %szb: ezeket az értékeket hogyhogy nem teszed be táblázatba?
 Az átlagos abszolút eltérés 0,567 és 1,427 pont között alakul, a pontos
-egyezések aránya pedig 25,4\% és 81,9\% között mozog. Az AUC 0,584 és 0,744 közé
+egyezések aránya pedig 6,7\% és 53,9\% között mozog. Az AUC 0,584 és 0,744 közé
 esik, mediánja 0,694. A legjobb Spearman-korrelációval rendelkező futás a QWK
 szerint is a legjobbnak adódik (0,418). A legkisebb átlagos eltérést a Qwen3.8
 27B négybites modell produkálta gondolkodó módban, \textit{zero-shot-detailed}
@@ -2323,7 +2317,7 @@ a Scalabrino-féle modell értékeivel együtt.
 
 \begin{longtable}{ | l | c | r | r | r | r | }
 	\caption[A futások eltérési mérőszámai]{A futások eltérési mérőszámai és válaszadási aránya.
-	A pontos egyezés azoknak a válaszoknak az aránya, amelyek az emberi átlagtól egy pontnál kevesebbel térnek el;
+	A pontos egyezés azoknak a válaszoknak az aránya, amelyek megegyeznek a legközelebbi egész számra kerekített emberi átlaggal;
 	az AUC küszöbe az emberi medián (3,48).}
 	\label{tab:app:errors} \\
 	\hline
@@ -2336,197 +2330,197 @@ a Scalabrino-féle modell értékeivel együtt.
 	\textbf{AUC} & \makecell{\textbf{Válasz}\\\textbf{(\%)}} \\
 	\hline \hline
 	\endhead
-	Gemma-4 E4B Q4 gond. & ZS & $0{,}916$ & 54,9 & $0{,}659$ & 100,0 \\
+	Gemma-4 E4B Q4 gond. & ZS & $0{,}916$ & 30,9 & $0{,}659$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q4 gond. & ZSD & $0{,}889$ & 58,0 & $0{,}701$ & 100,0 \\
+	Gemma-4 E4B Q4 gond. & ZSD & $0{,}889$ & 28,5 & $0{,}701$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q4 gond. & OS & $0{,}819$ & 63,9 & $0{,}654$ & 100,0 \\
+	Gemma-4 E4B Q4 gond. & OS & $0{,}819$ & 34,9 & $0{,}654$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q4 gond. & FS & $0{,}747$ & 69,1 & $0{,}676$ & 100,0 \\
+	Gemma-4 E4B Q4 gond. & FS & $0{,}747$ & 40,6 & $0{,}676$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q4 közv. & ZS & $0{,}619$ & 78,6 & $0{,}671$ & 100,0 \\
+	Gemma-4 E4B Q4 közv. & ZS & $0{,}619$ & 48,7 & $0{,}671$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q4 közv. & ZSD & $0{,}649$ & 75,5 & $0{,}678$ & 100,0 \\
+	Gemma-4 E4B Q4 közv. & ZSD & $0{,}649$ & 47,3 & $0{,}678$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q4 közv. & OS & $0{,}671$ & 73,2 & $0{,}645$ & 100,0 \\
+	Gemma-4 E4B Q4 közv. & OS & $0{,}671$ & 44,9 & $0{,}645$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q4 közv. & FS & $0{,}733$ & 68,6 & $0{,}702$ & 100,0 \\
+	Gemma-4 E4B Q4 közv. & FS & $0{,}733$ & 43,5 & $0{,}702$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q8 gond. & ZS & $0{,}876$ & 58,0 & $0{,}685$ & 100,0 \\
+	Gemma-4 E4B Q8 gond. & ZS & $0{,}876$ & 31,6 & $0{,}685$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q8 gond. & ZSD & $0{,}890$ & 58,4 & $0{,}687$ & 100,0 \\
+	Gemma-4 E4B Q8 gond. & ZSD & $0{,}890$ & 30,2 & $0{,}687$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q8 gond. & OS & $0{,}880$ & 58,0 & $0{,}675$ & 100,0 \\
+	Gemma-4 E4B Q8 gond. & OS & $0{,}880$ & 33,0 & $0{,}675$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q8 gond. & FS & $0{,}794$ & 66,5 & $0{,}682$ & 100,0 \\
+	Gemma-4 E4B Q8 gond. & FS & $0{,}794$ & 38,0 & $0{,}682$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q8 közv. & ZS & $0{,}610$ & 79,1 & $0{,}677$ & 100,0 \\
+	Gemma-4 E4B Q8 közv. & ZS & $0{,}610$ & 49,9 & $0{,}677$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q8 közv. & ZSD & $0{,}672$ & 73,6 & $0{,}685$ & 100,0 \\
+	Gemma-4 E4B Q8 közv. & ZSD & $0{,}672$ & 45,8 & $0{,}685$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q8 közv. & OS & $0{,}732$ & 69,6 & $0{,}641$ & 100,0 \\
+	Gemma-4 E4B Q8 közv. & OS & $0{,}732$ & 40,6 & $0{,}641$ & 100,0 \\
 	\hline
-	Gemma-4 E4B Q8 közv. & FS & $0{,}788$ & 64,8 & $0{,}699$ & 100,0 \\
+	Gemma-4 E4B Q8 közv. & FS & $0{,}788$ & 37,5 & $0{,}699$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q4 gond. & ZS & $0{,}865$ & 58,6 & $0{,}732$ & 99,8 \\
+	Gemma-4 12B Q4 gond. & ZS & $0{,}865$ & 32,1 & $0{,}732$ & 99,8 \\
 	\hline
-	Gemma-4 12B Q4 gond. & ZSD & $0{,}878$ & 58,3 & $0{,}679$ & 99,8 \\
+	Gemma-4 12B Q4 gond. & ZSD & $0{,}878$ & 31,4 & $0{,}679$ & 99,8 \\
 	\hline
-	Gemma-4 12B Q4 gond. & OS & $0{,}773$ & 66,7 & $0{,}721$ & 100,0 \\
+	Gemma-4 12B Q4 gond. & OS & $0{,}773$ & 39,7 & $0{,}721$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q4 gond. & FS & $0{,}685$ & 73,9 & $0{,}699$ & 100,0 \\
+	Gemma-4 12B Q4 gond. & FS & $0{,}685$ & 42,5 & $0{,}699$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q4 közv. & ZS & $0{,}871$ & 56,8 & $0{,}738$ & 100,0 \\
+	Gemma-4 12B Q4 közv. & ZS & $0{,}871$ & 29,5 & $0{,}738$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q4 közv. & ZSD & $0{,}861$ & 59,1 & $0{,}713$ & 100,0 \\
+	Gemma-4 12B Q4 közv. & ZSD & $0{,}861$ & 34,2 & $0{,}713$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q4 közv. & OS & $0{,}842$ & 61,3 & $0{,}717$ & 100,0 \\
+	Gemma-4 12B Q4 közv. & OS & $0{,}842$ & 34,0 & $0{,}717$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q4 közv. & FS & $0{,}783$ & 64,8 & $0{,}706$ & 100,0 \\
+	Gemma-4 12B Q4 közv. & FS & $0{,}783$ & 37,5 & $0{,}706$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q8 gond. & ZS & $0{,}886$ & 57,7 & $0{,}712$ & 100,0 \\
+	Gemma-4 12B Q8 gond. & ZS & $0{,}886$ & 30,2 & $0{,}712$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q8 gond. & ZSD & $0{,}926$ & 55,1 & $0{,}686$ & 100,0 \\
+	Gemma-4 12B Q8 gond. & ZSD & $0{,}926$ & 27,6 & $0{,}686$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q8 gond. & OS & $0{,}834$ & 62,0 & $0{,}743$ & 100,0 \\
+	Gemma-4 12B Q8 gond. & OS & $0{,}834$ & 34,9 & $0{,}743$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q8 gond. & FS & $0{,}687$ & 71,5 & $0{,}701$ & 100,0 \\
+	Gemma-4 12B Q8 gond. & FS & $0{,}687$ & 44,2 & $0{,}701$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q8 közv. & ZS & $0{,}880$ & 57,2 & $0{,}744$ & 100,0 \\
+	Gemma-4 12B Q8 közv. & ZS & $0{,}880$ & 30,4 & $0{,}744$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q8 közv. & ZSD & $0{,}863$ & 58,4 & $0{,}710$ & 100,0 \\
+	Gemma-4 12B Q8 közv. & ZSD & $0{,}863$ & 33,0 & $0{,}710$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q8 közv. & OS & $0{,}818$ & 62,5 & $0{,}731$ & 100,0 \\
+	Gemma-4 12B Q8 közv. & OS & $0{,}818$ & 34,7 & $0{,}731$ & 100,0 \\
 	\hline
-	Gemma-4 12B Q8 közv. & FS & $0{,}776$ & 64,1 & $0{,}724$ & 100,0 \\
+	Gemma-4 12B Q8 közv. & FS & $0{,}776$ & 37,5 & $0{,}724$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q4 gond. & ZS & $1{,}006$ & 48,5 & $0{,}705$ & 100,0 \\
+	Gemma-4 31B Q4 gond. & ZS & $1{,}006$ & 24,0 & $0{,}705$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q4 gond. & ZSD & $0{,}947$ & 54,6 & $0{,}701$ & 100,0 \\
+	Gemma-4 31B Q4 gond. & ZSD & $0{,}947$ & 25,2 & $0{,}701$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q4 gond. & OS & $0{,}907$ & 55,6 & $0{,}722$ & 100,0 \\
+	Gemma-4 31B Q4 gond. & OS & $0{,}907$ & 30,6 & $0{,}722$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q4 gond. & FS & $0{,}685$ & 71,3 & $0{,}708$ & 100,0 \\
+	Gemma-4 31B Q4 gond. & FS & $0{,}685$ & 43,7 & $0{,}708$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q4 közv. & ZS & $0{,}907$ & 56,3 & $0{,}741$ & 100,0 \\
+	Gemma-4 31B Q4 közv. & ZS & $0{,}907$ & 29,5 & $0{,}741$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q4 közv. & ZSD & $0{,}847$ & 60,6 & $0{,}726$ & 100,0 \\
+	Gemma-4 31B Q4 közv. & ZSD & $0{,}847$ & 34,4 & $0{,}726$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q4 közv. & OS & $0{,}799$ & 64,6 & $0{,}728$ & 100,0 \\
+	Gemma-4 31B Q4 közv. & OS & $0{,}799$ & 39,2 & $0{,}728$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q4 közv. & FS & $0{,}684$ & 71,0 & $0{,}734$ & 100,0 \\
+	Gemma-4 31B Q4 közv. & FS & $0{,}684$ & 44,7 & $0{,}734$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q8 gond. & ZS & $1{,}021$ & 47,3 & $0{,}708$ & 100,0 \\
+	Gemma-4 31B Q8 gond. & ZS & $1{,}021$ & 21,9 & $0{,}708$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q8 gond. & ZSD & $0{,}977$ & 52,7 & $0{,}699$ & 100,0 \\
+	Gemma-4 31B Q8 gond. & ZSD & $0{,}977$ & 23,5 & $0{,}699$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q8 gond. & OS & $0{,}930$ & 55,6 & $0{,}734$ & 100,0 \\
+	Gemma-4 31B Q8 gond. & OS & $0{,}930$ & 28,5 & $0{,}734$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q8 gond. & FS & $0{,}694$ & 71,7 & $0{,}697$ & 100,0 \\
+	Gemma-4 31B Q8 gond. & FS & $0{,}694$ & 41,8 & $0{,}697$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q8 közv. & ZS & $0{,}901$ & 56,3 & $0{,}741$ & 100,0 \\
+	Gemma-4 31B Q8 közv. & ZS & $0{,}901$ & 29,9 & $0{,}741$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q8 közv. & ZSD & $0{,}875$ & 58,4 & $0{,}726$ & 100,0 \\
+	Gemma-4 31B Q8 közv. & ZSD & $0{,}875$ & 32,8 & $0{,}726$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q8 közv. & OS & $0{,}780$ & 65,1 & $0{,}720$ & 100,0 \\
+	Gemma-4 31B Q8 közv. & OS & $0{,}780$ & 40,1 & $0{,}720$ & 100,0 \\
 	\hline
-	Gemma-4 31B Q8 közv. & FS & $0{,}679$ & 71,5 & $0{,}740$ & 100,0 \\
+	Gemma-4 31B Q8 közv. & FS & $0{,}679$ & 44,4 & $0{,}740$ & 100,0 \\
 	\hline
-	Qwen3.5 4B Q4 gond. & ZS & $0{,}799$ & 66,4 & $0{,}642$ & 66,5 \\
+	Qwen3.5 4B Q4 gond. & ZS & $0{,}799$ & 36,8 & $0{,}642$ & 66,5 \\
 	\hline
-	Qwen3.5 4B Q4 gond. & ZSD & $0{,}653$ & 74,5 & $0{,}694$ & 77,4 \\
+	Qwen3.5 4B Q4 gond. & ZSD & $0{,}653$ & 47,9 & $0{,}694$ & 77,4 \\
 	\hline
-	Qwen3.5 4B Q4 gond. & OS & $0{,}964$ & 55,5 & $0{,}626$ & 86,0 \\
+	Qwen3.5 4B Q4 gond. & OS & $0{,}964$ & 27,3 & $0{,}626$ & 86,0 \\
 	\hline
-	Qwen3.5 4B Q4 gond. & FS & $0{,}890$ & 63,8 & $0{,}638$ & 33,5 \\
+	Qwen3.5 4B Q4 gond. & FS & $0{,}890$ & 31,9 & $0{,}638$ & 33,5 \\
 	\hline
-	Qwen3.5 4B Q4 közv. & ZS & $1{,}387$ & 26,8 & $0{,}622$ & 100,0 \\
+	Qwen3.5 4B Q4 közv. & ZS & $1{,}387$ & 6,7 & $0{,}622$ & 100,0 \\
 	\hline
-	Qwen3.5 4B Q4 közv. & ZSD & $0{,}994$ & 50,6 & $0{,}693$ & 100,0 \\
+	Qwen3.5 4B Q4 közv. & ZSD & $0{,}994$ & 24,2 & $0{,}693$ & 100,0 \\
 	\hline
-	Qwen3.5 4B Q4 közv. & OS & $1{,}427$ & 25,4 & $0{,}585$ & 100,0 \\
+	Qwen3.5 4B Q4 közv. & OS & $1{,}427$ & 6,9 & $0{,}585$ & 100,0 \\
 	\hline
-	Qwen3.5 4B Q4 közv. & FS & $1{,}290$ & 32,8 & $0{,}613$ & 100,0 \\
+	Qwen3.5 4B Q4 közv. & FS & $1{,}290$ & 10,9 & $0{,}613$ & 100,0 \\
 	\hline
-	Qwen3.5 4B Q8 gond. & ZS & $0{,}764$ & 66,0 & $0{,}687$ & 78,1 \\
+	Qwen3.5 4B Q8 gond. & ZS & $0{,}764$ & 35,9 & $0{,}687$ & 78,1 \\
 	\hline
-	Qwen3.5 4B Q8 gond. & ZSD & $0{,}649$ & 76,2 & $0{,}681$ & 89,8 \\
+	Qwen3.5 4B Q8 gond. & ZSD & $0{,}649$ & 47,4 & $0{,}681$ & 89,8 \\
 	\hline
-	Qwen3.5 4B Q8 gond. & OS & $0{,}987$ & 52,9 & $0{,}618$ & 86,7 \\
+	Qwen3.5 4B Q8 gond. & OS & $0{,}987$ & 27,1 & $0{,}618$ & 86,7 \\
 	\hline
-	Qwen3.5 4B Q8 gond. & FS & $0{,}895$ & 58,9 & $0{,}651$ & 75,1 \\
+	Qwen3.5 4B Q8 gond. & FS & $0{,}895$ & 34,2 & $0{,}651$ & 75,1 \\
 	\hline
-	Qwen3.5 4B Q8 közv. & ZS & $1{,}322$ & 32,5 & $0{,}623$ & 100,0 \\
+	Qwen3.5 4B Q8 közv. & ZS & $1{,}322$ & 10,5 & $0{,}623$ & 100,0 \\
 	\hline
-	Qwen3.5 4B Q8 közv. & ZSD & $1{,}041$ & 47,5 & $0{,}653$ & 100,0 \\
+	Qwen3.5 4B Q8 közv. & ZSD & $1{,}041$ & 24,7 & $0{,}653$ & 100,0 \\
 	\hline
-	Qwen3.5 4B Q8 közv. & OS & $1{,}420$ & 25,9 & $0{,}584$ & 100,0 \\
+	Qwen3.5 4B Q8 közv. & OS & $1{,}420$ & 7,4 & $0{,}584$ & 100,0 \\
 	\hline
-	Qwen3.5 4B Q8 közv. & FS & $1{,}292$ & 33,3 & $0{,}586$ & 100,0 \\
+	Qwen3.5 4B Q8 közv. & FS & $1{,}292$ & 12,6 & $0{,}586$ & 100,0 \\
 	\hline
-	Qwen3.5 9B Q4 gond. & ZS & $0{,}902$ & 58,3 & $0{,}671$ & 93,3 \\
+	Qwen3.5 9B Q4 gond. & ZS & $0{,}902$ & 35,4 & $0{,}671$ & 93,3 \\
 	\hline
-	Qwen3.5 9B Q4 gond. & ZSD & $0{,}720$ & 72,0 & $0{,}657$ & 94,3 \\
+	Qwen3.5 9B Q4 gond. & ZSD & $0{,}720$ & 42,8 & $0{,}657$ & 94,3 \\
 	\hline
-	Qwen3.5 9B Q4 gond. & OS & $1{,}087$ & 48,2 & $0{,}673$ & 90,7 \\
+	Qwen3.5 9B Q4 gond. & OS & $1{,}087$ & 22,3 & $0{,}673$ & 90,7 \\
 	\hline
-	Qwen3.5 9B Q4 gond. & FS & $1{,}230$ & 39,3 & $0{,}645$ & 85,3 \\
+	Qwen3.5 9B Q4 gond. & FS & $1{,}230$ & 15,0 & $0{,}645$ & 85,3 \\
 	\hline
-	Qwen3.5 9B Q4 közv. & ZS & $0{,}939$ & 55,3 & $0{,}662$ & 100,0 \\
+	Qwen3.5 9B Q4 közv. & ZS & $0{,}939$ & 28,7 & $0{,}662$ & 100,0 \\
 	\hline
-	Qwen3.5 9B Q4 közv. & ZSD & $0{,}879$ & 61,0 & $0{,}661$ & 100,0 \\
+	Qwen3.5 9B Q4 közv. & ZSD & $0{,}879$ & 36,6 & $0{,}661$ & 100,0 \\
 	\hline
-	Qwen3.5 9B Q4 közv. & OS & $1{,}196$ & 40,4 & $0{,}645$ & 100,0 \\
+	Qwen3.5 9B Q4 közv. & OS & $1{,}196$ & 15,4 & $0{,}645$ & 100,0 \\
 	\hline
-	Qwen3.5 9B Q4 közv. & FS & $1{,}348$ & 29,9 & $0{,}641$ & 100,0 \\
+	Qwen3.5 9B Q4 közv. & FS & $1{,}348$ & 10,2 & $0{,}641$ & 100,0 \\
 	\hline
-	Qwen3.5 9B Q8 gond. & ZS & $0{,}820$ & 64,0 & $0{,}637$ & 96,4 \\
+	Qwen3.5 9B Q8 gond. & ZS & $0{,}820$ & 39,4 & $0{,}637$ & 96,4 \\
 	\hline
-	Qwen3.5 9B Q8 gond. & ZSD & $0{,}681$ & 73,6 & $0{,}673$ & 88,1 \\
+	Qwen3.5 9B Q8 gond. & ZSD & $0{,}681$ & 44,5 & $0{,}673$ & 88,1 \\
 	\hline
-	Qwen3.5 9B Q8 gond. & OS & $0{,}941$ & 58,9 & $0{,}638$ & 91,2 \\
+	Qwen3.5 9B Q8 gond. & OS & $0{,}941$ & 31,5 & $0{,}638$ & 91,2 \\
 	\hline
-	Qwen3.5 9B Q8 gond. & FS & $0{,}882$ & 59,2 & $0{,}731$ & 58,2 \\
+	Qwen3.5 9B Q8 gond. & FS & $0{,}882$ & 36,7 & $0{,}731$ & 58,2 \\
 	\hline
-	Qwen3.5 9B Q8 közv. & ZS & $0{,}863$ & 59,4 & $0{,}673$ & 100,0 \\
+	Qwen3.5 9B Q8 közv. & ZS & $0{,}863$ & 34,0 & $0{,}673$ & 100,0 \\
 	\hline
-	Qwen3.5 9B Q8 közv. & ZSD & $0{,}817$ & 63,4 & $0{,}670$ & 100,0 \\
+	Qwen3.5 9B Q8 közv. & ZSD & $0{,}817$ & 39,9 & $0{,}670$ & 100,0 \\
 	\hline
-	Qwen3.5 9B Q8 közv. & OS & $1{,}104$ & 44,9 & $0{,}692$ & 100,0 \\
+	Qwen3.5 9B Q8 közv. & OS & $1{,}104$ & 18,8 & $0{,}692$ & 100,0 \\
 	\hline
-	Qwen3.5 9B Q8 közv. & FS & $1{,}165$ & 40,1 & $0{,}681$ & 100,0 \\
+	Qwen3.5 9B Q8 közv. & FS & $1{,}165$ & 14,5 & $0{,}681$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q4 gond. & ZS & $0{,}693$ & 71,7 & $0{,}705$ & 100,0 \\
+	Qwen3.8 27B Q4 gond. & ZS & $0{,}693$ & 41,8 & $0{,}705$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q4 gond. & ZSD & $0{,}567$ & 81,9 & $0{,}700$ & 100,0 \\
+	Qwen3.8 27B Q4 gond. & ZSD & $0{,}567$ & 53,9 & $0{,}700$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q4 gond. & OS & $0{,}725$ & 72,0 & $0{,}702$ & 100,0 \\
+	Qwen3.8 27B Q4 gond. & OS & $0{,}725$ & 43,2 & $0{,}702$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q4 gond. & FS & $0{,}663$ & 75,5 & $0{,}693$ & 100,0 \\
+	Qwen3.8 27B Q4 gond. & FS & $0{,}663$ & 46,8 & $0{,}693$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q4 közv. & ZS & $0{,}748$ & 66,5 & $0{,}727$ & 100,0 \\
+	Qwen3.8 27B Q4 közv. & ZS & $0{,}748$ & 39,4 & $0{,}727$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q4 közv. & ZSD & $0{,}635$ & 76,0 & $0{,}695$ & 100,0 \\
+	Qwen3.8 27B Q4 közv. & ZSD & $0{,}635$ & 47,7 & $0{,}695$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q4 közv. & OS & $0{,}698$ & 71,7 & $0{,}718$ & 100,0 \\
+	Qwen3.8 27B Q4 közv. & OS & $0{,}698$ & 45,6 & $0{,}718$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q4 közv. & FS & $0{,}594$ & 78,6 & $0{,}733$ & 100,0 \\
+	Qwen3.8 27B Q4 közv. & FS & $0{,}594$ & 52,3 & $0{,}733$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q8 gond. & ZS & $0{,}693$ & 73,4 & $0{,}705$ & 100,0 \\
+	Qwen3.8 27B Q8 gond. & ZS & $0{,}693$ & 44,4 & $0{,}705$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q8 gond. & ZSD & $0{,}592$ & 81,0 & $0{,}677$ & 100,0 \\
+	Qwen3.8 27B Q8 gond. & ZSD & $0{,}592$ & 50,6 & $0{,}677$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q8 gond. & OS & $0{,}727$ & 72,9 & $0{,}702$ & 100,0 \\
+	Qwen3.8 27B Q8 gond. & OS & $0{,}727$ & 45,1 & $0{,}702$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q8 gond. & FS & $0{,}685$ & 73,9 & $0{,}710$ & 100,0 \\
+	Qwen3.8 27B Q8 gond. & FS & $0{,}685$ & 43,7 & $0{,}710$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q8 közv. & ZS & $0{,}752$ & 66,0 & $0{,}733$ & 100,0 \\
+	Qwen3.8 27B Q8 közv. & ZS & $0{,}752$ & 39,2 & $0{,}733$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q8 közv. & ZSD & $0{,}653$ & 74,6 & $0{,}697$ & 100,0 \\
+	Qwen3.8 27B Q8 közv. & ZSD & $0{,}653$ & 46,3 & $0{,}697$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q8 közv. & OS & $0{,}707$ & 71,5 & $0{,}715$ & 100,0 \\
+	Qwen3.8 27B Q8 közv. & OS & $0{,}707$ & 43,9 & $0{,}715$ & 100,0 \\
 	\hline
-	Qwen3.8 27B Q8 közv. & FS & $0{,}596$ & 78,6 & $0{,}731$ & 100,0 \\
+	Qwen3.8 27B Q8 közv. & FS & $0{,}596$ & 52,7 & $0{,}731$ & 100,0 \\
 	\hline
 \end{longtable}
 
