@@ -2138,11 +2138,338 @@ A gondolkodó mód modellcsaládonként más-más irányban módosítja a pontsz
 A promptolási stratégia megválasztása sem befolyásolja kimutathatóan az egyezést.
 E hatások mindegyike kisebb, mint a modellcsaládok közötti különbség (\ref{sec:discussion:rq1}.~alszakasz).
 
+\subsection{Összevetés a korábbi, nem LLM-alapú olvashatósági modellekkel}
+\label{sec:discussion:classic}
+
+A Scalabrino-féle modell a teljes adathalmazon 0,415-ös korrelációt ért el.
+A 24 modellváltozat közül 13 magasabb értéket mutat ennél,
+a Holm-korrekció után azonban egyik különbség sem szignifikáns (\ref{tab:results:agreement}.~táblázat).
+A 13 modellváltozat közül 12 a Gemma-4 12B, a Gemma-4 31B és a Qwen3.8 27B modellhez tartozik.
+A tizenharmadik a Qwen3.5 4B négybites, gondolkodó módú változata,
+azonban ezt csak 63 kódrészleten lehetett összehasonlítani,
+mert a többi legalább egy futásában nem kapott pontszámot.
+A legjobb modellváltozatok tehát azonos szinten rangsorolnak,
+a leggyengébbek viszont elmaradnak a Scalabrino-féle modelltől,
+bár ez az elmaradás nem szignifikáns.
+
+Az összehasonlítás során tekintettel kell lenni arra,
+hogy a két fél nem azonos feltételek mellett működik.
+A szerzők beszámolója szerint a Scalabrino-féle modell tanítóadata a Buse-,
+a Dorn- és a Scalabrino-féle adathalmaz volt~\cite{scalabrino2018comprehensive},
+így valószínűsíthető, hogy a modell azoknak a kódrészleteknek a címkéit is látta,
+amelyeken itt az összehasonlítást végzem.
+A vizsgált LLM-ek ehhez képest nem kaptak tanítást ezeken az adatokon,
+mégis elérik a legjobb modellváltozatok a Scalabrino-féle modell szintjét.
+Ez arra utal, hogy az LLM-ek olvashatósági tanítóadat nélkül is versenyképesek a jellemzőalapú megoldással.
+
+Forrás-adathalmazonként vegyes képet kapunk (\ref{tab:discussion:sources}.~táblázat).
+A Buse- és a Scalabrino-féle kódrészleteken a Scalabrino-féle modell
+mind a 24 modellváltozatnál jobb rangsort ad (a korrelációs értékei rendre 0,616 és 0,610).
+A Dorn-féle kódrészleteken ezzel szemben 16 modellváltozat korrelációja magasabb,
+és a modellváltozatok mediánja (0,535) a Scalabrino-féle modell 0,490-es értékét is meghaladja.
+A modellváltozatok a legrövidebb, átlagosan 7,7 soros Buse-féle
+kódrészleteken teljesítenek a leggyengébben (medián 0,279, \ref{sec:method:dataset}.~szakasz).
+Elképzelhető, hogy a rövid kódrészletek kevesebb támpontot nyújtanak az LLM-eknek,
+ezt azonban az eredmények alapján nem lehet biztosan kijelenteni.
+
+% TÁBLÁZAT AZ EGYES ADATHALMAZOKON A SCALABRINO ÉS AZ LLM ÁLTAL ELÉRT EREDMÉNYEKRŐL
+% + HÁNY KÓDRÉSZLET
+% + SCALABRINO KORRELÁCIÓ
+% + LLM KORRELÁCIÓ MEDIÁN
+% + LLM VÁLTOZATOK KÖZÜL MENNYI ÉRTE EL AZT AZ EREDMÉNYT
+\begin{table}[htbp]
+	\centering
+	\small
+	\begin{tabular}{ | l | r | r | r | r | r | }
+		\hline
+		\textbf{Forrás} &
+		\makecell{\textbf{Kód-}\\\textbf{részletek}} &
+		\makecell{\textbf{Scalabrino-}\\\textbf{féle modell}} &
+		\makecell{\textbf{Modellváltozatok}\\\textbf{mediánja}} &
+		\makecell{\textbf{Legjobb}\\\textbf{modellváltozat}} &
+		\makecell{\textbf{Magasabb}\\\textbf{(a 24-ből)}} \\
+		\hline \hline
+		Buse és Weimer & 100 & $0{,}616$ & $0{,}279$ & $0{,}435$ & 0 \\
+		\hline
+		Dorn & 121 & $0{,}490$ & $0{,}535$ & $0{,}610$ & 16 \\
+		\hline
+		Scalabrino és munkatársai & 200 & $0{,}610$ & $0{,}407$ & $0{,}484$ & 0 \\
+		\hline
+	\end{tabular}
+	\caption[A Scalabrino-féle modell és a modellváltozatok forrásonként]{A Scalabrino-féle modell és a 24 modellváltozat
+	Spearman-korrelációja az emberi átlagpontszámokkal, forrás-adathalmazonként.
+	A modellváltozatokhoz tartozó érték a négy promptolási stratégiával készült futás korrelációjának átlaga.
+	Az utolsó oszlop azt mutatja meg, hány modellváltozat korrelációja magasabb a Scalabrino-féle modellénél.
+	Az egyes modellváltozatok értékeit a \ref{tab:app:sources}.~függeléktáblázat közli.}
+	\label{tab:discussion:sources}
+\end{table}
+
+A többi korábbi modellel számszerű összevetés nem lehetséges,
+mivel azok eredményeit más adathalmazokon vagy bináris címkékre tették közzé.
+Viszonyítási pontként mégis hasznosak.
+Buse és Weimer adatain egy átlagos emberi értékelő 0,55-ös korrelációt mutatott a csoportátlaggal,
+modelljük pedig 0,71-et~\cite{buse2010learning}.
+Ugyanezen a 100 kódrészleten a vizsgált modellváltozatok legfeljebb 0,435-öt értek el,
+így gyengébben egyeznek a csoportátlaggal, mint egy átlagos emberi értékelő.
+Dorn modellje saját adathalmazán 0,724-es korrelációt ért el~\cite{dorn2012general}.
+Mindkét magas érték olyan adathalmazon született, amelyet a modell tanítására is használtak,
+ezért tanítás nélküli LLM eredményével nem vethetők össze.
+Sergeyuk és munkatársai szerint a korábbi modellek a tanítóadataiktól eltérő,
+új kódon alig egyeznek a fejlesztőkkel, és csak a Scalabrino-féle modell
+mutat mérsékelt egyezést~\cite{sergeyuk2024reassessing}.
+A betanított modellek tehát nehezen általánosítanak új kódra.
+Azt, hogy az LLM-ek ebben jobbak-e, a vizsgált adathalmaz alapján nem lehet eldönteni
+(\ref{sec:discussion:validity}.~szakasz).
+
+A CoReEval-vizsgálatban az LLM-ek Java-kódon 0,25-ös korrelációt értek el,
+a Scalabrino-féle modell pedig 0,27-est, tehát az LLM-ek
+valamelyest elmaradtak a klasszikus modelltől~\cite{ouedraogo2025coreeval}.
+Saját eredményeim alapján a legjobb modellváltozatok hozzák ezt a szintet.
+A két eredmény mégsem vethető össze közvetlenül, a CoReEval értéke ugyanis
+nem egy konkrét modellre és beállításra vonatkozik, hanem a szerzők összesített értéke.
+A CoReEval szerzői az LLM-eket az embereknél optimistábbnak találták,
+a vizsgált modellváltozatok esetében ez azonban nem általános jelenség,
+a Qwen3.5 család például pont, hogy szigorúbb az embereknél (\ref{sec:discussion:rq1}.~alszakasz).
+A CoReEval esetében a legkisebb átlagos eltérést a legegyszerűbb, \textit{zero-shot} prompt adta,
+ezzel összhangban áll, hogy a részletesebb promptok a vizsgált modellváltozatok vizsgálatakor
+sem javítottak jelentősen a rangsoroláson (\ref{sec:discussion:rq2}.~alszakasz).
+
+Az RQ3-ra adott válasz röviden a következőképpen összegezhető:
+a legjobb vizsgált modellváltozatok olvashatósági tanítás nélkül is
+ugyanazon a szinten rangsorolják a kódrészleteket, mint a Scalabrino-féle modell.
+Az eredmények különbsége egyik irányban sem szignifikáns.
+Forrás-adathalmazonként nézve a Scalabrino-féle modell két forráson jobb,
+a Dorn-féle kódrészleteken viszont a modellváltozatok többsége felülmúlja.
+A vizsgált modellváltozatok nem érik el azt az egyezést,
+amelyet egy átlagos emberi értékelő a csoportátlaggal mutat.
+A korábbi modellek jellemzőinek és a metrikákra épülő eredmények kapcsolatait
+a \ref{sec:discussion:rq4}.~alszakasz után tárgyalom.
+
+\subsection{A pontszámokkal együtt mozgó kódtulajdonságok}
+\label{sec:discussion:rq4}
+
+A modellváltozatok és az emberek pontszámai javarészt % HAHA érted Java ikszdé (bocs)
+ugyanazokkal a kódtulajdonságokkal járnak együtt.
+Az összesített rangsor hasonlósága 0,830, modellváltozatonként pedig 0,750 és 0,826 közé esik (\ref{sec:results:metrics}.~szakasz).
+Az első helyen mindkét oldalon az átfogó érthetőség áll,
+a rangsorok elején pedig a kód jelentésére vonatkozó, LLM-ekkel pontozott metrikák sorakoznak.
+A kód méretével és összetettségével összefüggő algoritmikus metrikák
+mindkét oldalon negatív irányba mutatnak.
+A korreláció azonban csupán együttmozgást jelent, és attól,
+hogy egy metrika erősen korrelál a pontszámokkal, még nem következik, hogy az értékelő e szerint dönt.
+
+A jelentésre vonatkozó metrikákkal a modellváltozatok jóval szorosabban mozognak együtt,
+mint az emberek (\ref{tab:discussion:metrics}.~táblázat).
+Az átfogó érthetőség korrelációja például az emberek esetében $+0{,}476$, a modellváltozatoknál $+0{,}666$.
+A 24 modellváltozat közül 22 követi kimutathatóan erősebben az elnevezések találóságát,
+az idiómák használatát és a projektkonvenciók követését.
+Mivel a metrikákat ugyanazok az LLM-ek pontozták,
+mint amik az olvashatósági pontszámokat is adták,
+ezért a modellváltozatok erősebb korrelációja valószínűleg részben abból fakad,
+hogy a két érték ugyanannak a szemléletnek a terméke.
+A leave-one-out átlagolás ezt a hatást csak részben szűri ki a modell saját értékelésének kihagyásával,
+viszont a többi LLM közös szemléleténél nem képes ugyanerre.
+
+% TÁBLÁZAT AZ EGYES METRIKÁK EMBERI ÉS LLM-ES PONTSZÁMOKKAL VALÓ KORRELÁCIÓJÁRÓL
+% LEOSZTVA SZIGNIFIKÁNSAN ERŐSEBBEN ÉS GYENGÉBBEN KÖVETŐ OSZLOPOKRA
+\begin{table}[htbp]
+	\centering
+	\small
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{ | l | c | r | r | r | r | }
+		\hline
+		\textbf{Metrika} &
+		\textbf{Típus} &
+		\makecell{\textbf{Emberek}\\$\boldsymbol{\rho}$} &
+		\makecell{\textbf{Modell-}\\\textbf{változatok} $\boldsymbol{\rho}$} &
+		\makecell{\textbf{Erősebben}\\\textbf{követi}} &
+		\makecell{\textbf{Gyengébben}\\\textbf{követi}} \\
+		\hline \hline
+		átfogó érthetőség & LLM & $+0{,}476$ & $+0{,}666$ & 18 & 0 \\
+		\hline
+		elnevezések következetessége & LLM & $+0{,}383$ & $+0{,}527$ & 15 & 0 \\
+		\hline
+		kognitív terhelés & LLM & $-0{,}338$ & $-0{,}480$ & 16 & 0 \\
+		\hline
+		idiómák használata & LLM & $+0{,}336$ & $+0{,}612$ & 22 & 0 \\
+		\hline
+		megjegyzések és kód összhangja & LLM & $+0{,}330$ & $+0{,}401$ & 3 & 0 \\
+		\hline
+		hibakezelés világossága & LLM & $+0{,}316$ & $+0{,}427$ & 11 & 0 \\
+		\hline
+		elnevezések találósága & LLM & $+0{,}310$ & $+0{,}582$ & 22 & 0 \\
+		\hline
+		projektkonvenciók követése & LLM & $+0{,}272$ & $+0{,}524$ & 22 & 0 \\
+		\hline
+		Halstead-térfogat & alg. & $-0{,}247$ & $-0{,}118$ & 0 & 8 \\
+		\hline
+		átlagos sorhossz & alg. & $-0{,}241$ & $+0{,}107$ & 0 & 24 \\
+		\hline
+		szóközhasználat & alg. & $+0{,}220$ & $+0{,}112$ & 0 & 1 \\
+		\hline
+		ciklomatikus komplexitás & alg. & $-0{,}210$ & $-0{,}280$ & 8 & 0 \\
+		\hline
+		kódsorok száma & alg. & $-0{,}184$ & $-0{,}198$ & 0 & 1 \\
+		\hline
+		átlagos azonosítóhossz & alg. & $-0{,}137$ & $+0{,}111$ & 7 & 15 \\
+		\hline
+		legnagyobb beágyazási mélység & alg. & $-0{,}088$ & $-0{,}204$ & 13 & 0 \\
+		\hline
+	\end{tabular}
+	\caption[Az embereknél eltérő erősséggel követett metrikák]{Azok a metrikák, amelyeket legalább egy modellváltozat szignifikánsan erősebben vagy gyengébben követ,
+	mint az emberi átlagpontszámok. Az utolsó két oszlop azt mutatja meg, hogy a 24 modellváltozat közül
+	hánynál nagyobb, illetve kisebb a korreláció abszolút értéke az emberekénél, még a Holm-korrekció után is
+	szignifikánsan, az iránytól függetlenül. Az átlagos sorhossz és az átlagos azonosítóhossz korrelációja az
+	embereknél és a modellváltozatoknál ellentétes előjelű. A modellváltozatok korrelációja a 24 modellváltozat
+	korrelációinak Fisher-féle átlaga. A korrelációkat a \ref{tab:results:metrics}.~táblázat, a
+	modellváltozatonkénti összevetést pedig a \ref{sec:results:metrics}.~szakasz ismerteti.}
+	\label{tab:discussion:metrics}
+\end{table}
+
+A legszembetűnőbb eltérés két algoritmikus metrika esetében mutatkozik, amelyek előjele a két oldalon ellentétes.
+Az emberek pontszámai hosszabb sorok és hosszabb azonosítók esetén csökkennek ($-0{,}241$ és $-0{,}137$),
+míg modellváltozatok pontszámai ugyanezekkel a tulajdonságokkal enyhén emelkednek ($+0{,}107$ és $+0{,}111$).
+Az átlagos sorhosszal mind a 24 modellváltozat kimutathatóan gyengébb együttmozgást mutat, mint az emberek.
+Felmerülhet, hogy a modellváltozatok a hosszabb, beszédesebb neveket
+és a kifejtettebb sorokat ítélik inkább érthetőnek,
+az emberek számára pedig a hosszú sorok nehezebben olvashatók.
+A Halstead-térfogattal nyolc modellváltozat szintén gyengébben mozog együtt, mint az emberek.
+A logikai összetettséget mérő metrikákkal (a beágyazási mélységgel és a ciklomatikus komplexitással)
+viszont több modellváltozat is erősebb együttmozgást mutat.
+A modellváltozatok pontszámai tehát a kód logikai összetettségével szorosabban,
+a Halstead-térfogattal és a sorhosszal pedig lazábban mozognak együtt,
+mint az emberek pontszámai.
+
+A metrikák mérése megbízhatónak bizonyult,
+mivel az LLM-ekkel pontozott metrikák közül kilencnél az értékelők egyetértése (ICC) eléri a 0,85-öt,
+és egyetlen metrikánál sem csökken 0,5 alá (\ref{tab:results:graders}.~táblázat).
+A legkisebb értéket a kognitív terhelés (0,51), valamint a megjegyzések és a kód összhangja (0,67) adja.
+E tulajdonságok megítélésében az LLM-ek kevésbé értenek egyet,
+ezért a hozzájuk tartozó korrelációkat óvatosabban kell értelmezni.
+A leave-one-out átlagolás a korrelációkon csak csekély mértékben változtat (az összesítésben 0,004 és 0,024 között).
+Az önkonzisztencia vizsgálata szerint a modellváltozatok pontszámai nem mozognak erősebben együtt
+a saját metrikapontszámaikkal, mint a többi értékelőével (a különbség mediánja $-0{,}095$),
+így a modellváltozatok erősebb korrelációja nem abból ered, hogy egy modell a saját értékelésével egyezik.
+
+Azon, hogy a modellváltozatok pontszámai mely metrikákkal mozognak együtt, a promptolási stratégia alig módosít.
+Egy modellváltozat mérésein belül a négy stratégia rangsorának hasonlósága a medián értékben mindössze 0,07-tel tér el.
+
+Az RQ4-re adott válasz röviden így összegezhető:
+az emberek és a vizsgált LLM-ek pontszámai nagyrészt ugyanazokkal a kódtulajdonságokkal mozognak együtt.
+Mindkét fél esetében a kód jelentésére vonatkozó tulajdonságok vezetnek,
+de a modellváltozatok ezeket a tulajdonságokat,
+valamint a kód logikai összetettségét erősebben követik.
+A sorhossz és az azonosítóhossz esetében viszont az emberekkel ellentétes irányba mozdulnak el.
+A promptolási stratégiák alig változtatnak azon, hogy az egyes modellváltozatok
+pontszámai melyik metrikákkal mozognak együtt.
+
+% Ezt azért raktam ide, mert egy korábbi visszajelzés alapján megcseréltem
+% a korábbi munkákra épülő kérdés a metrikák sorrendjét a módszertannál,
+% így ha sorrendben szeretném tárgyalni őket akkor ennek itt kell lennie
+% elszakítva a többi eredménytől, vagy onnan hivatkoznék ide előre (az is egy megoldás)
+% Vagy a másik ötlet, hogy a módszertannál megcserélem az RQ3 és 4 számát, viszont a sorrendjük marad
+% (tehát ott az RQ4-et előbb tárgyalnám mint az RQ3-at) és itt maradhatna a jó sorrend
+% Ez nekem már mindegy, ez nem sok meló
+Az eredmények összevethetők a korábbi olvashatósági modellek jellemzőivel is.
+Buse és Weimer adatain az azonosítók és a soronkénti karakterszám mutatta a legszorosabb
+együttmozgást az emberi átlagpontszámmal~\cite{buse2010learning},
+és a saját adataimon is az átlagos sorhossz szintén az emberi pontszámok egyik legnagyobb negatív irányú
+algoritmikus metrikája, a modellváltozatok esetében viszont ugyanez a metrika ellentétes irányba mutat.
+Posnett és munkatársai szerint a Halstead-térfogat mutatta a
+legszorosabb együttmozgást az emberi átlagpontszámmal~\cite{posnett2011simpler}.
+Az emberi pontszámokkal nálam is ez mutatja a legnagyobb negatív irányú együttmozgást ($-0{,}247$),
+a modellváltozatok viszont gyengébben követik.
+Scalabrino és munkatársai modelljében a megjegyzések olvashatósága volt a leghasznosabb
+jellemző~\cite{scalabrino2018comprehensive}, az emberi rangsorban nálam is a megjegyzések
+világossága áll a második helyen.
+A CoReEval-vizsgálatban a leggyakrabban említett metrikák az LLM-ek indoklásaiban
+a megjegyzések, az elnevezések, a behúzás és a szerkezet~\cite{ouedraogo2025coreeval}.
+Ezek közül az elnevezésekre és a megjegyzésekre vonatkozó metrikákkal
+szorosan együtt mozognak a vizsgált modellváltozatok pontszámai,
+a behúzás következetességével viszont csak gyengén ($+0{,}118$).
+
+\section{Az eredmények érvényességi korlátai}
+\label{sec:discussion:validity}
+
+Az eredmények értelmezésénél figyelembe kell venni azokat a tényezőket,
+amelyek a levont következtetések érvényességét behatárolják (\textit{threats to validity}).
+A szakasz először arra kérdez rá, hogy a vizsgálat valóban azt méri-e, amit mérni kíván.
+Utána a mérés körülményeiből adódó korlátokat veszem sorra,
+ezt követően pedig az eredmények általánosíthatóságát tárgyalom.
+A sort végül a statisztikai következtetések korlátaival zárom.
+
+A vizsgálatban az emberi és az LLM-ek által adott pontszámok
+egyaránt érzékelt olvashatóságot fejeznek ki.
+Ha egy modell pontszáma szorosan korrelál az emberekével,
+ebből még nem következik, hogy a modell érti a kódot, valamint az sem, hogy a kód valóban érthető.
+Scalabrino és munkatársai kimutatták, hogy a korábbi olvashatósági modellek jellemzői
+nem mutattak érdemi összefüggést azzal, hogy mennyire értették meg a fejlesztők a kódot~\cite{scalabrino2017understandability}.
+Az olvashatóság és az érthetőség tehát két különböző fogalom (\ref{sec:related:definition}.~szakasz),
+és a vizsgálat csak az előbbire ad választ.
+Ez az LLM-ekkel pontozott metrikákra is igaz: az átfogó érthetőség és a kognitív terhelés is az
+LLM-ek ítélete arról, mennyire tűnik érthetőnek a kód, és nem a megértés mérése.
+Mivel az olvashatósági pontszámok éppen az átfogó érthetőséggel mozognak együtt a legerősebben,
+valószínű, hogy az értékelők ítéleteiben a két fogalom nem válik élesen szét.
+
+A vizsgálatban az olvashatóságot az emberi értékelők ítéletein keresztül mérem.
+Az eredmények ezért azt mutatják meg, hogy az LLM-ek mennyire értenek egyet ezekkel az ítéletekkel.
+Az emberi átlagpontszámok három különböző értékelői körből kerültek ki:
+a Buse és Weimer-féle kódrészleteket 120 hallgató pontozta,
+a Scalabrino és munkatársai által vizsgált kódrészleteket kilenc hallgató,
+a Dorn-féle kódrészleteket pedig átlagosan 214-en értékelték (\ref{tab:method:dataset}.~táblázat).
+Két forrás esetében kizárólag hallgatók adtak értékelést.
+Ők jellemzően még kevés valódi projekt kódjával találkoztak, % valódi? ipari? idk
+és az iparban elvárt kódolási gyakorlatot is kevésbé ismerik.
+Ítéleteik ezért eltérhetnek attól, ahogyan a tapasztalt fejlesztők ugyanazt a kódot megítélik.
+Ezen felül az emberi átlagpontszámok annál több egyéni ízlésből fakadó eltérést tartalmaznak,
+minél kevesebb értékelő járult hozzá az átlaghoz (\ref{sec:related:models:buse}.~szakasz).
+Az emberi átlag így forrásonként eltérő mértékben tekinthető megbízható viszonyítási alapnak.
+Ez a megbízhatóság a kilenc értékelő által pontozott Scalabrino-féle kódrészleteken a legkisebb.
+
+Az eredményeket a mérés körülményei közül több tényező is befolyásolhatja.
+Minden kódrészlet futásonként egyetlen választ kapott.
+A mintavételi beállítások miatt egy újabb futás némileg más pontszámokat eredményezhetne (\ref{sec:method:judging}.~szakasz),
+ennek mértékét azonban a vizsgálat nem méri.
+A rögzített, 4096 tokenes gondolkodási keret a Qwen3.5 családnál számos csonkult választ okozott.
+Nagyobb keret mellett ezek a modellváltozatok több kódrészletre adhattak volna pontszámot,
+és az eredményeik is eltérhettek volna.
+A gondolkodási módra vonatkozó következtetések ezért erre a keretre érvényesek.
+Ugyanazok a modellek pontozták LLM által értékelt metrikákat,
+mint amelyek az olvashatósági pontszámokat is adták.
+A leave-one-out átlagolás ezt csak részben tudja ellensúlyozni (\ref{sec:discussion:rq4}.~alszakasz).
+A Scalabrino-féle modellt nem futtattam újra, helyette a CoReEval szerzői által közzétett kimeneteket használtam,
+ezért nem tudható pontosan, melyik tanított példánya állította elő őket.
+
+Több ok miatt is csak korlátozottan általánosíthatók az eredmények.
+A vizsgálat egyrészt csak Java nyelvű kódrészletekre terjedt ki.
+A 421 kódrészlet három olyan adathalmazból való, amelyet 2008 és 2016 között tettek közzé.
+Ezek rövid kódrészletek és önálló metódusok, ezért nem biztos, hogy a nagyobb kódbázisokra is jellemzőek.
+Mivel mindhárom adathalmaz már évek óta nyilvános, azt sem lehet kizárni,
+hogy a kódrészletek és akár az emberi pontszámok is bekerültek a vizsgált LLM-ek tanítóadatába.
+Ez felfelé torzíthatja az LLM-ek egyezését, így nem dönthető el biztosan csak ebből a kísérletből,
+hogy az LLM-ek új kódon jobban általánosítanak-e, mint a betanított modellek (\ref{sec:discussion:classic}.~alszakasz).
+A hat vizsgált modell három modellcsaládhoz tartozik.
+Ilyen limitált számú modellből és modellcsaládból nem vonható le a méret hatására általános következtetés.
+Az eredmények ezért a vizsgált modellekre, a két vizsgált kvantálási módszerre és
+a négy promptolási stratégia konkrét megfogalmazására érvényesek.
+
+A statisztikai következtetéseknek szintén vannak korlátai.
+Mivel sok összehasonlítást végeztem, a Holm-korrekciót használtam.
+Ez mérsékli a téves találatok valószínűségét, ugyanakkor szigorúbbá teszi a próbákat,
+ezért a kisebb különbségek rejtve maradhatnak.
+A nem szignifikáns eltérés ennélfogva nem azt jelenti,
+hogy a két modellváltozat teljesítménye azonos,
+csupán arra utal, hogy nem sikerült különbséget kimutatni.
+Ez főként a kvantálás és a gondolkodási mód tengelyén érvényes,
+ahol az átlagos eltérések elenyészők (\ref{tab:discussion:axes}.~táblázat).
+A Friedman-próba megfigyelésként kezeli a 24 modellváltozatot,
+ezért a promptolási stratégiák között csak a nagyobb,
+következetesebb különbségeket képes feltárni.
+A bootstrap eljárás a kódrészletek kiválasztásából fakadó bizonytalanságot becsüli.
+Az eredmények így a hasonló kódrészletekre általánosíthatók, más modellekre viszont nem.
+
 \section{Következmények}
 \label{sec:discussion:practice}
-
-\section{Érvényességi korlátok}
-\label{sec:discussion:validity}
 
 \cleardoublepage
 
