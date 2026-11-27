@@ -1281,59 +1281,67 @@ küszöböt, ezért csak a nagy különbségek bizonyulnak szignifikánsnak.
 \chapter{Eredmények}
 \label{ch:results}
 
-Ez a fejezet a kutatómunka eredményeit ismerteti.
-Az első szakasz a futások válaszadási arányát tekinti át, a második az emberi pontszámokkal való
-egyezést mutatja be (RQ1). A harmadik és a negyedik szakasz a
-modelltulajdonságok és a promptolási stratégiák hatását tárgyalja (RQ2). Az
-ötödik szakasz a Scalabrino-féle modellel való összevetést (RQ3), a hatodik
-pedig a pontszámokkal együtt mozgó kódtulajdonságokat (RQ4) tartalmazza.
+%szb: összegző gondolatok: szerintem okés, talán itt-ott picit hosszúnak és kicsit talán túlságosan magyarázósnak érzem. Néhol picit boarderline, hogy
+% épp már az eredményt csak közlöd még, vagy már értelmezed. Nem rossz így, és nincs is nagyon olyan rész, amit ki tudnék emelni. Majd nézem az eredmények értelmezését
+% és akkor valszeg jobb rálátásom lesz erre, de addig is mindenesetre gondoltam ezt leírom... 
 
-Az eredmények a következőképpen összegezhetők. A 96 futás (ami a 24 modellváltozat és a négy
-promptolási stratégia kombinációja) Spearman-korrelációja az emberi átlagpontszámokkal
-0,242 és 0,490 közé esik, a mediánja 0,401. A kvantálás és a gondolkodási mód
-egyetlen pár esetében sem változtatja meg szignifikánsan a korrelációt.
-A méret 16 párból kettőnél mutat szignifikáns hatást, mindkétszer a nagyobb modell javára.
-A Friedman-próba alapján a promptolási stratégiák között nincs szignifikáns különbség.
-A 24 modellváltozat közül 13 ér el magasabb korrelációt a Scalabrino-féle modellnél ugyanazokon a kódrészleteken, de
-egyik különbség sem szignifikáns.
-Az emberek és a modellváltozatok pontszámaival egyaránt az átfogó érthetőség metrika
+Ez a fejezet a kutatómunka eredményeit ismerteti. Az első szakasz a futások
+válaszadási arányát tekinti át, %szb: nagyon fura külön alfejezet a válaszadási aránynak. Szerintem összevonható a rákövetkezővel úgy, hogy azon legyen a hangsúly.
+% azért fura, mert ez abszolút nem annyira érdekes eredmény, hogy külön sectionja legyen
+a második az emberi pontszámokkal való egyezést mutatja be (RQ1). A harmadik és
+a negyedik szakasz a modelltulajdonságok és a promptolási stratégiák hatását
+tárgyalja (RQ2). Az ötödik szakasz a Scalabrino-féle modellel való összevetést
+(RQ3), a hatodik pedig a pontszámokkal együtt mozgó kódtulajdonságokat (RQ4)
+tartalmazza.
+
+%szb: sztem ez ide nem annyira illik. Az eredmények alfejezet feladata alapból röviden tömören egzaktan az eredményeket bemutatni
+% az összefoglalás, következtetés, értelmezés már a discussion feladata
+Az eredmények a következőképpen összegezhetők. A 96 futás (ami a 24
+modellváltozat és a négy promptolási stratégia kombinációja)
+Spearman-korrelációja az emberi átlagpontszámokkal 0,242 és 0,490 közé esik, a
+mediánja 0,401. A kvantálás és a gondolkodási mód egyetlen pár esetében sem
+változtatja meg szignifikánsan a korrelációt. A méret 16 párból kettőnél mutat
+szignifikáns hatást, mindkétszer a nagyobb modell javára. A Friedman-próba
+alapján a promptolási stratégiák között nincs szignifikáns különbség. A 24
+modellváltozat közül 13 ér el magasabb korrelációt a Scalabrino-féle modellnél
+ugyanazokon a kódrészleteken, de egyik különbség sem szignifikáns. Az emberek és
+a modellváltozatok pontszámaival egyaránt az átfogó érthetőség metrika
 korrelációja a legmagasabb.
 
-\section{A válaszadási arány}
+\section{A válaszadási arány} %szb: mint fentebb írtam, sztem ez melemergelhető a kövibe
 \label{sec:results:answerrate}
 
 A négy promptolási stratégiával a 24 modellváltozat összesen 96 futást végzett.
 Egy-egy futás 421 kódrészletet értékelt, így összesen 40\,416 válasz született.
-Értékelhetőnek 39\,112 válasz bizonyult, ez a válaszok 96,8\%-a (1304 válasz (3,2\%) nem volt értékelhető).
-A nem értékelhető válaszok mindegyike csonkult válasz volt: az LLM a rendelkezésére álló tokenkeret
-kimerüléséig nem adott pontszámot.
-Ilyen válasz csak gondolkodó módban fordult elő. Közvetlen válaszadó
-módban minden futásban minden kódrészlet kapott pontszámot.
-A 96 futás közül 78-ban minden kódrészlet értékelhető pontszámot kapott,
-így a futások válaszadási arányának mediánja 100\%.
-A futásonkénti válaszadási arányt a \ref{tab:app:errors}.~táblázat mutatja a függelékben.
+Értékelhetőnek 39\,112 válasz bizonyult, ez a válaszok 96,8\%-a (1304 válasz
+(3,2\%) nem volt értékelhető). A nem értékelhető válaszok mindegyike csonkult
+válasz volt: az LLM a rendelkezésére álló tokenkeret kimerüléséig nem adott
+pontszámot. Ilyen válasz csak gondolkodó módban fordult elő. Közvetlen válaszadó
+módban minden futásban minden kódrészlet kapott pontszámot. A 96 futás közül
+78-ban minden kódrészlet értékelhető pontszámot kapott, így a futások
+válaszadási arányának mediánja 100\%. A futásonkénti válaszadási arányt a
+\ref{tab:app:errors}.~táblázat mutatja a függelékben.
 
 A válaszadási arány 15 futásban maradt 95\% alatt, és ezek kivétel nélkül a
 Qwen3.5 család gondolkodó módban futó modelljeihez tartoznak: nyolc a 4B, hét a
 9B méretű modellhez. A legalacsonyabb arányt a Qwen3.5 4B négybites modell
-gondolkodó módú, \textit{few-shot} stratégiájú futása érte el (33,5\%),
-a többi érintett futás 58\% és 94\% között maradt.
-A Gemma-4 és a Qwen3.8 család minden futása legalább 95\%-os
-válaszadási arányt ért el.
+gondolkodó módú, \textit{few-shot} stratégiájú futása érte el (33,5\%), a többi
+érintett futás 58\% és 94\% között maradt. A Gemma-4 és a Qwen3.8 család minden
+futása legalább 95\%-os válaszadási arányt ért el.
 
 \section{Egyezés az emberi ítéletekkel}
 \label{sec:results:agreement}
 
 A nyolcbites modellváltozatok Spearman-korrelációját az emberi
-átlagpontszámokkal a \ref{tab:results:agreement}.~táblázat tartalmazza.
-A 96 futás korrelációi 0,242 és 0,490 közé esnek, mediánjuk 0,401,
-és mindegyik szignifikánsan eltér a nullától ($p < 0{,}001$).
-A legnagyobb értéket a Qwen3.8 27B négybites modell közvetlen válaszadó módú,
-\textit{few-shot} stratégiájú futása érte el (0,490, 95\%-os konfidenciaintervallum: 0,413-0,559).
-A legalacsonyabb érték a Qwen3.5 4B nyolcbites modell közvetlen válaszadó módú,
-\textit{few-shot} stratégiájú futásához tartozik (0,242).
-A futások családonkénti korrelációjának mediánja a Qwen3.8 családnál 0,434,
-a Gemma-4 családnál 0,420, a Qwen3.5 családnál 0,326.
+átlagpontszámokkal a \ref{tab:results:agreement}.~táblázat tartalmazza. A 96
+futás korrelációi 0,242 és 0,490 közé esnek, mediánjuk 0,401, és mindegyik %szb: ide nekem kívánkozik egy alany, de idk. Mi tér el 0tól? 
+szignifikánsan eltér a nullától ($p < 0{,}001$). A legnagyobb értéket a Qwen3.8
+27B négybites modell közvetlen válaszadó módú, \textit{few-shot} stratégiájú
+futása érte el (0,490, 95\%-os konfidenciaintervallum: 0,413-0,559). A
+legalacsonyabb érték a Qwen3.5 4B nyolcbites modell közvetlen válaszadó módú,
+\textit{few-shot} stratégiájú futásához tartozik (0,242). A futások
+családonkénti korrelációjának mediánja a Qwen3.8 családnál 0,434, a Gemma-4
+családnál 0,420, a Qwen3.5 családnál 0,326.
 
 % A SPEARMAN-KORRELÁCIÓKAT TARTALMAZÓ TÁBLÁZAT
 % + PROMPT STRATÉGIÁNKÉNT LEBONTVA
@@ -1393,22 +1401,21 @@ a Gemma-4 családnál 0,420, a Qwen3.5 családnál 0,326.
 	\label{tab:results:agreement}
 \end{table}
 
-A további egyezési mérőszámokat a \ref{tab:results:measures}.~táblázat foglalja össze.
-A 96 futásnál a Pearson-korreláció 0,241 és 0,467, a Kendall-féle $\tau_b$ 0,193 és 0,384,
-a QWK pedig 0,074 és 0,418 közötti értéket vesz fel.
-Az átlagos abszolút eltérés (MAE) 0,567 és 1,427 pont közötti,
-a pontos egyezések aránya pedig 6,7\% és 53,9\% között mozog.
-Az AUC 0,584 és 0,744 közé esik, mediánja 0,694.
-A legmagasabb Spearman-korrelációt mutató futás a QWK szerint szintén a legjobbnak bizonyult (0,418).
-A legkisebb átlagos eltérést a Qwen3.8 27B négybites modell gondolkodó módú,
-\textit{zero-shot-detailed} stratégiájú futása érte el (0,567),
-míg a legmagasabb AUC-t a Gemma-4 12B nyolcbites modell közvetlen válaszadó módú,
-\textit{zero-shot} stratégiájú futása adta (0,744).
-Az eltolás a Qwen3.5 család mind a nyolc modellváltozatánál negatív ($-0{,}30$ és $-0{,}99$ közötti),
-vagyis ezek a modellváltozatok az embereknél konzisztensen alacsonyabbra pontoznak.
-A többi modellváltozat esetén az eltolás $-0{,}40$ és $+0{,}40$ között marad.
-Az egyes futások valamennyi mérőszámát a \ref{app:results}.~függelék
-tartalmazza.
+A további egyezési mérőszámokat a \ref{tab:results:measures}.~táblázat foglalja
+össze. A 96 futásnál a Pearson-korreláció 0,241 és 0,467, a Kendall-féle
+$\tau_b$ 0,193 és 0,384, a QWK pedig 0,074 és 0,418 közötti értéket vesz fel. Az
+átlagos abszolút eltérés (MAE) 0,567 és 1,427 pont közötti, a pontos egyezések
+aránya pedig 6,7\% és 53,9\% között mozog. Az AUC 0,584 és 0,744 közé esik,
+mediánja 0,694. A legmagasabb Spearman-korrelációt mutató futás a QWK szerint
+szintén a legjobbnak bizonyult (0,418). A legkisebb átlagos eltérést a Qwen3.8
+27B négybites modell gondolkodó módú, \textit{zero-shot-detailed} stratégiájú
+futása érte el (0,567), míg a legmagasabb AUC-t a Gemma-4 12B nyolcbites modell
+közvetlen válaszadó módú, \textit{zero-shot} stratégiájú futása adta (0,744). Az
+eltolás a Qwen3.5 család mind a nyolc modellváltozatánál negatív ($-0{,}30$ és
+$-0{,}99$ közötti), vagyis ezek a modellváltozatok az embereknél konzisztensen
+alacsonyabbra pontoznak. A többi modellváltozat esetén az eltolás $-0{,}40$ és
+$+0{,}40$ között marad. Az egyes futások valamennyi mérőszámát a
+\ref{app:results}.~függelék tartalmazza.
 
 % TOVÁBBI MÉRŐSZÁMOKAT TARTALMAZÓ TÁBLÁZAT (SPEARMAN-EN KÍVÜL)
 % + Pearson-korr.
@@ -1476,22 +1483,25 @@ tartalmazza.
 \section{A modelltulajdonságok hatása az értékelésre}
 \label{sec:results:axes}
 
-A modelltulajdonságok hatását a \ref{sec:method:models}.~szakaszban ismertetett párokon vizsgáltam (RQ2).
-A kvantálásra vonatkozó eredményeket a \ref{tab:results:axis:quantization}.~táblázat,
-a méret és a gondolkodási mód eredményeit a \ref{fig:results:size}. és a \ref{fig:results:reasoning}.~ábra mutatja.
-A részletes értékeket a \ref{tab:app:axis:size}. és a \ref{tab:app:axis:reasoning}.~függeléktáblázat közli.
-Az eredmények a párok Spearman-korrelációja és
-átlagos abszolút eltérése közötti különbséget a négy promptolási stratégia átlagában adják meg.
-A táblázatok csillaggal jelölik azokat a különbségeket, amelyek a Holm-korrekció után is kimutathatók,
-a szöveg pedig ezekre röviden \textbf{kimutatható különbségként} hivatkozik.
-A stratégiánkénti összehasonlítások egyikében sem mutatható ki különbség a korrelációk között.
+A modelltulajdonságok hatását a \ref{sec:method:models}.~szakaszban ismertetett
+párokon vizsgáltam (RQ2). A kvantálásra vonatkozó eredményeket a
+\ref{tab:results:axis:quantization}.~táblázat, a méret és a gondolkodási mód
+eredményeit a \ref{fig:results:size}. és a \ref{fig:results:reasoning}.~ábra
+mutatja. A részletes értékeket a \ref{tab:app:axis:size}. és a
+\ref{tab:app:axis:reasoning}.~függeléktáblázat közli. Az eredmények a párok
+Spearman-korrelációja és átlagos abszolút eltérése közötti különbséget a négy
+promptolási stratégia átlagában adják meg. A táblázatok csillaggal jelölik
+azokat a különbségeket, amelyek a Holm-korrekció után is kimutathatók, a szöveg
+pedig ezekre röviden \textbf{kimutatható különbségként} hivatkozik. A
+stratégiánkénti összehasonlítások egyikében sem mutatható ki különbség a
+korrelációk között.
 
-A kvantálás tengelyén egyetlen párnál sem mutatható ki különbség a korrelációk között
-(\ref{tab:results:axis:quantization}.~táblázat).
-Az átlagos abszolút eltérés esetében négy párnál akad kimutatható különbség,
-közülük kettőnél a nyolcbites, kettőnél pedig a négybites változat eltérése bizonyul kisebbnek.
-A szakasz további ábrái ezért a nyolcbites modellváltozatokat mutatják be,
-míg a négybitesek eredményeit a függelék tartalmazza.
+A kvantálás tengelyén egyetlen párnál sem mutatható ki különbség a korrelációk
+között (\ref{tab:results:axis:quantization}.~táblázat). Az átlagos abszolút
+eltérés esetében négy párnál akad kimutatható különbség, közülük kettőnél a
+nyolcbites, kettőnél pedig a négybites változat eltérése bizonyul kisebbnek. A
+szakasz további ábrái ezért a nyolcbites modellváltozatokat mutatják be, míg a
+négybitesek eredményeit a függelék tartalmazza.
 
 % KVANTÁLÁSOK EREDMÉNYÉNEK ÖSSZEHASONLÍTÓ TÁBLÁZATA
 \begin{table}[htbp]
@@ -1539,17 +1549,20 @@ míg a négybitesek eredményeit a függelék tartalmazza.
 	\label{tab:results:axis:quantization}
 \end{table}
 
-A méret tengelyén 16 párból kettőnél mutatható ki különbség,
-és mindkettő a nagyobb modell javára szól, közvetlen válaszadó módban
-(\ref{fig:results:size}.~ábra, \ref{tab:app:axis:size}.~függeléktáblázat).
-A Gemma-4 négybites E4B és 31B modellje között a különbség $+0{,}076$,
-a Qwen3.5 nyolcbites 4B és 9B modellje között pedig $+0{,}091$.
-Az átlagos abszolút eltérésben nyolc párnál van kimutatható különbség:
-a Gemma-4 családban mind a hat ilyen párnál a kisebb modell eltérése bizonyul kisebbnek,
-a Qwen3.5 családban pedig mindkét párnál a nagyobb modellé.
-A Qwen3.8 27B modell a méret tengelyén nem kap párt, viszont mindkét kvantálással
-és mindkét gondolkodási módban magasabb átlagos korrelációt ér el, mint a Qwen3.5 9B modell.
-Mivel a két modell más családba tartozik, ezért ez a különbség nem közvetlenül a méret hatása.
+A méret tengelyén 16 párból kettőnél mutatható ki különbség, és mindkettő a
+nagyobb modell javára szól, közvetlen válaszadó módban
+(\ref{fig:results:size}.~ábra, \ref{tab:app:axis:size}.~függeléktáblázat). A
+Gemma-4 négybites E4B és 31B modellje között a különbség $+0{,}076$, a Qwen3.5
+nyolcbites 4B és 9B modellje között pedig $+0{,}091$. Az átlagos abszolút
+eltérésben nyolc párnál van kimutatható különbség: a Gemma-4 családban mind a
+hat ilyen párnál a kisebb modell eltérése bizonyul kisebbnek, a Qwen3.5
+családban pedig mindkét párnál a nagyobb modellé. A Qwen3.8 27B modell a méret
+tengelyén nem kap párt, viszont mindkét kvantálással és mindkét gondolkodási
+módban magasabb átlagos korrelációt ér el, mint a Qwen3.5 9B modell. Mivel a két
+modell más családba tartozik, ezért ez a különbség nem közvetlenül a méret
+hatása. %szb: ne csak azt írd, hogy ezek abszolút nem hasonlíthatók össze, mert valamelyest azért igen. Én onnan kezdenék, hogy 
+% itt is látszik, hogy a nagyobb modell jobban teljesít, bár meg kell jegyezni, hogy a qwen 3.5 és 3.8 architektúrájuk szerint ugyanazon modellcsaládba tartoznak, a tanítási módszertanban
+% mégis van különbség, így közvetlenül mégsem hasonlíthatóakl össze egyértelműen
 
 % MODELLMÉRET KÉT ÁBRA:
 % AZ EGYIK A GEMMA, A MÁSIK A QWEN3.5 MODELLEK ÁTLAGOS KORRELÁCIÓJÁT MUTATJA (ÁTLAGOS = STRATÉGIÁK ÁTLAGA)
@@ -1571,10 +1584,10 @@ Mivel a két modell más családba tartozik, ezért ez a különbség nem közve
 \end{figure}
 
 A gondolkodás tengelyén a 12 pár egyikénél sincs kimutatható különbség a
-korrelációk között (\ref{fig:results:reasoning}.~ábra, \ref{tab:app:axis:reasoning}.~függeléktáblázat).
-Az átlagos abszolút eltérésben nyolc párnál van kimutatható különbség: a Gemma-4
-modelleknél a gondolkodó, a Qwen3.5 modelleknél pedig a közvetlen válaszadó
-mód eltérése a nagyobb.
+korrelációk között (\ref{fig:results:reasoning}.~ábra,
+\ref{tab:app:axis:reasoning}.~függeléktáblázat). Az átlagos abszolút eltérésben
+nyolc párnál van kimutatható különbség: a Gemma-4 modelleknél a gondolkodó, a
+Qwen3.5 modelleknél pedig a közvetlen válaszadó mód eltérése a nagyobb.
 
 % GONDOLKODÁSI MÓD ÁBRA
 % OSZLOPTÁBLÁZATKÉNT MUTATJA A MODELLEK GONDOLKODÓ ÉS KÖZVETLEN ÁTLAGOS KORRELÁCIÓJÁT (ÁTLAGOS = STRATÉGIÁK ÁTLAGA)
@@ -1591,11 +1604,13 @@ mód eltérése a nagyobb.
 \section{A promptolási stratégiák hatása az értékelésre}
 \label{sec:results:prompting}
 
-A promptolási stratégiák összehasonlítását a \ref{tab:results:strategies}.~táblázat foglalja össze (RQ2).
-A négy stratégia átlagos Spearman-korrelációja 0,381 és 0,397 közé esik.
-A legjobb átlagos rangot (2,12) a \textit{few-shot} stratégia érte el,
-és a 24 modellváltozat közül kilencnél ez adta a legmagasabb korrelációt.
-A Friedman-próba alapján a stratégiák között nincs kimutatható különbség ($\chi^2(3) = 3{,}95$, $p = 0{,}267$).
+A promptolási stratégiák összehasonlítását a
+\ref{tab:results:strategies}.~táblázat foglalja össze (RQ2). A négy stratégia
+átlagos Spearman-korrelációja 0,381 és 0,397 közé esik. A legjobb átlagos rangot
+(2,12) a \textit{few-shot} stratégia érte el, és a 24 modellváltozat közül
+kilencnél ez adta a legmagasabb korrelációt. A Friedman-próba alapján a
+stratégiák között nincs kimutatható különbség ($\chi^2(3) = 3{,}95$, $p =
+0{,}267$).
 
 % PROMPTOLÁSI STRATÉGIÁKAT ÖSSZEHASONLÍTÓ TÁBLÁZAT
 % + ÁTLAGOS KORRELÁCIÓ
@@ -1628,64 +1643,78 @@ A Friedman-próba alapján a stratégiák között nincs kimutatható különbs�
 	\label{tab:results:strategies}
 \end{table}
 
-A stratégiapárok páros bootstrap-összehasonlítása a 24 modellváltozatot vizsgálva a hat pár közül egyiknél sem mutatott ki
-különbséget (a legkisebb korrigált $p$-érték 0,966, páronként 33-158 közös kódrészleten).
-Modellváltozatonként a 144 stratégiapárból ötnél akad kimutatható különbség, összesen négy modellváltozatnál.
-A Gemma-4 12B négybites, gondolkodó módú modellváltozat \textit{zero-shot} stratégiájú futása 0,090-del magasabb korrelációt ért el,
-mint a \textit{zero-shot-detailed} stratégiájú.
-A Gemma-4 E4B négybites, gondolkodó módú modellváltozatnál a \textit{zero-shot-detailed} stratégiájú futás
-0,120-szal magasabbat ért el, mint a \textit{one-shot} stratégiájú.
-A Qwen3.5 4B négybites, közvetlen válaszadó modellváltozatnál a \textit{zero-shot-detailed} stratégiájú futás 0,129-cel magasabbat ért el,
-mint a \textit{zero-shot}, és 0,127-tel magasabbat, mint a \textit{one-shot} stratégiájú.
-A Qwen3.5 4B nyolcbites, gondolkodó módú modellváltozatnál a
-\textit{zero-shot} stratégiájú futás 0,139-cel magasabbat ért el, mint a \textit{one-shot} stratégiájú.
+A stratégiapárok páros bootstrap-összehasonlítása a 24 modellváltozatot
+vizsgálva a hat pár közül egyiknél sem mutatott ki különbséget (a legkisebb
+korrigált $p$-érték 0,966, páronként 33-158 közös kódrészleten).
+Modellváltozatonként a 144 stratégiapárból ötnél akad kimutatható különbség,
+összesen négy modellváltozatnál. A Gemma-4 12B négybites, gondolkodó módú
+modellváltozat \textit{zero-shot} stratégiájú futása 0,090-del magasabb %szb: talán ahol ilyen eltéréseket írsz, jó lenne a honnan hova dolgokat is feltüntetni, pl.:
+% a keletázsiai cica 5 cm-t nőtt (9995cm -> 10000cm)
+korrelációt ért el, mint a \textit{zero-shot-detailed} stratégiájú. A Gemma-4
+E4B négybites, gondolkodó módú modellváltozatnál a \textit{zero-shot-detailed}
+stratégiájú futás 0,120-szal magasabbat ért el, mint a \textit{one-shot}
+stratégiájú. A Qwen3.5 4B négybites, közvetlen válaszadó modellváltozatnál a
+\textit{zero-shot-detailed} stratégiájú futás 0,129-cel magasabbat ért el, mint
+a \textit{zero-shot}, és 0,127-tel magasabbat, mint a \textit{one-shot}
+stratégiájú. A Qwen3.5 4B nyolcbites, gondolkodó módú modellváltozatnál a
+\textit{zero-shot} stratégiájú futás 0,139-cel magasabbat ért el, mint a
+\textit{one-shot} stratégiájú.
 
-\section{Összevetés a klasszikus modellekkel}
+\section{Összevetés a klasszikus modellekkel} %szb: ha csak 1 modellel hasonlítasz, akkor ez is legyen 1esszámban
 \label{sec:results:classic}
 
-A Scalabrino-féle modellel való összevetéshez (RQ3) a modell kimeneteit használom, amelyeket
-Ouédraogo és munkatársai ugyanerre a 421 kódrészletre tettek közzé \cite{ouedraogo2025coreeval}. A
-kimeneteket a kód alapján párosítottam a kódrészletekkel. A CoReEval adatfájljaiban a Dorn-féle
-kódrészletek emberi pontszámai egy sorral el vannak csúszva a kódhoz képest, ezért az emberi
-pontszámok közül a saját adathalmazom értékeit használom.
+A Scalabrino-féle modellel való összevetéshez (RQ3) a modell kimeneteit
+használom, amelyeket Ouédraogo és munkatársai ugyanerre a 421 kódrészletre
+tettek közzé \cite{ouedraogo2025coreeval}. A kimeneteket a kód alapján
+párosítottam a kódrészletekkel. A CoReEval adatfájljaiban a Dorn-féle
+kódrészletek emberi pontszámai egy sorral el vannak csúszva a kódhoz képest,
+ezért az emberi pontszámok közül a saját adathalmazom értékeit használom.
 
-A Scalabrino-féle modell korrelációja az emberi átlagpontszámokkal a teljes adathalmazon 0,415
-(95\%-os konfidenciaintervallum: 0,327--0,491). Forrásonként a Buse-féle kódrészleteken 0,616, a
-Dorn-féle kódrészleteken 0,490, a Scalabrino-féle kódrészleteken 0,610
-(\ref{tab:app:sources}.~táblázat, utolsó sor). A Buse- és a Scalabrino-féle kódrészleteken a
-24 modellváltozat egyike sem érte el ezt az értéket: ott a modellváltozatok korrelációja legfeljebb
-0,435, illetve 0,484. A Dorn-féle kódrészleteken a 24 modellváltozatból 16 korrelációja magasabb a
-Scalabrino-féle modellénél.
+A Scalabrino-féle modell korrelációja az emberi átlagpontszámokkal a teljes
+adathalmazon 0,415 (95\%-os konfidenciaintervallum: 0,327--0,491). Forrásonként
+a Buse-féle kódrészleteken 0,616, a Dorn-féle kódrészleteken 0,490, a
+Scalabrino-féle kódrészleteken 0,610 (\ref{tab:app:sources}.~táblázat, utolsó
+sor). A Buse- és a Scalabrino-féle kódrészleteken a 24 modellváltozat egyike sem
+érte el ezt az értéket: ott a modellváltozatok korrelációja legfeljebb 0,435,
+illetve 0,484. A Dorn-féle kódrészleteken a 24 modellváltozatból 16 korrelációja
+magasabb a Scalabrino-féle modellénél.
 
-A teljes adathalmazon a modellváltozatok és a Scalabrino-féle modell összevetését a
-\ref{tab:results:agreement}.~táblázat utolsó oszlopa közli, a négybites változatokkal együtt pedig a
-\ref{tab:app:agreement}.~függeléktáblázat tartalmazza.
-A 24 modellváltozat közül 13 korrelációja magasabb a Scalabrino-féle modellénél ugyanazokon a kódrészleteken,
-a különbségek pedig $-0{,}147$ és $+0{,}044$ között alakulnak.
-A Holm-korrekció alkalmazása után egyik különbség sem szignifikáns.
-A legnagyobb pozitív különbséget a Qwen3.8 27B négybites, közvetlen válaszadó modellváltozat érte el ($+0{,}044$).
-A Qwen3.5 4B modell két közvetlen válaszadó modellváltozatánál a különbség korrekció nélkül szignifikáns lenne
-($-0{,}147$ és $-0{,}110$, $p = 0{,}009$ és $0{,}041$), a korrekció után azonban ezek sem mutathatók ki.
-A Qwen3.5 gondolkodó módú modellváltozatait kevesebb kódrészleten (63-289) lehetett összevetni,
-mert csak azokat a kódrészleteket vettem figyelembe, amelyek mind a négy futásban értékelhető pontszámot kaptak.
+A teljes adathalmazon a modellváltozatok és a Scalabrino-féle modell
+összevetését a \ref{tab:results:agreement}.~táblázat utolsó oszlopa közli, a
+négybites változatokkal együtt pedig a \ref{tab:app:agreement}.~függeléktáblázat
+tartalmazza. A 24 modellváltozat közül 13 korrelációja magasabb a
+Scalabrino-féle modellénél ugyanazokon a kódrészleteken, a különbségek pedig
+$-0{,}147$ és $+0{,}044$ között alakulnak. A Holm-korrekció alkalmazása után
+egyik különbség sem szignifikáns. A legnagyobb pozitív különbséget a Qwen3.8 27B
+négybites, közvetlen válaszadó modellváltozat érte el ($+0{,}044$). A Qwen3.5 4B
+modell két közvetlen válaszadó modellváltozatánál a különbség korrekció nélkül
+szignifikáns lenne ($-0{,}147$ és $-0{,}110$, $p = 0{,}009$ és $0{,}041$), a
+korrekció után azonban ezek sem mutathatók ki. A Qwen3.5 gondolkodó módú
+modellváltozatait kevesebb kódrészleten (63-289) lehetett összevetni, mert csak
+azokat a kódrészleteket vettem figyelembe, amelyek mind a négy futásban
+értékelhető pontszámot kaptak.
 
-\section{A pontszámokkal együtt mozgó kódtulajdonságok}
+\section{A pontszámokkal együtt mozgó kódtulajdonságok} %szb: itt jut eszembe, hogy még nem javítottad a javaslataimnak megflelően a methodot. Ha megteszed,
+% kérlek majd nézz rá ismét az eredményekre, hogy ha ott átfogalmazol valamit, az itt is látszódjon
 \label{sec:results:metrics}
 
-A metrikák és a pontszámok közötti kapcsolatot a \ref{tab:results:metrics}.~táblázat szemlélteti (RQ4).
-Az emberi átlagpontszámokkal az átfogó érthetőség mutatja a legmagasabb korrelációt ($+0{,}476$).
-Ezt a megjegyzések világossága ($+0{,}427$) és hasznossága ($+0{,}405$) követi,
-majd az elnevezések következetessége ($+0{,}383$).
-Az első öt helyen csupán egyetlen algoritmikus metrika szerepel, a megjegyzéssűrűség ($+0{,}369$).
-A rangsor élén álló metrikák sorrendje bizonytalan, mivel korrelációik közel esnek egymáshoz
-($+0{,}476$, $+0{,}427$ és $+0{,}405$). Az átfogó érthetőség helyezésének 95\%-os
-konfidenciaintervalluma az 1-3., a megjegyzések világosságáé az 1--4. hely.
-Egy másik, hasonló adathalmazon e két metrika sorrendje könnyen felcserélődhetne.
-A kód méretével, összetettségével és sorhosszával összefüggő algoritmikus metrikák negatív irányba mutatnak.
-Ilyen például a Halstead-térfogat ($-0{,}247$), az átlagos sorhossz ($-0{,}241$),
-a ciklomatikus komplexitás ($-0{,}210$) és a kódsorok száma ($-0{,}184$).
-A behúzás és a kapcsos zárójelek következetessége, az elnevezési konvenció követése, a legnagyobb beágyazási mélység
-és a foglalt nevek elfedése 0,11-nél gyengébb korrelációt mutat.
+A metrikák és a pontszámok közötti kapcsolatot a
+\ref{tab:results:metrics}.~táblázat szemlélteti (RQ4). Az emberi
+átlagpontszámokkal az átfogó érthetőség mutatja a legmagasabb korrelációt
+($+0{,}476$). Ezt a megjegyzések világossága ($+0{,}427$) és hasznossága
+($+0{,}405$) követi, majd az elnevezések következetessége ($+0{,}383$). Az első
+öt helyen csupán egyetlen algoritmikus metrika szerepel, a megjegyzéssűrűség
+($+0{,}369$). A rangsor élén álló metrikák sorrendje bizonytalan, mivel
+korrelációik közel esnek egymáshoz ($+0{,}476$, $+0{,}427$ és $+0{,}405$). Az
+átfogó érthetőség helyezésének 95\%-os konfidenciaintervalluma az 1-3., a
+megjegyzések világosságáé az 1--4. hely. Egy másik, hasonló adathalmazon e két
+metrika sorrendje könnyen felcserélődhetne. A kód méretével, összetettségével és
+sorhosszával összefüggő algoritmikus metrikák negatív irányba mutatnak. Ilyen
+például a Halstead-térfogat ($-0{,}247$), az átlagos sorhossz ($-0{,}241$), a
+ciklomatikus komplexitás ($-0{,}210$) és a kódsorok száma ($-0{,}184$). A
+behúzás és a kapcsos zárójelek következetessége, az elnevezési konvenció
+követése, a legnagyobb beágyazási mélység és a foglalt nevek elfedése 0,11-nél
+gyengébb korrelációt mutat.
 
 % A METRIKÁK EMBEREKKEL ÉS LLM-EKKEL VALÓ KORRELÁCIÓI ÉS HELYEZÉSEI
 \begin{table}[htbp]
@@ -1759,36 +1788,41 @@ A behúzás és a kapcsos zárójelek következetessége, az elnevezési konvenc
 	\label{tab:results:metrics}
 \end{table}
 
-A modellváltozatok pontszámaival is az átfogó érthetőség korrelációja a legmagasabb ($+0{,}666$),
-ha a 24 modellváltozat korrelációit Fisher-féle átlaggal összegezzük.
-A sorban ezután az idiómák használata ($+0{,}612$), valamint az elnevezések találósága ($+0{,}582$)
-és következetessége ($+0{,}527$) áll.
-A modellváltozatok rangsorában az első tizenegy helyet a tizenegy LLM-metrika
-foglalja el.
-Az algoritmikus metrikák közül a megjegyzéssűrűség a legelső, ez a 12. helyen áll ($+0{,}293$).
-Két algoritmikus metrika iránya tér el a két rangsorban.
-Az átlagos sorhossz az embereknél negatívan ($-0{,}241$), a modellváltozatoknál pozitívan korrelál ($+0{,}107$),
-az átlagos azonosítóhossz pedig az embereknél $-0{,}137$, a modellváltozatoknál $+0{,}111$.
+A modellváltozatok pontszámaival is az átfogó érthetőség korrelációja a
+legmagasabb ($+0{,}666$), ha a 24 modellváltozat korrelációit Fisher-féle
+átlaggal összegezzük. A sorban ezután az idiómák használata ($+0{,}612$),
+valamint az elnevezések találósága ($+0{,}582$) és következetessége ($+0{,}527$)
+áll. A modellváltozatok rangsorában az első tizenegy helyet a tizenegy
+LLM-metrika foglalja el. Az algoritmikus metrikák közül a megjegyzéssűrűség a
+legelső, ez a 12. helyen áll ($+0{,}293$). Két algoritmikus metrika iránya tér
+el a két rangsorban. Az átlagos sorhossz az embereknél negatívan ($-0{,}241$), a
+modellváltozatoknál pozitívan korrelál ($+0{,}107$), az átlagos azonosítóhossz
+pedig az embereknél $-0{,}137$, a modellváltozatoknál $+0{,}111$.
 
-A két rangsor hasonlóságát a metrikák erősségei közötti Spearman-korreláció adja meg.
-Az összesített rangsornál ez az érték 0,830. Modellváltozatonként 0,750 és 0,826 közé esik, mediánja 0,778.
-A modellváltozatok több LLM-metrikát az embereknél kimutathatóan erősebben követnek.
-Az elnevezések találóságát, az idiómák használatát és a projektkonvenciók követését
-a 24 modellváltozatból 22 követi erősebben, az átfogó érthetőséget 18, a kognitív terhelést 16.
-Ezzel szemben az átlagos sorhossz korrelációja mind a 24 modellváltozatnál kimutathatóan eltér az emberekétől, és ellentétes előjelű.
-Egy modellváltozaton belül a négy stratégiával kapott rangsorhasonlóság mediánban 0,07-tel tér el egymástól, legfeljebb 0,23-dal.
+A két rangsor hasonlóságát a metrikák erősségei közötti Spearman-korreláció adja
+meg. Az összesített rangsornál ez az érték 0,830. Modellváltozatonként 0,750 és
+0,826 közé esik, mediánja 0,778. A modellváltozatok több LLM-metrikát az
+embereknél kimutathatóan erősebben követnek. Az elnevezések találóságát, az
+idiómák használatát és a projektkonvenciók követését a 24 modellváltozatból 22
+követi erősebben, az átfogó érthetőséget 18, a kognitív terhelést 16. Ezzel
+szemben az átlagos sorhossz korrelációja mind a 24 modellváltozatnál
+kimutathatóan eltér az emberekétől, és ellentétes előjelű. Egy modellváltozaton
+belül a négy stratégiával kapott rangsorhasonlóság mediánban 0,07-tel tér el
+egymástól, legfeljebb 0,23-dal.
 
 Az LLM-metrikák értékelőinek egyezését és a leave-one-out ellenőrzést a
-\ref{tab:results:graders}.~táblázat tartalmazza.
-Az ICC kilenc metrika esetében legalább 0,85, míg a megjegyzések és a kód összhangjánál 0,67, a kognitív terhelésnél 0,51.
-Eszerint egyetlen metrika sem került a 0,5 határ alá.
-Az ICC-t azon a 267-274 kódrészleten számoltam ki, amelyet mind a tizenkét értékelő értékelhetően pontozott.
-A kihagyott pontszámok bennhagyása minden LLM-metrikánál erősítené a korrelációt,
-a modellváltozatok összesítésében ez 0,004 és 0,024 közötti mértéket tenne ki.
-Modellváltozatonként a 264 különbség abszolút értékének átlaga 0,014, közülük csak 26 haladja meg a 0,03-at.
-Az önkonzisztencia vizsgálata szerint a modellváltozatok pontszámai gyengébben mozognak együtt az ugyanazon modell ugyanazzal a kvantálással adott
-metrikapontszámaival, mint a többi értékelő átlagával.
-A két korreláció erősségének különbsége mediánban $-0{,}095$.
+\ref{tab:results:graders}.~táblázat tartalmazza. Az ICC kilenc metrika esetében
+legalább 0,85, míg a megjegyzések és a kód összhangjánál 0,67, a kognitív
+terhelésnél 0,51. Eszerint egyetlen metrika sem került a 0,5 határ alá. Az ICC-t
+azon a 267-274 kódrészleten számoltam ki, amelyet mind a tizenkét értékelő
+értékelhetően pontozott. A kihagyott pontszámok bennhagyása minden
+LLM-metrikánál erősítené a korrelációt, a modellváltozatok összesítésében ez
+0,004 és 0,024 közötti mértéket tenne ki. Modellváltozatonként a 264 különbség
+abszolút értékének átlaga 0,014, közülük csak 26 haladja meg a 0,03-at. Az
+önkonzisztencia vizsgálata szerint a modellváltozatok pontszámai gyengébben
+mozognak együtt az ugyanazon modell ugyanazzal a kvantálással adott
+metrikapontszámaival, mint a többi értékelő átlagával. A két korreláció
+erősségének különbsége mediánban $-0{,}095$.
 
 % AZ LLM-METRIKÁK ÉRTÉKELŐIENK EGYETÉRTÉSÉT VIZSGÁLÓ TÁBLÁZAT
 % + ICC PONTSZÁM (NÉZETELTÉRÉS ARÁNYA)
