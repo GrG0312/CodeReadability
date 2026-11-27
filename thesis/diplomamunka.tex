@@ -630,7 +630,7 @@ nem méri.} A modelleket a következő táblázat összegzi:
 		\hline
 		\textbf{Modell} & \textbf{Család} & \textbf{Méret} & \textbf{Kvantálások} \\
 		\hline \hline
-		gemma-4-E4B-it & Gemma-4 & 4B & 4 bit, 8 bit \\
+		gemma-4-E4B-it & Gemma-4 & 4B\textsuperscript{\dag} & 4 bit, 8 bit \\
 		\hline
 		gemma-4-12b-it & Gemma-4 & 12B & 4 bit, 8 bit \\
 		\hline
@@ -644,7 +644,8 @@ nem méri.} A modelleket a következő táblázat összegzi:
 		\hline
 	\end{tabular}
 	\caption[A vizsgált modellek]{A vizsgált modellek. \textsuperscript{*}A Qwen3.8
-	négybites változata az Unsloth Dynamic módszerrel kvantált.}
+	négybites változata az Unsloth Dynamic módszerrel kvantált. \textsuperscript{\dag}A Gemma-4 E4B effektív
+	paraméterszáma 4,5 milliárd, a beágyazási táblákkal együtt 8 milliárd~\cite{google2026gemma4}.}
 	\label{tab:method:models}
 \end{table}
 
@@ -1473,7 +1474,7 @@ $+0{,}40$ között marad. Az egyes futások valamennyi mérőszámát a
 	kerekített emberi átlaggal. Az eltolás azt adja meg, hány ponttal pontoz a modellváltozat átlagosan
 	magasabbra (pozitív) vagy alacsonyabbra (negatív) az embereknél.
 	A négybites változatok Spearman-korrelációja a nyolcbitesekéhez nagyon hasonló, az átlagos abszolút
-	eltérésben viszont négy párnál szignifikáns a különbség (\ref{tab:results:axis:quantization}.~táblázat).
+	eltérésben viszont négy párnál szignifikáns a különbség (\ref{tab:app:axis:quantization}.~függeléktáblázat).
 	A négybites változatokkal együtt a \ref{tab:app:measures}.~függeléktáblázat tartalmazza az értékeket.
 	Futásonként minden mérőszám a \ref{tab:app:correlations}. és a \ref{tab:app:errors}.~függeléktáblázatban
 	szerepel.}
@@ -1483,71 +1484,34 @@ $+0{,}40$ között marad. Az egyes futások valamennyi mérőszámát a
 \section{A modelltulajdonságok hatása az értékelésre}
 \label{sec:results:axes}
 
-A modelltulajdonságok hatását a \ref{sec:method:models}.~szakaszban ismertetett
-párokon vizsgáltam (RQ2). A kvantálásra vonatkozó eredményeket a
-\ref{tab:results:axis:quantization}.~táblázat, a méret és a gondolkodási mód
-eredményeit a \ref{fig:results:size}. és a \ref{fig:results:reasoning}.~ábra
-mutatja. A részletes értékeket a \ref{tab:app:axis:size}. és a
-\ref{tab:app:axis:reasoning}.~függeléktáblázat közli. Az eredmények a párok
-Spearman-korrelációja és átlagos abszolút eltérése közötti különbséget a négy
-promptolási stratégia átlagában adják meg. A táblázatok csillaggal jelölik
-azokat a különbségeket, amelyek a Holm-korrekció után is kimutathatók, a szöveg
-pedig ezekre röviden \textbf{kimutatható különbségként} hivatkozik. A
-stratégiánkénti összehasonlítások egyikében sem mutatható ki különbség a
-korrelációk között.
+A modelltulajdonságok hatását a \ref{sec:method:models}.~szakaszban ismertetett párokon vizsgáltam (RQ2).
+A kvantálás, a méret és a gondolkodási mód eredményeit a \ref{fig:results:quantization}., a \ref{fig:results:size}. és a \ref{fig:results:reasoning}.~ábra mutatja.
+A részletes értékeket a \ref{tab:app:axis:quantization}., a \ref{tab:app:axis:size}. és a \ref{tab:app:axis:reasoning}.~függeléktáblázat közli.
+Az eredmények a párok Spearman-korrelációja és
+átlagos abszolút eltérése közötti különbséget a négy promptolási stratégia átlagában adják meg.
+A táblázatok csillaggal jelölik azokat a különbségeket, amelyek a Holm-korrekció után is kimutathatók,
+a szöveg pedig ezekre röviden \textbf{kimutatható különbségként} hivatkozik.
+A stratégiánkénti összehasonlítások egyikében sem mutatható ki különbség a korrelációk között.
 
-A kvantálás tengelyén egyetlen párnál sem mutatható ki különbség a korrelációk
-között (\ref{tab:results:axis:quantization}.~táblázat). Az átlagos abszolút
-eltérés esetében négy párnál akad kimutatható különbség, közülük kettőnél a
-nyolcbites, kettőnél pedig a négybites változat eltérése bizonyul kisebbnek. A
-szakasz további ábrái ezért a nyolcbites modellváltozatokat mutatják be, míg a
-négybitesek eredményeit a függelék tartalmazza.
+A kvantálás tengelyén egyetlen párnál sem mutatható ki különbség a korrelációk között
+(\ref{fig:results:quantization}.~ábra, \ref{tab:app:axis:quantization}.~függeléktáblázat).
+Az átlagos abszolút eltérés esetében négy párnál akad kimutatható különbség,
+közülük kettőnél a nyolcbites, kettőnél pedig a négybites változat eltérése bizonyul kisebbnek.
+A méret és a gondolkodási mód ábrái ezért a nyolcbites modellváltozatokat mutatják be,
+míg a négybitesek eredményeit a függelék tartalmazza.
 
-% KVANTÁLÁSOK EREDMÉNYÉNEK ÖSSZEHASONLÍTÓ TÁBLÁZATA
-\begin{table}[htbp]
+% KVANTÁLÁS ÁBRA
+\begin{figure}[htbp]
 	\centering
-	\small
-	\setlength{\tabcolsep}{4pt}
-	\begin{tabular}{ | l | r | r | r | r | }
-		\hline
-		\textbf{Pár} &
-		$\boldsymbol{\Delta\rho}$ &
-		\textbf{korr. $p$} &
-		$\boldsymbol{\Delta}$\textbf{MAE} &
-		\textbf{korr. $p$} \\
-		\hline \hline
-		Gemma-4 E4B, gond.: 4 bit $\rightarrow$ 8 bit & $+0{,}006$ & $1{,}000$ & $+0{,}018$ & $1{,}000$ \\
-		\hline
-		Gemma-4 E4B, közv.: 4 bit $\rightarrow$ 8 bit & $-0{,}003$ & $1{,}000$ & $+0{,}033$\textsuperscript{*} & $0{,}002$ \\
-		\hline
-		Gemma-4 12B, gond.: 4 bit $\rightarrow$ 8 bit & $+0{,}004$ & $1{,}000$ & $+0{,}033$\textsuperscript{*} & $0{,}024$ \\
-		\hline
-		Gemma-4 12B, közv.: 4 bit $\rightarrow$ 8 bit & $+0{,}012$ & $1{,}000$ & $-0{,}005$ & $1{,}000$ \\
-		\hline
-		Gemma-4 31B, gond.: 4 bit $\rightarrow$ 8 bit & $-0{,}002$ & $1{,}000$ & $+0{,}019$ & $0{,}308$ \\
-		\hline
-		Gemma-4 31B, közv.: 4 bit $\rightarrow$ 8 bit & $+0{,}000$ & $1{,}000$ & $-0{,}001$ & $1{,}000$ \\
-		\hline
-		Qwen3.5 4B, gond.: 4 bit $\rightarrow$ 8 bit & $+0{,}047$ & $1{,}000$ & $-0{,}034$ & $1{,}000$ \\
-		\hline
-		Qwen3.5 4B, közv.: 4 bit $\rightarrow$ 8 bit & $-0{,}037$ & $0{,}216$ & $-0{,}006$ & $1{,}000$ \\
-		\hline
-		Qwen3.5 9B, gond.: 4 bit $\rightarrow$ 8 bit & $+0{,}004$ & $1{,}000$ & $-0{,}178$\textsuperscript{*} & $<0{,}001$ \\
-		\hline
-		Qwen3.5 9B, közv.: 4 bit $\rightarrow$ 8 bit & $+0{,}032$ & $0{,}418$ & $-0{,}103$\textsuperscript{*} & $<0{,}001$ \\
-		\hline
-		Qwen3.8 27B, gond.: 4 bit $\rightarrow$ 8 bit & $-0{,}009$ & $1{,}000$ & $+0{,}012$ & $1{,}000$ \\
-		\hline
-		Qwen3.8 27B, közv.: 4 bit $\rightarrow$ 8 bit & $-0{,}001$ & $1{,}000$ & $+0{,}008$ & $0{,}637$ \\
-		\hline
-	\end{tabular}
-	\caption[A kvantálás hatása]{A kvantálás hatása: a Spearman-korreláció ($\Delta\rho$) és az átlagos abszolút eltérés ($\Delta$MAE)
-	különbsége a pár két modellváltozata között, a négy promptolási stratégia átlagában, Holm-korrigált
-	$p$-értékkel. A különbség a nyolcbites mínusz a négybites modellváltozat értéke. A pozitív $\Delta\rho$
-	és a negatív $\Delta$MAE a pár második modellváltozatának kedvez. A csillag a Holm-korrekció után is
-	szignifikáns különbséget jelöl.}
-	\label{tab:results:axis:quantization}
-\end{table}
+	\includegraphics[width=0.49\textwidth]{figures/results_quantization_nothinking.png}
+	\hfill
+	\includegraphics[width=0.49\textwidth]{figures/results_quantization_thinking.png}
+	\caption[A kvantálás hatása]{A modellek négy- és nyolcbites változatának átlagos Spearman-korrelációját
+	(a négy promptolási stratégia átlagát) közvetlen válaszadó (balra) és gondolkodó módban (jobbra) ábrázolja az ábra.
+	A két kvantálás között egyetlen párnál sem szignifikáns a különbség. Minden pár eredményét, az átlagos abszolút
+	eltérés különbségével együtt, a \ref{tab:app:axis:quantization}.~függeléktáblázat tartalmazza.}
+	\label{fig:results:quantization}
+\end{figure}
 
 A méret tengelyén 16 párból kettőnél mutatható ki különbség, és mindkettő a
 nagyobb modell javára szól, közvetlen válaszadó módban
@@ -1558,9 +1522,9 @@ eltérésben nyolc párnál van kimutatható különbség: a Gemma-4 családban 
 hat ilyen párnál a kisebb modell eltérése bizonyul kisebbnek, a Qwen3.5
 családban pedig mindkét párnál a nagyobb modellé. A Qwen3.8 27B modell a méret
 tengelyén nem kap párt, viszont mindkét kvantálással és mindkét gondolkodási
-módban magasabb átlagos korrelációt ér el, mint a Qwen3.5 9B modell. Mivel a két
-modell más családba tartozik, ezért ez a különbség nem közvetlenül a méret
-hatása. %szb: ne csak azt írd, hogy ezek abszolút nem hasonlíthatók össze, mert valamelyest azért igen. Én onnan kezdenék, hogy 
+módban magasabb átlagos korrelációt ér el, mint a Qwen3.5 9B modell
+(\ref{fig:results:size}.~ábra). Mivel a két modell más családba tartozik, ezért
+ez a különbség nem közvetlenül a méret hatása. %szb: ne csak azt írd, hogy ezek abszolút nem hasonlíthatók össze, mert valamelyest azért igen. Én onnan kezdenék, hogy 
 % itt is látszik, hogy a nagyobb modell jobban teljesít, bár meg kell jegyezni, hogy a qwen 3.5 és 3.8 architektúrájuk szerint ugyanazon modellcsaládba tartoznak, a tanítási módszertanban
 % mégis van különbség, így közvetlenül mégsem hasonlíthatóakl össze egyértelműen
 
@@ -1573,13 +1537,15 @@ hatása. %szb: ne csak azt írd, hogy ezek abszolút nem hasonlíthatók össze,
 	\hfill
 	\includegraphics[width=0.49\textwidth]{figures/results_size_qwen.png}
 	\caption[A modellméret hatása]{A nyolcbites modellváltozatok átlagos Spearman-korrelációját (a négy promptolási stratégia átlagát)
-	modellméret szerint, gondolkodási módonként ábrázolja az ábra a Gemma-4 (balra) és a Qwen3.5 (jobbra)
-	családban. A csillag olyan különbséget jelöl, amely a Holm-korrekció után is szignifikáns.
+	modellméret szerint, gondolkodási módonként ábrázolja az ábra a Gemma-4 (balra), valamint a Qwen3.5 és
+	a Qwen3.8 (jobbra) családban. A vízszintes tengely a modellek paraméterszámát mutatja milliárdban, a Gemma-4 E4B modellnél
+	az effektív paraméterszámot (4,5 milliárd).
+	A csillag olyan különbséget jelöl, amely a Holm-korrekció után is szignifikáns.
 	A négybites változatok korrelációja egyetlen párnál sem tér el szignifikánsan a nyolcbitesekétől.
 	A négybites változatok közül egyedül a Gemma-4 E4B és 31B modell közvetlen válaszadó módú változata
 	között szignifikáns a különbség. Ezt a párt és az összes többi párt a
-	\ref{tab:app:axis:size}.~függeléktáblázat tartalmazza. A Qwen3.8 családból csak egy méret szerepel,
-	ezért az ábrán nem jelenik meg.}
+	\ref{tab:app:axis:size}.~függeléktáblázat tartalmazza. A Qwen3.8 családból csak egy méret szerepel.
+	A Qwen3.8 27B modell (négyzet) külön modellcsaládba tartozik.}
 	\label{fig:results:size}
 \end{figure}
 
@@ -1604,13 +1570,11 @@ Qwen3.5 modelleknél pedig a közvetlen válaszadó mód eltérése a nagyobb.
 \section{A promptolási stratégiák hatása az értékelésre}
 \label{sec:results:prompting}
 
-A promptolási stratégiák összehasonlítását a
-\ref{tab:results:strategies}.~táblázat foglalja össze (RQ2). A négy stratégia
-átlagos Spearman-korrelációja 0,381 és 0,397 közé esik. A legjobb átlagos rangot
-(2,12) a \textit{few-shot} stratégia érte el, és a 24 modellváltozat közül
-kilencnél ez adta a legmagasabb korrelációt. A Friedman-próba alapján a
-stratégiák között nincs kimutatható különbség ($\chi^2(3) = 3{,}95$, $p =
-0{,}267$).
+A promptolási stratégiák összehasonlítását a \ref{tab:results:strategies}.~táblázat foglalja össze (RQ2).
+A négy stratégia átlagos Spearman-korrelációja 0,381 és 0,397 közé esik.
+A legjobb átlagos rangot (2,12) a \textit{few-shot} stratégia érte el,
+és a 24 modellváltozat közül kilencnél ez adta a legmagasabb korrelációt.
+A Friedman-próba alapján a stratégiák között nincs kimutatható különbség ($\chi^2(3) = 3{,}95$, $p = 0{,}267$, \ref{fig:results:strategies}.~ábra).
 
 % PROMPTOLÁSI STRATÉGIÁKAT ÖSSZEHASONLÍTÓ TÁBLÁZAT
 % + ÁTLAGOS KORRELÁCIÓ
@@ -1642,6 +1606,18 @@ stratégiák között nincs kimutatható különbség ($\chi^2(3) = 3{,}95$, $p 
 	Friedman-próba: $\chi^2(3) = 3{,}95$, $p = 0{,}267$.}
 	\label{tab:results:strategies}
 \end{table}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[height=5cm]{figures/results_strategies_gemma4.png}
+	\includegraphics[height=5cm]{figures/results_strategies_qwen35.png}
+	\includegraphics[height=5cm]{figures/results_strategies_qwen38.png}\\[2pt]
+	\includegraphics[width=0.8\textwidth]{figures/results_strategies_legend.png}
+	\caption[A promptolási stratégiák modellváltozatonként]{A nyolcbites modellváltozatok Spearman-korrelációja
+	promptolási stratégiánként, modellcsaládonként (közv.: közvetlen válaszadó, gond.: gondolkodó mód).
+	A négybites változatok értékeit a \ref{tab:app:agreement}.~függeléktáblázat tartalmazza.}
+	\label{fig:results:strategies}
+\end{figure}
 
 A stratégiapárok páros bootstrap-összehasonlítása a 24 modellváltozatot
 vizsgálva a hat pár közül egyiknél sem mutatott ki különbséget (a legkisebb
@@ -2110,7 +2086,7 @@ a gondolkodási módnál $-0{,}007$.
 	a nagyobb mínusz a kisebb,
 	illetve a gondolkodó mínusz a közvetlen válaszadó modellváltozat értéke.
 	A szignifikáns különbségek száma a Holm-korrekció utáni eredményt mutatja.
-	Az egyes párok értékeit a \ref{tab:results:axis:quantization}.~táblázat, valamint a
+	Az egyes párok értékeit a \ref{tab:app:axis:quantization}., a
 	\ref{tab:app:axis:size}. és a \ref{tab:app:axis:reasoning}.~függeléktáblázat tartalmazza.}
 	\label{tab:discussion:axes}
 \end{table}
@@ -2895,8 +2871,8 @@ A \ref{tab:app:agreement}. és a \ref{tab:app:measures}.~táblázat a
 \ref{tab:results:agreement}. és a \ref{tab:results:measures}.~táblázatot ismétli meg mind a 24
 modellváltozattal. A \ref{tab:app:sources}.~táblázat a modellváltozatok Spearman-korrelációját
 a három forrás-adathalmazon külön-külön is megadja, a Scalabrino-féle modell értékeivel együtt.
-A méret és a gondolkodási mód tengelyének összes párját a \ref{tab:app:axis:size}. és a
-\ref{tab:app:axis:reasoning}.~táblázat tartalmazza. Futásonként minden mérőszám a
+A kvantálás, a méret és a gondolkodási mód tengelyének összes párját a \ref{tab:app:axis:quantization}., a
+\ref{tab:app:axis:size}. és a \ref{tab:app:axis:reasoning}.~táblázat tartalmazza. Futásonként minden mérőszám a
 \ref{tab:app:correlations}. és a \ref{tab:app:errors}.~táblázatban szerepel.
 
 \begin{table}[htbp]
@@ -3102,6 +3078,51 @@ A méret és a gondolkodási mód tengelyének összes párját a \ref{tab:app:a
 	külön és a teljes adathalmazon, a négy promptolási stratégia átlagaként. Az utolsó sor a Scalabrino-féle
 	modell közzétett kimeneteinek korrelációja.}
 	\label{tab:app:sources}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\small
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{ | l | r | r | r | r | }
+		\hline
+		\textbf{Pár} &
+		$\boldsymbol{\Delta\rho}$ &
+		\textbf{korr. $p$} &
+		$\boldsymbol{\Delta}$\textbf{MAE} &
+		\textbf{korr. $p$} \\
+		\hline \hline
+		Gemma-4 E4B, gond.: 4 bit $\rightarrow$ 8 bit & $+0{,}006$ & $1{,}000$ & $+0{,}018$ & $1{,}000$ \\
+		\hline
+		Gemma-4 E4B, közv.: 4 bit $\rightarrow$ 8 bit & $-0{,}003$ & $1{,}000$ & $+0{,}033$\textsuperscript{*} & $0{,}002$ \\
+		\hline
+		Gemma-4 12B, gond.: 4 bit $\rightarrow$ 8 bit & $+0{,}004$ & $1{,}000$ & $+0{,}033$\textsuperscript{*} & $0{,}024$ \\
+		\hline
+		Gemma-4 12B, közv.: 4 bit $\rightarrow$ 8 bit & $+0{,}012$ & $1{,}000$ & $-0{,}005$ & $1{,}000$ \\
+		\hline
+		Gemma-4 31B, gond.: 4 bit $\rightarrow$ 8 bit & $-0{,}002$ & $1{,}000$ & $+0{,}019$ & $0{,}308$ \\
+		\hline
+		Gemma-4 31B, közv.: 4 bit $\rightarrow$ 8 bit & $+0{,}000$ & $1{,}000$ & $-0{,}001$ & $1{,}000$ \\
+		\hline
+		Qwen3.5 4B, gond.: 4 bit $\rightarrow$ 8 bit & $+0{,}047$ & $1{,}000$ & $-0{,}034$ & $1{,}000$ \\
+		\hline
+		Qwen3.5 4B, közv.: 4 bit $\rightarrow$ 8 bit & $-0{,}037$ & $0{,}216$ & $-0{,}006$ & $1{,}000$ \\
+		\hline
+		Qwen3.5 9B, gond.: 4 bit $\rightarrow$ 8 bit & $+0{,}004$ & $1{,}000$ & $-0{,}178$\textsuperscript{*} & $<0{,}001$ \\
+		\hline
+		Qwen3.5 9B, közv.: 4 bit $\rightarrow$ 8 bit & $+0{,}032$ & $0{,}418$ & $-0{,}103$\textsuperscript{*} & $<0{,}001$ \\
+		\hline
+		Qwen3.8 27B, gond.: 4 bit $\rightarrow$ 8 bit & $-0{,}009$ & $1{,}000$ & $+0{,}012$ & $1{,}000$ \\
+		\hline
+		Qwen3.8 27B, közv.: 4 bit $\rightarrow$ 8 bit & $-0{,}001$ & $1{,}000$ & $+0{,}008$ & $0{,}637$ \\
+		\hline
+	\end{tabular}
+	\caption[A kvantálás hatása]{A kvantálás hatása: a Spearman-korreláció ($\Delta\rho$) és az átlagos abszolút eltérés ($\Delta$MAE)
+	különbsége a pár két modellváltozata között, a négy promptolási stratégia átlagában, Holm-korrigált
+	$p$-értékkel. A különbség a nyolcbites mínusz a négybites modellváltozat értéke. A pozitív $\Delta\rho$
+	és a negatív $\Delta$MAE a pár második modellváltozatának kedvez. A csillag a Holm-korrekció után is
+	szignifikáns különbséget jelöl.}
+	\label{tab:app:axis:quantization}
 \end{table}
 
 \begin{table}[htbp]
