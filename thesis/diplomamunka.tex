@@ -548,9 +548,8 @@ A kísérletekhez a \ref{sec:related:models}. szakaszban ismertetett három,
 emberek által pontozott adathalmaz Java-nyelvű kódrészleteit használom. Ezeket a
 kódrészleteket Krodinger egyetlen, 421 kódrészletből álló adathalmazba
 gyűjtötte, és tette közzé a Hugging Face platformon \cite{krodinger2023merged}.
-Az adathalmaz minden bejegyzés %szb: mit jelent 1 bekezdés? 1 sor? ha igen, szerintem lehetne egyszerűbb: kódrészleteket és hozzájuk tartozó ... tartalmaz
-esetében tartalmazza magát a kódrészletet és az emberi pontszámok átlagát egy
-1-től 5-ig terjedő skálán, ahol az 1 a nagyon nehezen, az 5 a nagyon könnyen
+Az adathalmaz bejegyzései a kódrészletet és a hozzájuk tartozó emberi pontszámok átlagát tartalmazza.
+A pontozás egy 1-től 5-ig terjedő skálán, ahol az 1 a nagyon nehezen, az 5 a nagyon könnyen
 olvasható kódot jelöli. Az átlagoláson kívül más feldolgozást nem végeztek az
 adatokon. A CoReEval benchmark többek között ugyanezt a 421 kódrészletet
 tartalmazza, ezért a két munka eredményei ezeken a kódrészleteken közvetlenül %szb: nem mondanám, hogy közvetlenül. Az akkor lenne, ha pont ugyanezt a 421-et használták volna. 
@@ -614,7 +613,7 @@ Qwen3.5 család két méretben (4B és 9B), a Qwen3.8 család pedig egy méretbe
 (27B) szerepel. Mindegyik modell nyolcbites (\textit{Q8\_0}), illetve négybites
 kvantálással érhető el. A négybites változatokat a \textit{Q4\_K\_M} módszerrel
 kvantálták. A Qwen3.8 négybites változata ilyen formában nem volt elérhető,
-ezért annak az \textit{Unsloth Dynamic} módszerrel kvantált változatát %szb: esetleg kvantált négybites változatát (csak h tuti nehogy azt higgyék h valami nagyon más)
+ezért annak az \textit{Unsloth Dynamic} módszerrel kvantált négybites változatát
 használom.%
 \footnote{Mindkét módszer vegyes pontosságú négybites kvantálás, azaz a súlyok
 jelentős részét négybites formában tárolják, a kényesebb részeket pedig magasabb
@@ -749,7 +748,7 @@ folytatások közül választ. %szb: ici-picit fura ezt úgy olvasni, hogy már 
 A választás véletlenszerűségét a mintavételi beállítások szabályozzák, ilyen
 például a hőmérséklet (\textit{temperature}). A mintavételi beállításokat a
 modellek készítőinek ajánlásai alapján adom meg, külön a gondolkodó és a
-közvetlenül válaszoló módokra is egyaránt (\ref{tab:method:sampling}.~táblázat).
+közvetlen válaszadó módokra is egyaránt (\ref{tab:method:sampling}.~táblázat).
 A meg nem adott paraméterek alapértelmezett értéket vesznek fel. A
 véletlenszám-generátor kezdőértéke minden pontozáskor ugyanaz (35420).
 
@@ -935,7 +934,7 @@ különbség p-értékét a bootstrap eljárással becsülöm. A négy stratégi
 adódik, ezért itt is Holm-korrekciót alkalmazok. Ugyanezt az összehasonlítást
 modellváltozatonként külön is elvégzem. A két módszer eltérő eredményt is adhat.
 A Friedman-próba stratégiánként csupán 24 értéket lát, minden modellváltozatból
-egyet, a bootstrap eljárás viszont mind a 421 kódrészletet felhasználja, így a
+egyet, a bootstrap eljárás viszont kódrészletenként dolgozik, így a
 kisebb különbségeket is kimutathatja. Ezért az eredmények közlésekor mindig
 rögzítem, hogy az adott állítás melyik módszeren alapul.
 
@@ -1295,7 +1294,7 @@ promptolási stratégia kombinációja) Spearman-korrelációja az emberi átlag
 egyetlen pár esetében sem változtatja meg szignifikánsan a korrelációt.
 A méret 16 párból kettőnél mutat szignifikáns hatást, mindkétszer a nagyobb modell javára.
 A Friedman-próba alapján a promptolási stratégiák között nincs szignifikáns különbség.
-A 24 modellváltozat közül 13 ér el magasabb korrelációt a Scalabrino-féle modellnél, de
+A 24 modellváltozat közül 13 ér el magasabb korrelációt a Scalabrino-féle modellnél ugyanazokon a kódrészleteken, de
 egyik különbség sem szignifikáns.
 Az emberek és a modellváltozatok pontszámaival egyaránt az átfogó érthetőség metrika
 korrelációja a legmagasabb.
@@ -1308,7 +1307,7 @@ Egy-egy futás 421 kódrészletet értékelt, így összesen 40\,416 válasz sz�
 Értékelhetőnek 39\,112 válasz bizonyult, ez a válaszok 96,8\%-a (1304 válasz (3,2\%) nem volt értékelhető).
 A nem értékelhető válaszok mindegyike csonkult válasz volt: az LLM a rendelkezésére álló tokenkeret
 kimerüléséig nem adott pontszámot.
-Ilyen válasz csak gondolkodó módban fordult elő. Közvetlenül válaszoló
+Ilyen válasz csak gondolkodó módban fordult elő. Közvetlen válaszadó
 módban minden futásban minden kódrészlet kapott pontszámot.
 A 96 futás közül 78-ban minden kódrészlet értékelhető pontszámot kapott,
 így a futások válaszadási arányának mediánja 100\%.
@@ -1329,9 +1328,9 @@ A nyolcbites modellváltozatok Spearman-korrelációját az emberi
 átlagpontszámokkal a \ref{tab:results:agreement}.~táblázat tartalmazza.
 A 96 futás korrelációi 0,242 és 0,490 közé esnek, mediánjuk 0,401,
 és mindegyik szignifikánsan eltér a nullától ($p < 0{,}001$).
-A legnagyobb értéket a Qwen3.8 27B négybites modell közvetlenül válaszoló módú,
+A legnagyobb értéket a Qwen3.8 27B négybites modell közvetlen válaszadó módú,
 \textit{few-shot} stratégiájú futása érte el (0,490, 95\%-os konfidenciaintervallum: 0,413-0,559).
-A legalacsonyabb érték a Qwen3.5 4B nyolcbites modell közvetlenül válaszoló módú,
+A legalacsonyabb érték a Qwen3.5 4B nyolcbites modell közvetlen válaszadó módú,
 \textit{few-shot} stratégiájú futásához tartozik (0,242).
 A futások családonkénti korrelációjának mediánja a Qwen3.8 családnál 0,434,
 a Gemma-4 családnál 0,420, a Qwen3.5 családnál 0,326.
@@ -1403,7 +1402,7 @@ Az AUC 0,584 és 0,744 közé esik, mediánja 0,694.
 A legmagasabb Spearman-korrelációt mutató futás a QWK szerint szintén a legjobbnak bizonyult (0,418).
 A legkisebb átlagos eltérést a Qwen3.8 27B négybites modell gondolkodó módú,
 \textit{zero-shot-detailed} stratégiájú futása érte el (0,567),
-míg a legmagasabb AUC-t a Gemma-4 12B nyolcbites modell közvetlenül válaszoló módú,
+míg a legmagasabb AUC-t a Gemma-4 12B nyolcbites modell közvetlen válaszadó módú,
 \textit{zero-shot} stratégiájú futása adta (0,744).
 Az eltolás a Qwen3.5 család mind a nyolc modellváltozatánál negatív ($-0{,}30$ és $-0{,}99$ közötti),
 vagyis ezek a modellváltozatok az embereknél konzisztensen alacsonyabbra pontoznak.
@@ -1491,7 +1490,7 @@ A kvantálás tengelyén egyetlen párnál sem mutatható ki különbség a korr
 (\ref{tab:results:axis:quantization}.~táblázat).
 Az átlagos abszolút eltérés esetében négy párnál akad kimutatható különbség,
 közülük kettőnél a nyolcbites, kettőnél pedig a négybites változat eltérése bizonyul kisebbnek.
-A fejezet további része ezért a nyolcbites modellváltozatokat tárgyalja,
+A szakasz további ábrái ezért a nyolcbites modellváltozatokat mutatják be,
 míg a négybitesek eredményeit a függelék tartalmazza.
 
 % KVANTÁLÁSOK EREDMÉNYÉNEK ÖSSZEHASONLÍTÓ TÁBLÁZATA
@@ -1541,7 +1540,7 @@ míg a négybitesek eredményeit a függelék tartalmazza.
 \end{table}
 
 A méret tengelyén 16 párból kettőnél mutatható ki különbség,
-és mindkettő a nagyobb modell javára szól, közvetlenül válaszoló módban
+és mindkettő a nagyobb modell javára szól, közvetlen válaszadó módban
 (\ref{fig:results:size}.~ábra, \ref{tab:app:axis:size}.~függeléktáblázat).
 A Gemma-4 négybites E4B és 31B modellje között a különbség $+0{,}076$,
 a Qwen3.5 nyolcbites 4B és 9B modellje között pedig $+0{,}091$.
@@ -1564,7 +1563,7 @@ Mivel a két modell más családba tartozik, ezért ez a különbség nem közve
 	modellméret szerint, gondolkodási módonként ábrázolja az ábra a Gemma-4 (balra) és a Qwen3.5 (jobbra)
 	családban. A csillag olyan különbséget jelöl, amely a Holm-korrekció után is szignifikáns.
 	A négybites változatok korrelációja egyetlen párnál sem tér el szignifikánsan a nyolcbitesekétől.
-	A négybites változatok közül egyedül a Gemma-4 E4B és 31B modell közvetlenül válaszoló módú változata
+	A négybites változatok közül egyedül a Gemma-4 E4B és 31B modell közvetlen válaszadó módú változata
 	között szignifikáns a különbség. Ezt a párt és az összes többi párt a
 	\ref{tab:app:axis:size}.~függeléktáblázat tartalmazza. A Qwen3.8 családból csak egy méret szerepel,
 	ezért az ábrán nem jelenik meg.}
@@ -1574,7 +1573,7 @@ Mivel a két modell más családba tartozik, ezért ez a különbség nem közve
 A gondolkodás tengelyén a 12 pár egyikénél sincs kimutatható különbség a
 korrelációk között (\ref{fig:results:reasoning}.~ábra, \ref{tab:app:axis:reasoning}.~függeléktáblázat).
 Az átlagos abszolút eltérésben nyolc párnál van kimutatható különbség: a Gemma-4
-modelleknél a gondolkodó, a Qwen3.5 modelleknél pedig a közvetlenül válaszoló
+modelleknél a gondolkodó, a Qwen3.5 modelleknél pedig a közvetlen válaszadó
 mód eltérése a nagyobb.
 
 % GONDOLKODÁSI MÓD ÁBRA
@@ -1583,7 +1582,7 @@ mód eltérése a nagyobb.
 	\centering
 	\includegraphics[width=\textwidth]{figures/results_reasoning.png}
 	\caption[A gondolkodási mód hatása]{A nyolcbites modellváltozatok átlagos Spearman-korrelációját (a négy promptolási stratégia átlagát)
-	közvetlenül válaszoló és gondolkodó módban mutatja az ábra. A két mód között egyetlen párnál sem
+	közvetlen válaszadó és gondolkodó módban mutatja az ábra. A két mód között egyetlen párnál sem
 	szignifikáns a különbség. A négybites változatok korrelációja egyik párnál sem tér el szignifikánsan
 	a nyolcbitesekétől. Minden pár eredményét a \ref{tab:app:axis:reasoning}.~függeléktáblázat tartalmazza.}
 	\label{fig:results:reasoning}
@@ -1629,14 +1628,14 @@ A Friedman-próba alapján a stratégiák között nincs kimutatható különbs�
 	\label{tab:results:strategies}
 \end{table}
 
-A stratégiapárok páros bootstrap-összehasonlítása a 24 modellváltozat közül egyetlen párnál sem mutatott ki
-különbséget (a legkisebb korrigált $p$-érték 0,966).
+A stratégiapárok páros bootstrap-összehasonlítása a 24 modellváltozatot vizsgálva a hat pár közül egyiknél sem mutatott ki
+különbséget (a legkisebb korrigált $p$-érték 0,966, páronként 33-158 közös kódrészleten).
 Modellváltozatonként a 144 stratégiapárból ötnél akad kimutatható különbség, összesen négy modellváltozatnál.
 A Gemma-4 12B négybites, gondolkodó módú modellváltozat \textit{zero-shot} stratégiájú futása 0,090-del magasabb korrelációt ért el,
 mint a \textit{zero-shot-detailed} stratégiájú.
 A Gemma-4 E4B négybites, gondolkodó módú modellváltozatnál a \textit{zero-shot-detailed} stratégiájú futás
 0,120-szal magasabbat ért el, mint a \textit{one-shot} stratégiájú.
-A Qwen3.5 4B négybites, közvetlenül válaszoló modellváltozatnál a \textit{zero-shot-detailed} stratégiájú futás 0,129-cel magasabbat ért el,
+A Qwen3.5 4B négybites, közvetlen válaszadó modellváltozatnál a \textit{zero-shot-detailed} stratégiájú futás 0,129-cel magasabbat ért el,
 mint a \textit{zero-shot}, és 0,127-tel magasabbat, mint a \textit{one-shot} stratégiájú.
 A Qwen3.5 4B nyolcbites, gondolkodó módú modellváltozatnál a
 \textit{zero-shot} stratégiájú futás 0,139-cel magasabbat ért el, mint a \textit{one-shot} stratégiájú.
@@ -1661,10 +1660,11 @@ Scalabrino-féle modellénél.
 A teljes adathalmazon a modellváltozatok és a Scalabrino-féle modell összevetését a
 \ref{tab:results:agreement}.~táblázat utolsó oszlopa közli, a négybites változatokkal együtt pedig a
 \ref{tab:app:agreement}.~függeléktáblázat tartalmazza.
-A 24 modellváltozat közül 13 korrelációja magasabb a Scalabrino-féle modellénél, a különbségek $-0{,}147$ és $+0{,}044$ között alakulnak.
+A 24 modellváltozat közül 13 korrelációja magasabb a Scalabrino-féle modellénél ugyanazokon a kódrészleteken,
+a különbségek pedig $-0{,}147$ és $+0{,}044$ között alakulnak.
 A Holm-korrekció alkalmazása után egyik különbség sem szignifikáns.
-A legnagyobb pozitív különbséget a Qwen3.8 27B négybites, közvetlenül válaszoló modellváltozat érte el ($+0{,}044$).
-A Qwen3.5 4B modell két közvetlenül válaszoló modellváltozatánál a különbség korrekció nélkül szignifikáns lenne
+A legnagyobb pozitív különbséget a Qwen3.8 27B négybites, közvetlen válaszadó modellváltozat érte el ($+0{,}044$).
+A Qwen3.5 4B modell két közvetlen válaszadó modellváltozatánál a különbség korrekció nélkül szignifikáns lenne
 ($-0{,}147$ és $-0{,}110$, $p = 0{,}009$ és $0{,}041$), a korrekció után azonban ezek sem mutathatók ki.
 A Qwen3.5 gondolkodó módú modellváltozatait kevesebb kódrészleten (63-289) lehetett összevetni,
 mert csak azokat a kódrészleteket vettem figyelembe, amelyek mind a négy futásban értékelhető pontszámot kaptak.
@@ -1775,7 +1775,7 @@ Az összesített rangsornál ez az érték 0,830. Modellváltozatonként 0,750 �
 A modellváltozatok több LLM-metrikát az embereknél kimutathatóan erősebben követnek.
 Az elnevezések találóságát, az idiómák használatát és a projektkonvenciók követését
 a 24 modellváltozatból 22 követi erősebben, az átfogó érthetőséget 18, a kognitív terhelést 16.
-Ezzel szemben az átlagos sorhosszt mind a 24 modellváltozat kimutathatóan gyengébben követi, mint az emberek.
+Ezzel szemben az átlagos sorhossz korrelációja mind a 24 modellváltozatnál kimutathatóan eltér az emberekétől, és ellentétes előjelű.
 Egy modellváltozaton belül a négy stratégiával kapott rangsorhasonlóság mediánban 0,07-tel tér el egymástól, legfeljebb 0,23-dal.
 
 Az LLM-metrikák értékelőinek egyezését és a leave-one-out ellenőrzést a
@@ -1881,10 +1881,11 @@ A modellek viszonylag jól visszaadják a kódrészletek sorrendjét,
 de a konkrét pontszámok kevésbé egyeznek az emberekével.
 A sorrendet vizsgáló mérőszámok hasonló képet adnak, mint a Spearman-korreláció.
 Az AUC mediánja például 0,694, azaz egy olvasható és egy nem olvasható kódrészlet közül a futások
-jellemzően mintegy \~69\%-os valószínűséggel az olvasható kódrészletet pontozzák magasabbra.
+jellemzően mintegy 69\%-os valószínűséggel az olvasható kódrészletet pontozzák magasabbra
+(az azonos pontszámot fél találatnak számítva).
 A skála pontos használatát mérő mérőszámok azonban alacsonyabb értékeket mutatnak.
 A QWK legfeljebb 0,418, a pontos egyezések arányának mediánja pedig 35,1\%.
-A futások többségében tehát a válaszok kevesebb mint fele egyezik az emberek kerekített átlagpontszámával.
+Négy futás kivételével a válaszok kevesebb mint fele egyezik az emberek kerekített átlagpontszámával.
 
 % ÖSSZEFOGLALÓ TÁBLÁZAT A MODELLCSALÁDONKÉNTI EREDMÉNYEKRŐL
 \begin{table}[htbp]
@@ -1944,7 +1945,7 @@ mint az emberek által használt skála eltalálásában.
 Az eltolás iránya ráadásul nem egységes, hanem modellcsaládonként és gondolkodási módonként is eltér.
 
 Az olvashatóság becslésének fontos része az is, hogy az LLM mennyi kódrészletre ad értékelhető pontszámot.
-Közvetlenül válaszoló módban minden kódrészlet kapott pontszámot, viszont gondolkodó módban
+Közvetlen válaszadó módban minden kódrészlet kapott pontszámot, viszont gondolkodó módban
 ezzel szemben a válaszok egy jelentősebb része több modellváltozat esetében is csonkult.
 A 95\% alatti válaszadási arányt mutató futások kivétel nélkül a Qwen3.5 család gondolkodó módú futásai közé tartoztak.
 Ezek a modellváltozatok tehát jó néhány kódrészletnél kimerítik a 4096 tokenes gondolkodási keretet, mielőtt pontszámot adnának.
@@ -1960,12 +1961,15 @@ Az alacsonyabb értékre két kézenfekvő magyarázat is kínálkozik:
 a Qwen3.5 családban kisebb modellek szerepelnek (4B és 9B),
 illetve a csonkult válaszok is ennél a családnál fordultak elő a legnagyobb arányban.
 A különbség magyarázatára önmagában egyik tényező sem elegendő azonban (\ref{tab:discussion:smallmodels}.~táblázat),
-mert a szintén kis méretű Gemma-4 E4B nyolcbites változatai (közvetlen válaszoló és gondolkodó módban futtatott)
+mert a szintén kis méretű Gemma-4 E4B nyolcbites változatai (közvetlen válaszadó és gondolkodó módban futtatott)
 magasabb korrelációt értek el (0,372 és 0,373), mint a Qwen3.5 4B nyolcbites változatai (0,268 és 0,334).
-A Gemma-4 E4B mindkét változata, valamint a Qwen3.5 4B közvetlenül válaszoló változata is
+A Gemma-4 E4B mindkét változata, valamint a Qwen3.5 4B közvetlen válaszadó változata is
 tudott a kódrészletek mindegyikére értékelhető pontszámot adni,
 de az utóbbi korrelációja (0,268) mégis a legalacsonyabb a 24 modellváltozat közül.
-Ezzel szemben a Qwen3.5 4B gondolkodó változatának korrelációja a csonkult válaszok ellenére is magasabb.
+A Qwen3.5 4B gondolkodó változatának átlagos korrelációja (0,334) ugyan magasabb,
+de ez csak az értékelhető válaszokon számolt értékre igaz.
+Azon a 195 kódrészleten, amelyet a két változat mindegyik futása értékelt, a különbség már csak $+0{,}021$,
+és nem szignifikáns (\ref{tab:app:axis:reasoning}.~függeléktáblázat).
 A különbség tehát nem csak a méretből és a csonkult válaszokból fakad, hanem valószínűleg a modellcsaládból is.
 
 % TÁBLÁZAT A FELSOROLT ADATOK GYORS SZEMLÉLTETÉSÉRE
@@ -2070,7 +2074,7 @@ a gondolkodási módnál $-0{,}007$.
 	$\Delta$MAE az átlagos abszolút eltérésük közötti különbség a négy promptolási stratégia átlagában:
 	a nyolcbites mínusz a négybites,
 	a nagyobb mínusz a kisebb,
-	illetve a gondolkodó mínusz a közvetlenül válaszoló modellváltozat értéke.
+	illetve a gondolkodó mínusz a közvetlen válaszadó modellváltozat értéke.
 	A szignifikáns különbségek száma a Holm-korrekció utáni eredményt mutatja.
 	Az egyes párok értékeit a \ref{tab:results:axis:quantization}.~táblázat, valamint a
 	\ref{tab:app:axis:size}. és a \ref{tab:app:axis:reasoning}.~függeléktáblázat tartalmazza.}
@@ -2087,11 +2091,11 @@ A négybites kvantálás tehát a rangsorolás szempontjából nem okoz kimutath
 
 A vizsgált tulajdonságok közül a méret hatásának iránya a legkövetkezetesebb.
 A 16 párból 14-ben a nagyobb modell korrelációja bizonyul magasabbnak
-(közvetlenül válaszoló módban mind a nyolc pár esetében a nagyobb modell rangsorol jobban).
+(közvetlen válaszadó módban mind a nyolc pár esetében a nagyobb modell rangsorol jobban).
 A különbség ugyanakkor csekély, ezért csupán két pár esetében szignifikáns.
 A Gemma-4 családban a javulás túlnyomó része az E4B és a 12B modell között jelentkezik (átlagosan $+0{,}056$),
 míg a 12B és a 31B modell között már csak $+0{,}010$ a növekedés (\ref{fig:results:size}.~ábra).
-A Qwen3.5 családban egyetlen negatív érték ($-0{,}076$) fordul elő
+A Qwen3.5 családban egyetlen negatív érték ($-0{,}076$) fordul elő,
 mégpedig a négybites, gondolkodó módú párnál,
 ahol mindkét modellváltozat válaszainak egy része csonkult.
 Mivel csak két családban szerepel több méret, ezért nem állítható biztosan,
@@ -2100,11 +2104,11 @@ az irány azonban mindkét vizsgált családban megegyezik.
 Az emberi átlagtól való eltérésben a két család ellentétes képet mutat:
 a nagyobb Gemma-4 modellek átlagos eltérése nagyobb, szemben a nagyobb Qwen3.5 modellekével, ami pedig kisebb.
 
-A a gondolkodási mód nem javítja rangsorolást.
+A gondolkodási mód nem javítja szignifikánsan a rangsorolást.
 A 12 párból mindössze négyben magasabb a gondolkodó mód korrelációja,
 a különbségek átlaga pedig az összes párt vizsgálva $-0{,}007$.
 A Gemma-4 és a Qwen3.8 családban a gondolkodó mód korrelációja átlagosan valamivel
-alacsonyabba közvetlenül válaszoló módénál, a Qwen3.5 családban valamivel magasabb.
+alacsonyabb a közvetlen válaszadó módénál, a Qwen3.5 családban valamivel magasabb.
 A pontszámok értékeinek pontosságára ugyanakkor nagy és ellentétes irányú hatást gyakorol.
 A Qwen3.5 családban például a gondolkodó mód átlagos eltérése jóval kisebb ($-0{,}290$),
 ellentétben a Gemma-4 családdal, ahol a gondolkodó mód eltérése nagyobb ($+0{,}078$, \ref{tab:discussion:axes}.~táblázat).
@@ -2113,9 +2117,10 @@ a kódrészletek sorrendjét alig befolyásolja.
 A gondolkodó mód jóval több tokent állít elő, és a Qwen3.5 családban jelentős mennyiségű csonkult válaszhoz is vezet,
 a rangsorolásban azonban mégsem jelent előnyt a vizsgált modelleknél.
 
-A promptolási stratégiák között szintén nem mutatható ki különbség.
+A promptolási stratégiák között a rangsorolásban szintén nem mutatható ki különbség.
 A négy stratégia korrelációinak átlaga 0,381 és 0,397 közé esik, és sem a Friedman-próba,
-sem a páros összehasonlítások nem jeleznek szignifikáns eltérést a 24 modellváltozatot együtt vizsgálva (\ref{tab:results:strategies}.~táblázat).
+sem a páros összehasonlítások nem jeleznek szignifikáns eltérést a 24 modellváltozatot együtt vizsgálva (\ref{tab:results:strategies}.~táblázat),
+bár az utóbbiak csak kevés kódrészleten készültek.
 A legkedvezőbb átlagos rangja ugyan a \textit{few-shot} stratégiának van,
 a próbák alapján azonban ez véletlen ingadozásból is fakadhat.
 A részletes értékelési szempontokat tartalmazó \textit{zero-shot-detailed} prompt
@@ -2134,15 +2139,15 @@ A nagyobb modellek valamivel jobban rangsorolnak, ám a különbség csekély,
 és a Gemma-4 családban a 12B méret felett elenyésző.
 A négybites kvantálás és a gondolkodó mód nem befolyásolja kimutathatóan a rangsorolást.
 A gondolkodó mód modellcsaládonként más-más irányban módosítja a pontszámok eltolódását,
-általánosan azonban nem jobb vagy rosszabb a közvetlenül válaszoló módhoz képest.
-A promptolási stratégia megválasztása sem befolyásolja kimutathatóan az egyezést.
+általánosan azonban nem jobb vagy rosszabb a közvetlen válaszadó módhoz képest.
+A promptolási stratégia megválasztása sem befolyásolja kimutathatóan a rangsorolást.
 E hatások mindegyike kisebb, mint a modellcsaládok közötti különbség (\ref{sec:discussion:rq1}.~alszakasz).
 
 \subsection{Összevetés a korábbi, nem LLM-alapú olvashatósági modellekkel}
 \label{sec:discussion:classic}
 
 A Scalabrino-féle modell a teljes adathalmazon 0,415-ös korrelációt ért el.
-A 24 modellváltozat közül 13 magasabb értéket mutat ennél,
+A 24 modellváltozat közül 13 korrelációja magasabb a Scalabrino-féle modellénél ugyanazokon a kódrészleteken,
 a Holm-korrekció után azonban egyik különbség sem szignifikáns (\ref{tab:results:agreement}.~táblázat).
 A 13 modellváltozat közül 12 a Gemma-4 12B, a Gemma-4 31B és a Qwen3.8 27B modellhez tartozik.
 A tizenharmadik a Qwen3.5 4B négybites, gondolkodó módú változata,
@@ -2230,9 +2235,10 @@ nem egy konkrét modellre és beállításra vonatkozik, hanem a szerzők össze
 A CoReEval szerzői az LLM-eket az embereknél optimistábbnak találták,
 a vizsgált modellváltozatok esetében ez azonban nem általános jelenség,
 a Qwen3.5 család például pont, hogy szigorúbb az embereknél (\ref{sec:discussion:rq1}.~alszakasz).
-A CoReEval esetében a legkisebb átlagos eltérést a legegyszerűbb, \textit{zero-shot} prompt adta,
-ezzel összhangban áll, hogy a részletesebb promptok a vizsgált modellváltozatok vizsgálatakor
-sem javítottak jelentősen a rangsoroláson (\ref{sec:discussion:rq2}.~alszakasz).
+A CoReEval esetében a legkisebb átlagos eltérést a legegyszerűbb, \textit{zero-shot} prompt adta.
+A vizsgált modellváltozatoknál a legkisebb eltérést modellcsaládonként és gondolkodási módonként más stratégia adja
+(\ref{tab:app:errors}.~függeléktáblázat),
+a rangsoroláson pedig a részletesebb promptok sem javítottak jelentősen (\ref{sec:discussion:rq2}.~alszakasz).
 
 Az RQ3-ra adott válasz röviden a következőképpen összegezhető:
 a legjobb vizsgált modellváltozatok olvashatósági tanítás nélkül is
@@ -2320,7 +2326,9 @@ viszont a többi LLM közös szemléleténél nem képes ugyanerre.
 	mint az emberi átlagpontszámok. Az utolsó két oszlop azt mutatja meg, hogy a 24 modellváltozat közül
 	hánynál nagyobb, illetve kisebb a korreláció abszolút értéke az emberekénél, még a Holm-korrekció után is
 	szignifikánsan, az iránytól függetlenül. Az átlagos sorhossz és az átlagos azonosítóhossz korrelációja az
-	embereknél és a modellváltozatoknál ellentétes előjelű. A modellváltozatok korrelációja a 24 modellváltozat
+	embereknél és a modellváltozatoknál ellentétes előjelű. E két metrikánál a szignifikáns eltérések mindegyike
+	ellentétes előjelű korrelációt jelent, ezért náluk az erősebb vagy gyengébb követés csak a korreláció abszolút
+	értékére vonatkozik. A modellváltozatok korrelációja a 24 modellváltozat
 	korrelációinak Fisher-féle átlaga. A korrelációkat a \ref{tab:results:metrics}.~táblázat, a
 	modellváltozatonkénti összevetést pedig a \ref{sec:results:metrics}.~szakasz ismerteti.}
 	\label{tab:discussion:metrics}
@@ -2328,16 +2336,16 @@ viszont a többi LLM közös szemléleténél nem képes ugyanerre.
 
 A legszembetűnőbb eltérés két algoritmikus metrika esetében mutatkozik, amelyek előjele a két oldalon ellentétes.
 Az emberek pontszámai hosszabb sorok és hosszabb azonosítók esetén csökkennek ($-0{,}241$ és $-0{,}137$),
-míg modellváltozatok pontszámai ugyanezekkel a tulajdonságokkal enyhén emelkednek ($+0{,}107$ és $+0{,}111$).
-Az átlagos sorhosszal mind a 24 modellváltozat kimutathatóan gyengébb együttmozgást mutat, mint az emberek.
+míg a modellváltozatok pontszámai ugyanezekkel a tulajdonságokkal enyhén emelkednek ($+0{,}107$ és $+0{,}111$).
+Az átlagos sorhossz korrelációja mind a 24, az átlagos azonosítóhosszé 22 modellváltozatnál kimutathatóan eltér az emberekétől.
 Felmerülhet, hogy a modellváltozatok a hosszabb, beszédesebb neveket
 és a kifejtettebb sorokat ítélik inkább érthetőnek,
 az emberek számára pedig a hosszú sorok nehezebben olvashatók.
-A Halstead-térfogattal nyolc modellváltozat szintén gyengébben mozog együtt, mint az emberek.
+A Halstead-térfogattal nyolc modellváltozat gyengébben mozog együtt, mint az emberek.
 A logikai összetettséget mérő metrikákkal (a beágyazási mélységgel és a ciklomatikus komplexitással)
 viszont több modellváltozat is erősebb együttmozgást mutat.
 A modellváltozatok pontszámai tehát a kód logikai összetettségével szorosabban,
-a Halstead-térfogattal és a sorhosszal pedig lazábban mozognak együtt,
+a Halstead-térfogattal lazábban, a sorhosszal pedig ellentétes irányban mozognak együtt,
 mint az emberek pontszámai.
 
 A metrikák mérése megbízhatónak bizonyult,
@@ -2347,12 +2355,13 @@ A legkisebb értéket a kognitív terhelés (0,51), valamint a megjegyzések és
 E tulajdonságok megítélésében az LLM-ek kevésbé értenek egyet,
 ezért a hozzájuk tartozó korrelációkat óvatosabban kell értelmezni.
 A leave-one-out átlagolás a korrelációkon csak csekély mértékben változtat (az összesítésben 0,004 és 0,024 között).
-Az önkonzisztencia vizsgálata szerint a modellváltozatok pontszámai nem mozognak erősebben együtt
-a saját metrikapontszámaikkal, mint a többi értékelőével (a különbség mediánja $-0{,}095$),
-így a modellváltozatok erősebb korrelációja nem abból ered, hogy egy modell a saját értékelésével egyezik.
+Az önkonzisztencia vizsgálata szerint a modellváltozatok pontszámai gyengébben mozognak együtt
+a saját metrikapontszámaikkal, mint a többi értékelő átlagával (a különbség mediánja $-0{,}095$).
+Ez arra utal, hogy a modellváltozatok erősebb korrelációja elsősorban nem abból ered, hogy egy modell a saját értékelésével egyezik.
+Az összehasonlítás azonban nem teljesen kiegyenlített, mivel egyetlen értékelő pontszámai zajosabbak tizenegy értékelő átlagánál.
 
 Azon, hogy a modellváltozatok pontszámai mely metrikákkal mozognak együtt, a promptolási stratégia alig módosít.
-Egy modellváltozat mérésein belül a négy stratégia rangsorának hasonlósága a medián értékben mindössze 0,07-tel tér el.
+Egy modellváltozat négy futása között a rangsorhasonlóság a medián értékben mindössze 0,07-tel tér el.
 
 Az RQ4-re adott válasz röviden így összegezhető:
 az emberek és a vizsgált LLM-ek pontszámai nagyrészt ugyanazokkal a kódtulajdonságokkal mozognak együtt.
@@ -2393,7 +2402,7 @@ a behúzás következetességével viszont csak gyengén ($+0{,}118$).
 
 Az eredmények értelmezésénél figyelembe kell venni azokat a tényezőket,
 amelyek a levont következtetések érvényességét behatárolják (\textit{threats to validity}).
-A szakasz először arra kérdez rá, hogy a vizsgálat valóban azt méri-e, amit mérni kíván.
+A szakasz először azt tárgyalja, hogy a vizsgálat valóban azt méri-e, amit mérni kíván.
 Utána a mérés körülményeiből adódó korlátokat veszem sorra,
 ezt követően pedig az eredmények általánosíthatóságát tárgyalom.
 A sort végül a statisztikai következtetések korlátaival zárom.
@@ -2418,7 +2427,7 @@ a Buse és Weimer-féle kódrészleteket 120 hallgató pontozta,
 a Scalabrino és munkatársai által vizsgált kódrészleteket kilenc hallgató,
 a Dorn-féle kódrészleteket pedig átlagosan 214-en értékelték (\ref{tab:method:dataset}.~táblázat).
 Két forrás esetében kizárólag hallgatók adtak értékelést.
-Ők jellemzően még kevés valódi projekt kódjával találkoztak, % valódi? ipari? idk
+Ők jellemzően még kevés ipari projekt kódjával találkoztak,
 és az iparban elvárt kódolási gyakorlatot is kevésbé ismerik.
 Ítéleteik ezért eltérhetnek attól, ahogyan a tapasztalt fejlesztők ugyanazt a kódot megítélik.
 Ezen felül az emberi átlagpontszámok annál több egyéni ízlésből fakadó eltérést tartalmaznak,
@@ -2450,7 +2459,7 @@ Ez felfelé torzíthatja az LLM-ek egyezését, így nem dönthető el biztosan 
 hogy az LLM-ek új kódon jobban általánosítanak-e, mint a betanított modellek (\ref{sec:discussion:classic}.~alszakasz).
 A hat vizsgált modell három modellcsaládhoz tartozik.
 Ilyen limitált számú modellből és modellcsaládból nem vonható le a méret hatására általános következtetés.
-Az eredmények ezért a vizsgált modellekre, a két vizsgált kvantálási módszerre és
+Az eredmények ezért a vizsgált modellekre, a két vizsgált kvantálási szintre és
 a négy promptolási stratégia konkrét megfogalmazására érvényesek.
 
 A statisztikai következtetéseknek szintén vannak korlátai.
@@ -2471,6 +2480,73 @@ Az eredmények így a hasonló kódrészletekre általánosíthatók, más model
 \section{Következmények}
 \label{sec:discussion:practice}
 
+A szakasz azt tekinti át, milyen következményekkel járnak az eredmények
+az LLM-ek olvashatósági értékelésére való használatára nézve.
+Először a gyakorlati következményeket foglalom össze,
+majd a további kutatások lehetséges irányait vázolom.
+
+Az eredmények alapján a vizsgált LLM-ek pontszámai főként arra alkalmasak,
+hogy a kódrészleteket egymáshoz képest ítéljük meg.
+A futások Spearman-korrelációja az emberi átlagpontszámokkal legfeljebb 0,490, a mediánja pedig 0,401.
+Egy LLM pontozása tehát egy-egy kódrészlet olvashatóságának konkrét megítélése helyett inkább annak eldöntésére lehet alkalmas,
+hogy két kódrészlet közül melyik az olvashatóbb.
+A pontszámok abszolút értéke ennél is kevésbé megbízható.
+Négy futás kivételével a válaszok kevesebb mint fele egyezik meg az emberek kerekített átlagpontszámával,
+és az eltolás iránya modellcsaládonként és gondolkodási módonként is különbözik (\ref{sec:discussion:rq1}.~alszakasz).
+Ebből következik, hogy ha egy LLM pontszámát küszöbként akarjuk használni, például annak eldöntésére, hogy egy kódrészlet
+elég olvasható-e, akkor a küszöböt érdemes az adott modellváltozathoz igazítani.
+
+A modell kiválasztásakor a modellcsalád mutatkozott a legfontosabbnak.
+A kvantálás egyetlen pár esetében sem módosította szignifikánsan a korrelációt,
+ezért a rangsoroláshoz a négybites változatok is elegendőnek bizonyultak.
+A négybites változatok kisebbek, így kevesebb erőforrással futtathatóak.
+A gondolkodó mód szintén nem javította szignifikánsan a rangsorolást egyik vizsgált modell esetében sem,
+valamint a Qwen3.5 család esetében a válaszok egy részének a csonkulását is okozta.
+A vizsgált modelleknél ezért a rangsoroláshoz a közvetlen válaszadó mód is elég volt.
+A modellméret hatásának iránya ugyan következetes, mértéke viszont csekély.
+A Gemma-4 család esetében a 12B modell már majdnem olyan jól rangsorolt, mint a 31B.
+Mivel a legnagyobb eltérés a modellcsaládok között mutatkozott,
+egy új modellcsalád használata előtt érdemes a modellt emberek által
+pontozott kódrészleteken ellenőrizni.
+
+A rangsorolás terén nem mutatható ki általános különbség a vizsgált promptolási stratégiák között.
+A vizsgált LLM-eknél a részletes értékelési szempontok vagy mintapéldák megadása sem javította általánosan a rangsorolást.
+Az viszont eltér, hogy melyik stratégia viszi közelebb a pontszámokat az emberekéhez,
+ez a modellcsaládtól és a gondolkodási módtól is függ (\ref{sec:discussion:classic}.~alszakasz).
+Ha a pontszám abszolút értéke is számít, az adott modellváltozathoz érdemes megválasztani a stratégiát.
+
+Olvashatósági tanítás nélkül is a legjobb modellváltozatok rangsorolása
+a Scalabrino-féle modellhez hasonló szintet ért el.
+Ez alapján olyan esetekben is használható lehet akár egy lokálisan futtatott LLM,
+ahol emberek által pontozott tanítóadat nem áll rendelkezésre.
+Az viszont nem következik az eredményekből, hogy az LLM-ek átvehetnék az emberi értékelők szerepét.
+A Buse és Weimer-féle kódrészleteken egyetlen modellváltozat sem érte el azt az egyezést,
+amelyet egy átlagos emberi értékelő a csoportátlaggal mutat.
+Az adathalmaz kódrészletei ráadásul a modellek tanítóadatába is bekerülhettek,
+ezért új kódon az egyezés ennél alacsonyabb is lehet (\ref{sec:discussion:validity}.~szakasz).
+
+A pontszámokkal együtt mozgó kódtulajdonságok nagyrészt ugyanazok az
+emberek és a vizsgált LLM-ek esetében is.
+Kivételt jelent ez alól az átlagos sorhossz és az átlagos azonosítóhossz.
+Ezeknél a modellváltozatok pontszámai az emberekével ellentétes irányba mozdulnak el.
+Ha egy LLM pontszáma alapján akarjuk a kód átalakítását elvégezni, akkor ügyelnünk kell arra,
+hogy ez a pontszám a hosszabb sorokat és neveket tartalmazó kódot az embereknél olvashatóbbnak jelezheti.
+Ez különösen lényeges lehet, ha az olvashatósági pontszám egy másik modell tanítási céljául fog szolgálni~\cite{sergeyuk2024reassessing}.
+
+Az eredményekből a további kutatások számára több irány is kínálkozik.
+Mivel minden kódrészlet futásonként csupán egyetlen választ kapott,
+így ismételt futásokkal meg lehetne mérni például a pontszámok stabilitását.
+A Qwen3.5 család csonkult válaszai miatt érdemes lenne nagyobb gondolkodási kerettel is megvizsgálni a gondolkodó mód hatását.
+A modellméret hatásának általánosításához több olyan modellcsaládra lenne szükség, amelyek több méretben is elérhetők.
+A CoReEval-vizsgálatban az LLM-ek Python- és CUDA-kódon gyakorlatilag nem korreláltak az emberekkel~\cite{ouedraogo2025coreeval},
+ezért más nyelvekre a Java-kódon kapott eredmények csak további vizsgálatok elvégzésével terjeszthetők ki.
+
+Továbbfejleszthető egyúttal az emberi viszonyítási alap is.
+Új, még nem publikált kódrészletekkel kizárható lenne, hogy a kódrészletek bekerültek a modellek tanítóadatai közé.
+Ezzel az is mérhetővé válna, hogy az LLM-ek mennyire általánosítanak a betanított modellekhez képest.
+Tapasztalt fejlesztők értékelései megmutatnák, mennyiben függnek az eredmények attól,
+hogy az emberi pontszámok nagyrészt hallgatóktól származnak.
+
 \cleardoublepage
 
 
@@ -2485,6 +2561,54 @@ Az eredmények így a hasonló kódrészletekre általánosíthatók, más model
 
 \chapter{Összegzés}
 \label{ch:conclusion}
+
+A dolgozatom központi kérdése az volt, hogy a nyílt súlyú, lokálisan futtatott LLM-ek mennyire tudják
+az emberekhez hasonlóan megítélni a forráskód olvashatóságát.
+Ehhez hat modellt vizsgáltam három modellcsaládból (Gemma-4, Qwen3.5 és Qwen3.8),
+két kvantálással, gondolkodó és közvetlen válaszoló módban futtatva.
+Az így kapott 24 modellváltozat négy promptolási stratégia mentén pontozta a három korábbi adathalmazból összeállított
+421 Java-kódrészletet, így összesen 96 futás jött létre.
+A kapott pontszámokat az emberi átlagpontszámokkal vetettem össze, elsődlegesen Spearman-korreláció segítségével.
+
+Az első kutatási kérdésre (RQ1) adott válasz szerint a vizsgált LLM-ek
+mind a 96 futásban jobban rangsorolták a kódrészleteket a véletlennél.
+A futások korrelációja 0,242 és 0,490 közé esett, a mediánja 0,401 volt.
+A kódrészletek sorrendjét a modellek pontosabban találták el, mint a pontszámok értékét.
+A pontszámok eltolódásának iránya modellcsaládonként és gondolkodási módonként is különbözött.
+A legnagyobb eltérés a modellcsaládok között jelentkezett:
+a Qwen3.8 és a Gemma-4 család futásai magasabb korrelációt értek el,
+mint a Qwen3.5 család futásai.
+
+A második kutatási kérdés (RQ2) a modelltulajdonságok és a promptolási stratégia hatását vizsgálta.
+A négybites kvantálás vagy a gondolkodó mód egyik pár esetében sem változtatta meg szignifikánsan a korrelációt.
+A modellméret hatásának iránya következetes volt, a 16 párból azonban csak kettőnél bizonyult szignifikánsnak.
+A promptolási stratégiák esetében sem jelentkezett általános különbség a rangsorolásban.
+A gondolkodó mód és a promptolási stratégia hatása a pontszámok értékére modellcsaládonként eltért.
+
+A harmadik kutatási kérdés (RQ3) célja a korábbi, nem LLM-alapú olvashatósági modellekkel való összevetés volt.
+A 24 modellváltozat közül 13 ugyanazokon a kódrészleteken magasabb korrelációt ért el mint Scalabrino és munkatársainak modellje,
+a különbségek azonban egyik irányban sem bizonyultak szignifikánsnak.
+A betanított, jellemzőalapú modellekhez képest olvashatósági tanítás nélkül is
+hasonló szinten rangsoroltak a legjobban teljesítő modellváltozatok.
+A Buse és Weimer-féle kódrészleteken viszont egyetlen modellváltozat sem érte el azt az egyezést,
+amelyet egy átlagos emberi értékelő a csoportátlaggal mutat.
+
+A negyedik kutatási kérdés (RQ4) arra irányult, hogy mely kódtulajdonságokkal mozognak együtt a pontszámok.
+A modellváltozatok és az emberek pontszámai javarészt ugyanazokkal a kódmetrikákkal mozogtak együtt,
+és mindkét oldalon az átfogó érthetőség korrelációja volt a legmagasabb.
+A kódrészletek jelentésére vonatkozó metrikák többségét a modellváltozatok ugyanakkor erősebben követték, mint az emberek.
+Az átlagos sorhossz és az átlagos azonosítóhossz esetében pedig pontszámaik az emberekével ellentétes irányban mozogtak.
+
+A vizsgálat eredményei alapján a vizsgált LLM-ek elsősorban arra alkalmasak,
+hogy a kódrészletek egymáshoz viszonyított megítélését végeztessük velük,
+az általuk adott pontszámok abszolút értéke azonban kevésbé megbízható.
+A rangsoroláshoz már a négybitesen kvantált, közvetlen válaszadó módban futtatott modellek is elegendőnek bizonyultak,
+ugyanakkor a modellcsalád megválasztása fontosabbnak tűnik, mint a kvantálás vagy a gondolkodó mód beállítása.
+Az eredmények érvényességét azonban valamennyire korlátozhatja,
+hogy az emberi pontszámok nagyrészt hallgatóktól származnak,
+illetve, hogy a kódrészletek régóta nyilvánosak.
+Az is csökkenti a megbízhatóságot, hogy minden kódrészlet futásonként csak egy választ kapott.
+A további kutatásokhoz ezért új kódrészletek, lehetőleg tapasztalt fejlesztők értékelései és ismételt futások nyújthatnak alapot.
 
 \cleardoublepage
 
@@ -2731,7 +2855,7 @@ Return only the JSON object.
 A függelék a fő szövegből kimaradt részletes eredményeket tartalmazza: a négybites
 modellváltozatok eredményeit, a tengelyek összes párját, valamint valamennyi futás összes
 egyezési mérőszámát. A modellváltozatokat a család, a méret, a kvantálás (4 vagy 8 bit),
-valamint a mód (gondolkodó vagy közvetlenül válaszoló) azonosítja.
+valamint a mód (gondolkodó vagy közvetlen válaszadó) azonosítja.
 
 A \ref{tab:app:agreement}. és a \ref{tab:app:measures}.~táblázat a
 \ref{tab:results:agreement}. és a \ref{tab:results:measures}.~táblázatot ismétli meg mind a 24
@@ -3028,7 +3152,7 @@ A méret és a gondolkodási mód tengelyének összes párját a \ref{tab:app:a
 		\hline
 	\end{tabular}
 	\caption[A gondolkodási mód hatása]{A gondolkodási mód hatása: a Spearman-korreláció ($\Delta\rho$) és az átlagos abszolút eltérés
-	($\Delta$MAE) különbsége a pár két modellváltozata között (a gondolkodó mínusz a közvetlenül válaszoló mód), a négy promptolási
+	($\Delta$MAE) különbsége a pár két modellváltozata között (a gondolkodó mínusz a közvetlen válaszadó mód), a négy promptolási
 	stratégia átlagában, Holm-korrigált $p$-értékkel. A pozitív $\Delta\rho$ és a negatív $\Delta$MAE a
 	második modellváltozatnak kedvez. A csillag a Holm-korrekció után is szignifikáns különbséget jelöli.}
 	\label{tab:app:axis:reasoning}
@@ -3037,7 +3161,7 @@ A méret és a gondolkodási mód tengelyének összes párját a \ref{tab:app:a
 \begin{longtable}{ | l | c | r | r | r | r | }
 	\caption[A futások korrelációs mérőszámai]{A futások korrelációs mérőszámai.
 	Stratégiák: ZS = \textit{zero-shot}, ZSD = \textit{zero-shot-detailed}, OS = \textit{one-shot}, FS = \textit{few-shot}.
-	Mód: gond. = gondolkodó, közv. = közvetlenül válaszoló.}
+	Mód: gond. = gondolkodó, közv. = közvetlen válaszadó.}
 	\label{tab:app:correlations} \\
 	\hline
 	\textbf{Modellváltozat} & \textbf{Str.} & \textbf{Spearman} & \textbf{Pearson} & \textbf{Kendall} & \textbf{QWK} \\
