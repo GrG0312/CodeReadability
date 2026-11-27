@@ -29,6 +29,18 @@
 % Add bibliography file
 \addbibresource{diplomamunka.bib}
 
+% Táblázat összehúzása a szövegszélességre, ha annál szélesebb (egyébként változatlan)
+\newcommand{\fitwidth}[1]{\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{#1}}
+
+% Lebegő elemek: ne kerüljenek külön, egyedül álló oldalra
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.9}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.85}
+
+% Ékezetes betűk a lstlisting blokkokban
+\lstset{extendedchars=true,literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ö}{{\"o}}1 {ő}{{\H{o}}}1 {ú}{{\'u}}1 {ü}{{\"u}}1 {ű}{{\H{u}}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ö}{{\"O}}1 {Ő}{{\H{O}}}1 {Ú}{{\'U}}1 {Ü}{{\"U}}1 {Ű}{{\H{U}}}1}
+
 % The document
 \begin{document}
 \documentlang{hungarian}
@@ -1017,7 +1029,9 @@ méretet és a komplexitást, a megjegyzéseket, valamint az elnevezéseket mér
 \begin{table}[htb]
 	\centering
 	\small
-	\begin{tabular}{ | p{4.4cm} | p{9.2cm} | }
+	\let\oldtexttt\texttt
+	\renewcommand{\texttt}[1]{\oldtexttt{\footnotesize #1}}
+	\begin{tabular}{ | p{5.6cm} | p{7.8cm} | }
 		\hline
 		\textbf{Metrika} & \textbf{Leírás} \\
 		\hline \hline
@@ -1040,6 +1054,9 @@ méretet és a komplexitást, a megjegyzéseket, valamint az elnevezéseket mér
 		Legnagyobb beágyazási mélység \newline \texttt{nesting\_depth} &
 		Az egymásba ágyazott blokkok legnagyobb mélysége. \\
 		\hline
+	\end{tabular}\par\medskip
+	\begin{tabular}{ | p{5.6cm} | p{7.8cm} | }
+		\hline
 		\multicolumn{2}{|l|}{\textit{Méret és komplexitás}} \\
 		\hline
 		Ciklomatikus komplexitás \newline \texttt{cyclomatic\_complexity} &
@@ -1054,6 +1071,9 @@ méretet és a komplexitást, a megjegyzéseket, valamint az elnevezéseket mér
 		Kódsorok száma \newline \texttt{lines\_of\_code} &
 		A nem üres és nem megjegyzésből álló sorok száma. \\
 		\hline
+	\end{tabular}\par\medskip
+	\begin{tabular}{ | p{5.6cm} | p{7.8cm} | }
+		\hline
 		\multicolumn{2}{|l|}{\textit{Megjegyzések}} \\
 		\hline
 		Megjegyzéssűrűség \newline \texttt{comment\_density} &
@@ -1063,6 +1083,9 @@ méretet és a komplexitást, a megjegyzéseket, valamint az elnevezéseket mér
 		Dokumentációs megjegyzések sűrűsége \newline \texttt{docstring\_density} &
 		Ugyanez az arány csak a dokumentációs megjegyzésekre (Javában a
 		\texttt{/** */} blokkokra). \\
+		\hline
+	\end{tabular}\par\medskip
+	\begin{tabular}{ | p{5.6cm} | p{7.8cm} | }
 		\hline
 		\multicolumn{2}{|l|}{\textit{Elnevezések}} \\
 		\hline
@@ -1097,7 +1120,9 @@ rangkorrelációval mérem.
 \begin{table}[htb]
 	\centering
 	\small
-	\begin{tabular}{ | p{4.4cm} | p{7.4cm} | p{1.5cm} | }
+	\let\oldtexttt\texttt
+	\renewcommand{\texttt}[1]{\oldtexttt{\footnotesize #1}}
+	\begin{tabular}{ | p{5.9cm} | p{5.5cm} | p{1.9cm} | }
 		\hline
 		\textbf{Metrika} & \textbf{Leírás} & \textbf{Magasabb érték} \\
 		\hline \hline
@@ -1114,6 +1139,9 @@ rangkorrelációval mérem.
 		Mennyire könnyen kiejthetők a változók, függvények és osztályok nevei. &
 		jobb \\
 		\hline
+	\end{tabular}\par\medskip
+	\begin{tabular}{ | p{5.9cm} | p{5.5cm} | p{1.9cm} | }
+		\hline
 		\multicolumn{3}{|l|}{\textit{Megjegyzések}} \\
 		\hline
 		Megjegyzések világossága \newline \texttt{clarity\_of\_comments} &
@@ -1126,6 +1154,9 @@ rangkorrelációval mérem.
 		\texttt{consistency\_of\_comments\_and\_code} &
 		Mennyire egyeznek a megjegyzések a kód tényleges működésével. & jobb \\
 		\hline
+	\end{tabular}\par\medskip
+	\begin{tabular}{ | p{5.9cm} | p{5.5cm} | p{1.9cm} | }
+		\hline
 		\multicolumn{3}{|l|}{\textit{Komplexitás és érthetőség}} \\
 		\hline
 		Átfogó érthetőség \newline \texttt{high\_level\_understandability} &
@@ -1137,6 +1168,9 @@ rangkorrelációval mérem.
 		Idiómák használata \newline \texttt{use\_of\_idioms} &
 		Mennyire használja a kód a nyelv megszokott szerkezeteit és mintáit. &
 		jobb \\
+		\hline
+	\end{tabular}\par\medskip
+	\begin{tabular}{ | p{5.9cm} | p{5.5cm} | p{1.9cm} | }
 		\hline
 		\multicolumn{3}{|l|}{\textit{Hibakezelés és konvenciók}} \\
 		\hline
@@ -1344,9 +1378,9 @@ a Gemma-4 családnál 0,420, a Qwen3.5 családnál 0,326.
 	\centering
 	\small
 	\setlength{\tabcolsep}{4pt}
-	\begin{tabular}{ | l | c | c | r | r | r | r | r | r | }
+	\fitwidth{\begin{tabular}{ | l | c | c | r | r | r | r | r | r | }
 		\hline
-		& & & \multicolumn{4}{c |}{\textbf{Spearman-korreláció promptolási stratégiánként}} & & \\
+		& & & \multicolumn{4}{c |}{\makecell{\textbf{Spearman-korreláció}\\\textbf{promptolási stratégiánként}}} & & \\
 		\cline{4-7}
 		\textbf{Család} &
 		\textbf{Méret} &
@@ -1382,7 +1416,7 @@ a Gemma-4 családnál 0,420, a Qwen3.5 családnál 0,326.
 		\hline
 		Qwen3.8 & 27B & nem & $0{,}464$ & $0{,}430$ & $0{,}449$ & $0{,}487$ & $0{,}458$ & $+0{,}043$ \\
 		\hline
-	\end{tabular}
+	\end{tabular}}
 	\caption[A modellváltozatok Spearman-korrelációja]{A nyolcbites modellváltozatok Spearman-korrelációja az emberi
 	átlagpontszámokkal promptolási stratégiánként, a négy stratégia átlaga, valamint az átlag eltérése a
 	Scalabrino-féle modell korrelációjától (pozitív, ha az LLM a jobb).
@@ -1423,7 +1457,7 @@ tartalmazza.
 	\centering
 	\small
 	\setlength{\tabcolsep}{4pt}
-	\begin{tabular}{ | l | c | c | r | r | r | r | r | r | r | }
+	\fitwidth{\begin{tabular}{ | l | c | c | r | r | r | r | r | r | r | }
 		\hline
 		\textbf{Család} &
 		\textbf{Méret} &
@@ -1460,7 +1494,7 @@ tartalmazza.
 		\hline
 		Qwen3.8 & 27B & nem & $0{,}437$ & $0{,}357$ & $0{,}369$ & $0{,}677$ & 45,5 & $0{,}719$ & $+0{,}16$ \\
 		\hline
-	\end{tabular}
+	\end{tabular}}
 	\caption[A modellváltozatok további mérőszámai]{A nyolcbites modellváltozatok további egyezési
 	mérőszámai, a négy promptolási stratégiával készült futás értékeinek átlagaként.
 	A pontos egyezés azoknak a válaszoknak az aránya, amelyek megegyeznek a legközelebbi egész számra
@@ -1599,9 +1633,9 @@ A Friedman-próba alapján a stratégiák között nincs kimutatható különbs�
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[height=5cm]{figures/results_strategies_gemma4.png}
-	\includegraphics[height=5cm]{figures/results_strategies_qwen35.png}
-	\includegraphics[height=5cm]{figures/results_strategies_qwen38.png}\\[2pt]
+	\includegraphics[height=5.5cm]{figures/results_strategies_gemma4.png}
+	\includegraphics[height=5.5cm]{figures/results_strategies_qwen35.png}
+	\includegraphics[height=5.5cm]{figures/results_strategies_qwen38.png}\\[2pt]
 	\includegraphics[width=0.8\textwidth]{figures/results_strategies_legend.png}
 	\caption[A promptolási stratégiák modellváltozatonként]{A nyolcbites modellváltozatok Spearman-korrelációja
 	promptolási stratégiánként, modellcsaládonként (közv.: közvetlen válaszadó, gond.: gondolkodó mód).
@@ -1673,7 +1707,7 @@ A behúzás és a kapcsos zárójelek következetessége, az elnevezési konvenc
 	\centering
 	\small
 	\setlength{\tabcolsep}{4pt}
-	\begin{tabular}{ | l | c | r | r | r | r | }
+	\fitwidth{\begin{tabular}{ | l | c | r | r | r | r | }
 		\hline
 		\textbf{Metrika} &
 		\textbf{Típus} &
@@ -1732,7 +1766,7 @@ A behúzás és a kapcsos zárójelek következetessége, az elnevezési konvenc
 		\hline
 		kapcsos zárójelek következetessége & alg. & $+0{,}059$ & 24 & $+0{,}097$ & 23 \\
 		\hline
-	\end{tabular}
+	\end{tabular}}
 	\caption[A metrikák és a pontszámok kapcsolata]{A metrikák Spearman-korrelációja az emberi
 	átlagpontszámokkal és a modellváltozatok pontszámaival (a 24 modellváltozat korrelációinak Fisher-féle
 	átlaga), valamint a metrikák helye a két rangsorban. A rangsor a korreláció abszolút értékén alapul, az
@@ -1780,7 +1814,7 @@ A két korreláció erősségének különbsége mediánban $-0{,}095$.
 	\centering
 	\small
 	\setlength{\tabcolsep}{4pt}
-	\begin{tabular}{ | l | r | l | r | r | c | }
+	\fitwidth{\begin{tabular}{ | l | r | l | r | r | c | }
 		\hline
 		\textbf{LLM-metrika} &
 		\textbf{ICC} &
@@ -1811,7 +1845,7 @@ A két korreláció erősségének különbsége mediánban $-0{,}095$.
 		\hline
 		projektkonvenciók követése & $0{,}88$ & jó & $+0{,}524$ & $+0{,}536$ & $+0{,}012$ \\
 		\hline
-	\end{tabular}
+	\end{tabular}}
 	\caption[Az LLM-metrikák értékelőinek egyezése]{Az LLM-metrikák értékelőinek egyezése (ICC(3,k),
 	tizenkét értékelő) és a leave-one-out ellenőrzés: a modellváltozatok korrelációja a kihagyott
 	pontszámok nélküli és a teljes átlaggal, a modellváltozatok között Fisher-féle átlagolással
@@ -1873,7 +1907,7 @@ Négy futás kivételével a válaszok kevesebb mint fele egyezik az emberek ker
 	\centering
 	\small
 	\setlength{\tabcolsep}{4pt}
-	\begin{tabular}{ | l | c | r | r | r | r | r | c | r | }
+	\fitwidth{\begin{tabular}{ | l | c | r | r | r | r | r | c | r | }
 		\hline
 		\textbf{Család} &
 		\textbf{Gond.} &
@@ -1903,7 +1937,7 @@ Négy futás kivételével a válaszok kevesebb mint fele egyezik az emberek ker
 		\cline{2-9}
 		 & mind & $0{,}434$ & $0{,}709$ & $0{,}355$ & $0{,}670$ & 46,1 & $-0{,}15$ -- $+0{,}16$ & 100,0 \\
 		\hline
-	\end{tabular}
+	\end{tabular}}
 	\caption[Az egyezés modellcsaládonként és gondolkodási módonként]{Az egyezés mérőszámai
 	modellcsaládonként és gondolkodási módonként, a négy- és a nyolcbites modellváltozatok összes
 	futásán. A Spearman-korreláció a futások értékeinek mediánja, az AUC, a QWK, a MAE és a pontos
@@ -2014,7 +2048,7 @@ a gondolkodási módnál $-0{,}007$.
 	\centering
 	\small
 	\setlength{\tabcolsep}{4pt}
-	\begin{tabular}{ | l | l | r | r | c | r | r | r | r | }
+	\fitwidth{\begin{tabular}{ | l | l | r | r | c | r | r | r | r | }
 		\hline
 		\textbf{Tengely} &
 		\textbf{Család} &
@@ -2048,7 +2082,7 @@ a gondolkodási módnál $-0{,}007$.
 		\cline{2-9}
 		 & összesen & 12 & $-0{,}007$ & $-0{,}042$ -- $+0{,}066$ & 4 & 0 & $-0{,}058$ & 8 \\
 		\hline
-	\end{tabular}
+	\end{tabular}}
 	\caption[A modelltulajdonságok hatásának összesítése]{A modelltulajdonságok hatásának összesítése
 	tengelyenként és modellcsaládonként.
 	$\Delta\rho$ a pár két modellváltozatának Spearman-korrelációja közötti,
@@ -2166,7 +2200,7 @@ ezt azonban az eredmények alapján nem lehet biztosan kijelenteni.
 \begin{table}[htbp]
 	\centering
 	\small
-	\begin{tabular}{ | l | r | r | r | r | r | }
+	\fitwidth{\begin{tabular}{ | l | r | r | r | r | r | }
 		\hline
 		\textbf{Forrás} &
 		\makecell{\textbf{Kód-}\\\textbf{részletek}} &
@@ -2181,7 +2215,7 @@ ezt azonban az eredmények alapján nem lehet biztosan kijelenteni.
 		\hline
 		Scalabrino és munkatársai & 200 & $0{,}610$ & $0{,}407$ & $0{,}484$ & 0 \\
 		\hline
-	\end{tabular}
+	\end{tabular}}
 	\caption[A Scalabrino-féle modell és a modellváltozatok forrásonként]{A Scalabrino-féle modell és a 24 modellváltozat
 	Spearman-korrelációja az emberi átlagpontszámokkal, forrás-adathalmazonként.
 	A modellváltozatokhoz tartozó érték a négy promptolási stratégiával készült futás korrelációjának átlaga.
@@ -2263,7 +2297,7 @@ viszont a többi LLM közös szemléleténél nem képes ugyanerre.
 	\centering
 	\small
 	\setlength{\tabcolsep}{4pt}
-	\begin{tabular}{ | l | c | r | r | r | r | }
+	\fitwidth{\begin{tabular}{ | l | c | r | r | r | r | }
 		\hline
 		\textbf{Metrika} &
 		\textbf{Típus} &
@@ -2302,7 +2336,7 @@ viszont a többi LLM közös szemléleténél nem képes ugyanerre.
 		\hline
 		legnagyobb beágyazási mélység & alg. & $-0{,}088$ & $-0{,}204$ & 13 & 0 \\
 		\hline
-	\end{tabular}
+	\end{tabular}}
 	\caption[Az embereknél eltérő erősséggel követett metrikák]{Azok a metrikák, amelyeket legalább egy modellváltozat szignifikánsan erősebben vagy gyengébben követ,
 	mint az emberi átlagpontszámok. Az utolsó két oszlop azt mutatja meg, hogy a 24 modellváltozat közül
 	hánynál nagyobb, illetve kisebb a korreláció abszolút értéke az emberekénél, még a Holm-korrekció után is
@@ -2850,9 +2884,9 @@ A kvantálás, a méret és a gondolkodási mód tengelyének összes párját a
 	\centering
 	\small
 	\setlength{\tabcolsep}{3pt}
-	\begin{tabular}{ | l | c | c | c | r | r | r | r | r | r | }
+	\fitwidth{\begin{tabular}{ | l | c | c | c | r | r | r | r | r | r | }
 		\hline
-		& & & & \multicolumn{4}{c |}{\textbf{Spearman-korreláció promptolási stratégiánként}} & & \\
+		& & & & \multicolumn{4}{c |}{\makecell{\textbf{Spearman-korreláció}\\\textbf{promptolási stratégiánként}}} & & \\
 		\cline{5-8}
 		\textbf{Család} & \textbf{Méret} & \textbf{Kv.} & \textbf{Gond.} & \makecell{\textit{zero-}\\\textit{shot}} & \makecell{\textit{zero-shot-}\\\textit{detailed}} & \makecell{\textit{one-}\\\textit{shot}} & \makecell{\textit{few-}\\\textit{shot}} & \textbf{Átlag} & \makecell{\textbf{Eltérés a}\\\textbf{Scalabrino-}\\\textbf{modelltől}} \\
 		\hline \hline
@@ -2904,7 +2938,7 @@ A kvantálás, a méret és a gondolkodási mód tengelyének összes párját a
 		\hline
 		Qwen3.8 & 27B & 8 bit & nem & $0{,}464$ & $0{,}430$ & $0{,}449$ & $0{,}487$ & $0{,}458$ & $+0{,}043$ \\
 		\hline
-	\end{tabular}
+	\end{tabular}}
 	\caption[A modellváltozatok Spearman-korrelációja (minden modellváltozat)]{A
 	\ref{tab:results:agreement}.~táblázat minden modellváltozattal: a Spearman-korreláció az emberi
 	átlagpontszámokkal promptolási stratégiánként, a négy stratégia átlaga, valamint az átlag eltérése a
@@ -2919,7 +2953,7 @@ A kvantálás, a méret és a gondolkodási mód tengelyének összes párját a
 	\centering
 	\footnotesize
 	\setlength{\tabcolsep}{3pt}
-	\begin{tabular}{ | l | c | c | c | r | r | r | r | r | r | r | }
+	\fitwidth{\begin{tabular}{ | l | c | c | c | r | r | r | r | r | r | r | }
 		\hline
 		\textbf{Család} & \textbf{Méret} & \textbf{Kv.} & \textbf{Gond.} & \textbf{Pearson} & \textbf{Kendall} & \textbf{QWK} & \textbf{MAE} & \makecell{\textbf{Pontos}\\\textbf{egyezés (\%)}} & \textbf{AUC} & \makecell{\textbf{Eltolás}\\\textbf{(pont)}} \\
 		\hline \hline
@@ -2971,7 +3005,7 @@ A kvantálás, a méret és a gondolkodási mód tengelyének összes párját a
 		\hline
 		Qwen3.8 & 27B & 8 bit & nem & $0{,}437$ & $0{,}357$ & $0{,}369$ & $0{,}677$ & 45,5 & $0{,}719$ & $+0{,}16$ \\
 		\hline
-	\end{tabular}
+	\end{tabular}}
 	\caption[A modellváltozatok további egyezési mérőszámai (minden modellváltozat)]{A
 	\ref{tab:results:measures}.~táblázat minden modellváltozattal: a további egyezési mérőszámok, a négy
 	promptolási stratégiával készült futás értékeinek átlagaként.
@@ -2987,7 +3021,7 @@ A kvantálás, a méret és a gondolkodási mód tengelyének összes párját a
 	\centering
 	\small
 	\setlength{\tabcolsep}{4pt}
-	\begin{tabular}{ | l | c | c | c | r | r | r | r | }
+	\fitwidth{\begin{tabular}{ | l | c | c | c | r | r | r | r | }
 		\hline
 		\textbf{Család} & \textbf{Méret} & \textbf{Kv.} & \textbf{Gond.} & \textbf{Buse} &
 		\textbf{Dorn} & \textbf{Scalabrino} & \textbf{Teljes} \\
@@ -3043,7 +3077,7 @@ A kvantálás, a méret és a gondolkodási mód tengelyének összes párját a
 		\hline
 		\multicolumn{4}{| l |}{Scalabrino-féle modell} & $0{,}616$ & $0{,}490$ & $0{,}610$ & $0{,}415$ \\
 		\hline
-	\end{tabular}
+	\end{tabular}}
 	\caption[Spearman-korreláció forrásonként]{A modellváltozatok Spearman-korrelációja az emberi átlagpontszámokkal
 	a három forrás-adathalmazon (Buse és Weimer: 100, Dorn: 121, Scalabrino és munkatársai: 200 kódrészlet)
 	külön és a teljes adathalmazon, a négy promptolási stratégia átlagaként. Az utolsó sor a Scalabrino-féle
